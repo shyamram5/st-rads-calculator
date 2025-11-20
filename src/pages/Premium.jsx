@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { User } from "@/entities/User";
 import { Button } from "@/components/ui/button";
@@ -7,7 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Crown, Check, Zap, Star, CreditCard, Shield, Users, Clock, Loader2 } from "lucide-react";
 import { createCheckoutSession } from "@/functions/createCheckoutSession";
 import { Link } from "react-router-dom"; // Added import for Link
-import { createPageUrl } from "@/utils/createPageUrl"; // Added import for createPageUrl (assuming its path)
+import { createPageUrl } from "@/utils"; // Added import for createPageUrl (assuming its path)
 
 export default function PremiumPage() {
     const [user, setUser] = useState(null);
