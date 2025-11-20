@@ -45,9 +45,9 @@ export default function LandingPage() {
     <div className="min-h-screen space-y-16">
             {/* Hero Section */}
             <div className="text-center space-y-6 py-16 relative">
-                 <div className="absolute inset-0 -z-10 h-full w-full bg-white dark:bg-gray-950">
+                 {/* Grid pattern overlay - background removed to show global liquid effect */}
+                 <div className="absolute inset-0 -z-10 h-full w-full pointer-events-none">
                     <div className="absolute h-full w-full bg-[linear-gradient(to_right,#8080800a_1px,transparent_1px),linear-gradient(to_bottom,#8080800a_1px,transparent_1px)] bg-[size:24px_24px]"></div>
-                    <div className="absolute left-0 right-0 top-0 -z-10 m-auto h-[310px] w-[310px] rounded-full bg-blue-400 opacity-20 blur-[100px] dark:bg-blue-600/30"></div>
                  </div>
                  <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-1000">
                     <Badge className="bg-blue-50 dark:bg-blue-950/30 text-blue-700 dark:text-blue-300 px-4 py-1.5 text-xs font-medium border border-blue-200 dark:border-blue-800 rounded-full shadow-sm">
@@ -82,7 +82,7 @@ export default function LandingPage() {
             </div>
 
             {/* Community Stats */}
-            <Card className="shadow-xl shadow-indigo-100/50 dark:shadow-none border-0 bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm max-w-sm mx-auto overflow-hidden relative">
+            <Card className="glass-panel max-w-sm mx-auto overflow-hidden relative">
               <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500"></div>
               <CardContent className="p-8">
                 <div className="text-center">
@@ -122,7 +122,7 @@ export default function LandingPage() {
 
                 <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
                     {/* Step 1 */}
-                    <Card className="group bg-white dark:bg-gray-900/40 border-slate-200 dark:border-slate-800 hover:border-indigo-300 dark:hover:border-indigo-700/50 transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
+                    <Card className="group glass-panel hover:bg-white/40 dark:hover:bg-gray-800/40 transition-all duration-300 hover:shadow-2xl hover:-translate-y-1">
                         <CardContent className="p-8 text-center space-y-4">
                             <div className="p-4 bg-indigo-50 dark:bg-indigo-950/30 rounded-2xl w-fit mx-auto group-hover:bg-indigo-100 dark:group-hover:bg-indigo-900/50 transition-colors duration-300">
                                 <FileUp className="w-8 h-8 text-indigo-600 dark:text-indigo-400" />
@@ -137,7 +137,7 @@ export default function LandingPage() {
                     </Card>
 
                     {/* Step 2 */}
-                    <Card className="group bg-white dark:bg-gray-900/40 border-slate-200 dark:border-slate-800 hover:border-blue-300 dark:hover:border-blue-700/50 transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
+                    <Card className="group glass-panel hover:bg-white/40 dark:hover:bg-gray-800/40 transition-all duration-300 hover:shadow-2xl hover:-translate-y-1">
                         <CardContent className="p-8 text-center space-y-4">
                             <div className="p-4 bg-blue-50 dark:bg-blue-950/30 rounded-2xl w-fit mx-auto group-hover:bg-blue-100 dark:group-hover:bg-blue-900/50 transition-colors duration-300">
                                 <ClipboardCheck className="w-8 h-8 text-blue-600 dark:text-blue-400" />
@@ -152,7 +152,7 @@ export default function LandingPage() {
                     </Card>
 
                     {/* Step 3 */}
-                    <Card className="group bg-white dark:bg-gray-900/40 border-slate-200 dark:border-slate-800 hover:border-green-300 dark:hover:border-green-700/50 transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
+                    <Card className="group glass-panel hover:bg-white/40 dark:hover:bg-gray-800/40 transition-all duration-300 hover:shadow-2xl hover:-translate-y-1">
                         <CardContent className="p-8 text-center space-y-4">
                             <div className="p-4 bg-green-50 dark:bg-green-950/30 rounded-2xl w-fit mx-auto group-hover:bg-green-100 dark:group-hover:bg-green-900/50 transition-colors duration-300">
                                 <Sparkles className="w-8 h-8 text-green-600 dark:text-green-400" />

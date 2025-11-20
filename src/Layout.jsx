@@ -75,15 +75,16 @@ export default function Layout({ children, currentPageName }) {
                     50% { opacity: 0.8; transform: scale(1.1); }
                 }
                 .glass-panel {
-                    background: rgba(255, 255, 255, 0.6);
-                    backdrop-filter: blur(16px);
-                    -webkit-backdrop-filter: blur(16px);
-                    border: 1px solid rgba(255, 255, 255, 0.3);
-                    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+                    background: rgba(255, 255, 255, 0.25);
+                    backdrop-filter: blur(12px);
+                    -webkit-backdrop-filter: blur(12px);
+                    border: 1px solid rgba(255, 255, 255, 0.2);
+                    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
                 }
                 .dark .glass-panel {
-                    background: rgba(17, 24, 39, 0.6);
-                    border: 1px solid rgba(255, 255, 255, 0.1);
+                    background: rgba(17, 24, 39, 0.3);
+                    border: 1px solid rgba(255, 255, 255, 0.05);
+                    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
                 }
             `}</style>
             <header className="glass-panel sticky top-4 z-50 mx-4 sm:mx-8 rounded-2xl mt-4 transition-all duration-300">

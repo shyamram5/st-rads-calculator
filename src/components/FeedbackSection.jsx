@@ -35,7 +35,7 @@ export default function FeedbackSection({ analysisId }) {
 
     if (isSubmitted) {
         return (
-            <Card className="bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-800">
+            <Card className="glass-panel border-green-200/50 dark:border-green-800/50 bg-green-50/30 dark:bg-green-900/10">
                 <CardContent className="p-6">
                     <div className="text-center space-y-3">
                         <ThumbsUp className="w-8 h-8 text-green-600 dark:text-green-400 mx-auto" />
@@ -48,7 +48,7 @@ export default function FeedbackSection({ analysisId }) {
     }
 
     return (
-        <Card className="bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-800">
+        <Card className="glass-panel border-blue-200/50 dark:border-blue-800/50 bg-blue-50/30 dark:bg-blue-900/10">
             <CardHeader>
                 <CardTitle className="text-xl text-blue-900 dark:text-blue-100 flex items-center gap-2">
                     <MessageSquare className="w-5 h-5" />
