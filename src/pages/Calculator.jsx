@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useCallback } from "react";
 import { UploadFile, InvokeLLM } from "@/integrations/Core";
 import { LesionAnalysis } from "@/entities/LesionAnalysis";
@@ -358,8 +357,8 @@ Use the following detailed scoring categories, characteristics, and management r
       }
 
       {/* Main Analysis Card */}
-      <Card className="shadow-none border border-slate-200 dark:border-slate-800 bg-white dark:bg-gray-900 overflow-hidden">
-        <CardHeader className="bg-slate-50 dark:bg-gray-900/50 p-6 border-b border-slate-200 dark:border-slate-800">
+      <Card className="glass-panel shadow-xl border-0 overflow-hidden">
+        <CardHeader className="bg-white/30 dark:bg-gray-800/30 p-6 border-b border-slate-200/50 dark:border-slate-700/50">
           <div className="text-center">
             <CardTitle className="text-2xl font-bold text-slate-900 dark:text-slate-100">ST-RADS Analysis</CardTitle>
           </div>
@@ -586,7 +585,7 @@ function MRIImageUpload({ type, title, description, files, previews, onFileSelec
       {/* Upload area */}
       {canAddMore &&
         <div
-          className={`relative group aspect-square border-2 border-dashed rounded-xl flex items-center justify-center cursor-pointer transition-all duration-300 ${colorClasses[color]}`}
+          className={`relative group aspect-square border border-dashed rounded-2xl flex items-center justify-center cursor-pointer transition-all duration-300 backdrop-blur-sm ${colorClasses[color].replace('bg-', 'bg-opacity-30 bg-')} hover:backdrop-blur-md shadow-inner`}
           onClick={onFileSelect}
           tabIndex={0}
           data-paste-type={type}

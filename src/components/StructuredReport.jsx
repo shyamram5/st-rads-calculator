@@ -1,4 +1,3 @@
-
 import React from "react";
 import ReactMarkdown from "react-markdown";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
@@ -53,8 +52,8 @@ export default function StructuredReport({ analysis }) {
     const displayScore = analysis.strads_score;
 
     return (
-        <Card className="bg-white dark:bg-gray-900 shadow-xl h-full flex flex-col border border-slate-200 dark:border-slate-800">
-            <CardHeader className="bg-slate-50 dark:bg-gray-900/50 border-b border-slate-200 dark:border-slate-800">
+        <Card className="glass-panel h-full flex flex-col shadow-xl border-0">
+            <CardHeader className="border-b border-slate-200/50 dark:border-slate-700/50 bg-white/30 dark:bg-gray-800/30">
                 <CardTitle className="text-slate-900 dark:text-slate-100 text-center text-xl">AI-Assisted Radiology Report</CardTitle>
                 <CardDescription className="text-center text-slate-500 dark:text-slate-400">ST-RADS v2025 Educational Analysis</CardDescription>
             </CardHeader>

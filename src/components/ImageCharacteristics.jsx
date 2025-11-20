@@ -238,7 +238,7 @@ export default function ImageCharacteristics({ selectedCharacteristics, onCharac
     const isAdequateLesionPath = selectedInitial === "Lesion present - adequate imaging";
 
     return (
-        <Card className="bg-white dark:bg-slate-800/50 border-2 border-slate-200 dark:border-slate-700 shadow-lg hover:shadow-xl transition-shadow duration-300">
+        <Card className="glass-panel shadow-lg hover:shadow-xl transition-all duration-300 border-0">
             <CardHeader>
                 <CardTitle>ST-RADS v2025 Diagnostic Flowchart</CardTitle>
                 <CardDescription>Follow the diagnostic steps based on the official flowcharts.</CardDescription>

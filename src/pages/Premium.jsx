@@ -154,8 +154,8 @@ export default function PremiumPage() {
             {/* Comparison Cards */}
             <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
                 {/* Free Trial Card */}
-                <Card className="shadow-md border-2 border-slate-200 dark:border-slate-800 bg-white dark:bg-gray-900">
-                    <CardHeader className="text-center p-6">
+                    <Card className="glass-panel border-0 shadow-xl">
+                        <CardHeader className="text-center p-6">
                         <div className="flex items-center justify-center gap-2 mb-2">
                             <Zap className="w-6 h-6 text-blue-500" />
                             <CardTitle className="text-2xl text-slate-900 dark:text-slate-100">Free Trial</CardTitle>
@@ -186,9 +186,10 @@ export default function PremiumPage() {
                 </Card>
 
                 {/* Premium Card */}
-                <Card className="shadow-2xl border-2 border-amber-400 dark:border-amber-600 bg-gradient-to-br from-white to-amber-50 dark:from-gray-900 dark:to-amber-950/30 relative overflow-hidden">
+                <Card className="glass-panel border-amber-400/50 dark:border-amber-500/50 bg-gradient-to-br from-white/80 to-amber-50/80 dark:from-gray-900/80 dark:to-amber-950/50 relative overflow-hidden ring-1 ring-amber-400/30 dark:ring-amber-500/30">
+                    <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-amber-300 via-orange-400 to-amber-300"></div>
                     <div className="absolute top-4 -right-12">
-                        <Badge className="bg-amber-500 text-white font-bold transform rotate-45 px-8 py-1">POPULAR</Badge>
+                        <Badge className="bg-amber-500 text-white font-bold transform rotate-45 px-8 py-1 shadow-lg">POPULAR</Badge>
                     </div>
                     <CardHeader className="text-center p-6">
                         <div className="flex items-center justify-center gap-2 mb-2">

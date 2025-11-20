@@ -46,7 +46,15 @@ export default function Layout({ children, currentPageName }) {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-gray-950 text-slate-800 dark:text-slate-200 transition-colors duration-300">
+    <div className="min-h-screen bg-slate-50 dark:bg-gray-950 text-slate-800 dark:text-slate-200 transition-colors duration-300 relative overflow-x-hidden">
+
+            {/* Liquid Background Elements */}
+            <div className="fixed inset-0 -z-10 overflow-hidden pointer-events-none">
+                <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-blue-400/20 dark:bg-blue-600/20 blur-[120px] animate-pulse-slow"></div>
+                <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] rounded-full bg-indigo-400/20 dark:bg-indigo-600/20 blur-[120px] animate-pulse-slow" style={{animationDelay: "2s"}}></div>
+                <div className="absolute top-[40%] left-[40%] w-[30%] h-[30%] rounded-full bg-purple-400/20 dark:bg-purple-600/20 blur-[100px] animate-pulse-slow" style={{animationDelay: "4s"}}></div>
+            </div>
+
             <style>{`
                 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
                 body, h1, h2, h3, h4, h5, h6, p, span, div, button, input, textarea, label {
@@ -59,8 +67,26 @@ export default function Layout({ children, currentPageName }) {
                     from { opacity: 0; transform: translateY(10px); }
                     to { opacity: 1; transform: translateY(0); }
                 }
+                .animate-pulse-slow {
+                    animation: pulse 10s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+                }
+                @keyframes pulse {
+                    0%, 100% { opacity: 0.5; transform: scale(1); }
+                    50% { opacity: 0.8; transform: scale(1.1); }
+                }
+                .glass-panel {
+                    background: rgba(255, 255, 255, 0.6);
+                    backdrop-filter: blur(16px);
+                    -webkit-backdrop-filter: blur(16px);
+                    border: 1px solid rgba(255, 255, 255, 0.3);
+                    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+                }
+                .dark .glass-panel {
+                    background: rgba(17, 24, 39, 0.6);
+                    border: 1px solid rgba(255, 255, 255, 0.1);
+                }
             `}</style>
-            <header className="bg-white/70 dark:bg-gray-950/70 backdrop-blur-md sticky top-0 z-50 border-b border-slate-200/60 dark:border-slate-800/60 supports-[backdrop-filter]:bg-white/60 dark:supports-[backdrop-filter]:bg-gray-950/60 transition-all duration-300">
+            <header className="glass-panel sticky top-4 z-50 mx-4 sm:mx-8 rounded-2xl mt-4 transition-all duration-300">
                 <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="flex justify-between items-center py-3">
                         <div className="flex items-center gap-4">
