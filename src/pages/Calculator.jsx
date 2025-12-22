@@ -5,7 +5,7 @@ import { User } from "@/entities/User";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Camera, FileUp, Loader2, AlertCircle, Sparkles, CheckCircle, Info, X, UploadCloud } from "lucide-react";
+import { Camera, FileUp, Loader2, AlertCircle, Sparkles, CheckCircle, Info, X, UploadCloud, Shield } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
 import StructuredReport from "../components/StructuredReport";
 import ImageCharacteristics from "../components/ImageCharacteristics";
@@ -369,7 +369,11 @@ Use the following detailed scoring categories, characteristics, and management r
             <div className="space-y-6">
               <div className="text-center">
                 <h2 className="text-xl font-bold text-slate-900 dark:text-slate-100 mb-1">Upload MRI Images</h2>
-                <p className="text-slate-600 dark:text-slate-400 max-w-xl mx-auto">Upload up to 2 images for each MRI sequence type for comprehensive analysis.</p>
+                <p className="text-slate-600 dark:text-slate-400 max-w-xl mx-auto mb-4">Upload up to 2 images for each MRI sequence type for comprehensive analysis.</p>
+                <div className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 text-sm text-green-700 dark:text-green-300">
+                  <Shield className="w-4 h-4" />
+                  <span className="font-medium">No PHI is stored. Please ensure all uploaded MRI slices are anonymized.</span>
+                </div>
               </div>
 
               <div className="grid lg:grid-cols-3 gap-6">

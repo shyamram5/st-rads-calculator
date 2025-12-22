@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { User } from "@/entities/User";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Sparkles, User as UserIcon, FileUp, ClipboardCheck, Activity } from "lucide-react";
+import { ArrowRight, Sparkles, User as UserIcon, FileUp, ClipboardCheck, Activity, Shield } from "lucide-react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { getStats } from "@/functions/getStats";
@@ -71,6 +71,12 @@ export default function LandingPage() {
                 <Activity className="w-4 h-4 text-blue-500" />
                 <span>{totalAnalyses > 0 ? totalAnalyses.toLocaleString() : "..."}</span>
                 <span className="opacity-70">analyses performed</span>
+            </div>
+
+            {/* Privacy Disclaimer */}
+            <div className="flex items-center justify-center gap-2 text-slate-500 dark:text-slate-400 text-sm animate-in fade-in delay-700 duration-1000">
+                <Shield className="w-4 h-4" />
+                <span>Your privacy is priority. No PHI or images are permanently stored.</span>
             </div>
         </div>
 
