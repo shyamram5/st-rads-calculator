@@ -107,12 +107,6 @@ export default function StructuredReport({ analysis }) {
                            <p className="font-semibold text-base text-slate-900 dark:text-slate-100">{analysis.differential_diagnosis}</p>
                         </ReportSection>
                     )}
-                    
-                     {analysis.user_notes && (
-                        <ReportSection icon={<Microscope />} title="Provided Clinical Information">
-                            <p className="italic text-slate-700 dark:text-slate-300">"{analysis.user_notes}"</p>
-                        </ReportSection>
-                     )}
                 </>
 
                 <Separator className="bg-slate-200 dark:bg-slate-800" />

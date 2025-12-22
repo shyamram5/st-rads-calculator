@@ -284,8 +284,6 @@ Use the following detailed scoring categories, characteristics, and management r
       const allImageUrls = Object.values(fileUrls).flat().join(', ') || '';
 
       const analysisData = {
-        image_url: allImageUrls,
-        user_notes: notes,
         strads_score: result.score,
         explanation: result.explanation,
         recommendation: result.recommendation,
