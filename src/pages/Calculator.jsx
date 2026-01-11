@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { UploadFile, InvokeLLM } from "@/integrations/Core";
-import { LesionAnalysis } from "@/entities/LesionAnalysis";
+import { base44 } from "@/api/base44Client";
 import { User } from "@/components/User";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
