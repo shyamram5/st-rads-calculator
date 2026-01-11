@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { agentSDK } from "@/agents";
-import { User } from "@/entities/User";
+import { User } from "@/components/User";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";

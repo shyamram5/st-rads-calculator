@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { UploadFile, InvokeLLM } from "@/integrations/Core";
 import { LesionAnalysis } from "@/entities/LesionAnalysis";
-import { User } from "@/entities/User";
+import { User } from "@/components/User";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";

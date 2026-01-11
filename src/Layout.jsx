@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { User } from "@/entities/User";
+import { User } from "@/components/User";
 import { Button } from "@/components/ui/button";
 import { Sun, Moon, LogOut, ChevronDown, Crown, User as UserIcon, AlertTriangle, Info, Home } from "lucide-react";
 import { Link } from "react-router-dom";
