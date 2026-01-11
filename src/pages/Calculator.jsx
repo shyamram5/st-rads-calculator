@@ -169,7 +169,7 @@ export default function CalculatorPage() {
           if (fileArray.length > 0) {
             const typeUrls = [];
             for (const file of fileArray) {
-              const { file_url } = await UploadFile({ file });
+              const { file_url } = await base44.integrations.Core.UploadFile({ file });
               typeUrls.push(file_url);
               uploadedFiles.push(file_url);
             }
@@ -284,7 +284,7 @@ Use the following detailed scoring categories, characteristics, and management r
         required: ["score", "explanation", "recommendation", "limitations", "differential_diagnoses"]
       };
 
-      const result = await InvokeLLM({
+      const result = await base44.integrations.Core.InvokeLLM({
         prompt,
         file_urls: uploadedFiles.length > 0 ? uploadedFiles : undefined,
         response_json_schema,
@@ -304,7 +304,7 @@ Use the following detailed scoring categories, characteristics, and management r
         differential_diagnoses: result.differential_diagnoses || []
       };
 
-      const createdAnalysis = await LesionAnalysis.create(analysisData);
+      const createdAnalysis = await base44.entities.LesionAnalysis.create(analysisData);
       setAnalysis({ ...analysisData, id: createdAnalysis.id });
 
       // Update user's usage count
@@ -314,7 +314,7 @@ Use the following detailed scoring categories, characteristics, and management r
 
     } catch (err) {
       console.error(err);
-      setError("An error occurred during analysis. Please try again. This may be due to the complexity of the request or image quality.");
+      setError(`An error occurred: ${err.message || "Unknown error"}. Please try again.`);
     } finally {
       setIsLoading(false);
     }
