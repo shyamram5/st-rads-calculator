@@ -258,7 +258,7 @@ Use the following detailed scoring categories, characteristics, and management r
 2. **explanation:** A concise explanation of the key findings justifying the score.
 3. **recommendation:** The official management recommendation for the assigned score, taken directly from the guidelines above.
 4. **limitations:** Specific limitations of photograph vs proper imaging analysis.
-5. **differential_diagnosis:** The single most likely diagnosis.
+5. **differential_diagnoses:** An array of up to 5 ranked differential diagnoses, ordered from most to least likely. Each item should have "diagnosis" (the condition name) and "justification" (a brief 1-2 sentence explanation of why this diagnosis is considered).
       `;
 
       const response_json_schema = {
@@ -268,9 +268,20 @@ Use the following detailed scoring categories, characteristics, and management r
           explanation: { type: "string", description: "A concise explanation of the key findings justifying the score." },
           recommendation: { type: "string", description: "Official ST-RADS management recommendation" },
           limitations: { type: "string", description: "Specific limitations of photograph vs proper imaging analysis" },
-          differential_diagnosis: { "type": "string", "description": "The single most likely diagnosis selected from the provided guidelines." }
+          differential_diagnoses: { 
+            type: "array", 
+            description: "Ranked list of up to 5 differential diagnoses from most to least likely",
+            items: {
+              type: "object",
+              properties: {
+                diagnosis: { type: "string", description: "The condition name" },
+                justification: { type: "string", description: "Brief 1-2 sentence explanation" }
+              },
+              required: ["diagnosis", "justification"]
+            }
+          }
         },
-        required: ["score", "explanation", "recommendation", "limitations"]
+        required: ["score", "explanation", "recommendation", "limitations", "differential_diagnoses"]
       };
 
       const result = await InvokeLLM({
@@ -290,7 +301,7 @@ Use the following detailed scoring categories, characteristics, and management r
         limitations: result.limitations || (hasAnyFile ? 
           "This analysis is based on visual assessment of 2D photographs and cannot replace proper cross-sectional imaging (MRI/CT) evaluation." :
           "This analysis is based solely on selected imaging characteristics from the ST-RADS flowchart without visual image assessment."),
-        differential_diagnosis: result.differential_diagnosis || "Not specified"
+        differential_diagnoses: result.differential_diagnoses || []
       };
 
       const createdAnalysis = await LesionAnalysis.create(analysisData);

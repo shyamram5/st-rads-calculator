@@ -102,9 +102,25 @@ export default function StructuredReport({ analysis }) {
                     </Accordion>
 
 
-                    {analysis.differential_diagnosis && (
-                        <ReportSection icon={<Stethoscope />} title="Most Likely Differential Diagnosis">
-                           <p className="font-semibold text-base text-slate-900 dark:text-slate-100">{analysis.differential_diagnosis}</p>
+                    {analysis.differential_diagnoses && analysis.differential_diagnoses.length > 0 && (
+                        <ReportSection icon={<Stethoscope />} title="Differential Diagnoses (Ranked)">
+                           <div className="space-y-3">
+                               {analysis.differential_diagnoses.map((item, index) => (
+                                   <div key={index} className="flex items-start gap-3 p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700">
+                                       <div className={`flex-shrink-0 w-7 h-7 rounded-full flex items-center justify-center text-sm font-bold ${
+                                           index === 0 ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/50 dark:text-blue-300' :
+                                           index === 1 ? 'bg-slate-200 text-slate-700 dark:bg-slate-700 dark:text-slate-300' :
+                                           'bg-slate-100 text-slate-500 dark:bg-slate-800 dark:text-slate-400'
+                                       }`}>
+                                           {index + 1}
+                                       </div>
+                                       <div className="flex-1">
+                                           <p className="font-semibold text-slate-900 dark:text-slate-100">{item.diagnosis}</p>
+                                           <p className="text-sm text-slate-600 dark:text-slate-400 mt-1">{item.justification}</p>
+                                       </div>
+                                   </div>
+                               ))}
+                           </div>
                         </ReportSection>
                     )}
                 </>

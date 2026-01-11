@@ -1,23 +1,23 @@
-import Home from './pages/Home';
-import Premium from './pages/Premium';
-import PaymentSuccess from './pages/PaymentSuccess';
-import PaymentCancel from './pages/PaymentCancel';
-import Account from './pages/Account';
 import About from './pages/About';
+import Account from './pages/Account';
 import Calculator from './pages/Calculator';
 import CaseReview from './pages/CaseReview';
+import Home from './pages/Home';
+import PaymentCancel from './pages/PaymentCancel';
+import PaymentSuccess from './pages/PaymentSuccess';
+import Premium from './pages/Premium';
 import __Layout from './Layout.jsx';
 
 
 export const PAGES = {
-    "Home": Home,
-    "Premium": Premium,
-    "PaymentSuccess": PaymentSuccess,
-    "PaymentCancel": PaymentCancel,
-    "Account": Account,
     "About": About,
+    "Account": Account,
     "Calculator": Calculator,
     "CaseReview": CaseReview,
+    "Home": Home,
+    "PaymentCancel": PaymentCancel,
+    "PaymentSuccess": PaymentSuccess,
+    "Premium": Premium,
 }
 
 export const pagesConfig = {
