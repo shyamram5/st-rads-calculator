@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { User } from "@/components/User";
 import { Button } from "@/components/ui/button";
-import { Sun, Moon, LogOut, ChevronDown, Crown, User as UserIcon, AlertTriangle, Info, Home } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Sun, Moon, LogOut, ChevronDown, Crown, User as UserIcon, AlertTriangle, Info, Home, Calculator, FileText, ArrowLeft } from "lucide-react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils";
+import { AnimatePresence, motion } from "framer-motion";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -14,7 +15,40 @@ import {
 
 export default function Layout({ children, currentPageName }) {
   const [user, setUser] = useState(null);
-  const [theme, setTheme] = useState("dark"); // Defaulting to dark
+  const [theme, setTheme] = useState("system");
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  // Listen for system theme changes
+  useEffect(() => {
+    const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+    const handleChange = (e) => {
+        if (theme === "system") {
+            const root = window.document.documentElement;
+            root.classList.remove("light", "dark");
+            root.classList.add(e.matches ? "dark" : "light");
+        }
+    };
+    
+    // Initial set
+    if (theme === "system") {
+        const root = window.document.documentElement;
+        root.classList.remove("light", "dark");
+        root.classList.add(mediaQuery.matches ? "dark" : "light");
+    }
+
+    mediaQuery.addEventListener("change", handleChange);
+    return () => mediaQuery.removeEventListener("change", handleChange);
+  }, [theme]);
+
+  // Handle manual theme overrides
+  useEffect(() => {
+    if (theme !== "system") {
+        const root = window.document.documentElement;
+        root.classList.remove("light", "dark");
+        root.classList.add(theme);
+    }
+  }, [theme]);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -28,16 +62,12 @@ export default function Layout({ children, currentPageName }) {
     fetchUser();
   }, []);
 
-  useEffect(() => {
-    const root = window.document.documentElement;
-    root.classList.remove("light", "dark");
-    if (theme) {
-      root.classList.add(theme);
-    }
-  }, [theme]);
-
   const toggleTheme = () => {
-    setTheme(theme === "light" ? "dark" : "light");
+    setTheme(prev => {
+        if (prev === "system") return "light";
+        if (prev === "light") return "dark";
+        return "system";
+    });
   };
 
   const handleLogout = async () => {
@@ -56,41 +86,69 @@ export default function Layout({ children, currentPageName }) {
             </div>
 
             <style>{`
-                @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
-                body, h1, h2, h3, h4, h5, h6, p, span, div, button, input, textarea, label {
-                    font-family: 'Inter', sans-serif;
-                }
-                .page-content {
-                    animation: fadeIn 0.5s ease-in-out;
-                }
-                @keyframes fadeIn {
-                    from { opacity: 0; transform: translateY(10px); }
-                    to { opacity: 1; transform: translateY(0); }
-                }
-                .animate-pulse-slow {
-                    animation: pulse 10s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-                }
-                @keyframes pulse {
-                    0%, 100% { opacity: 0.5; transform: scale(1); }
-                    50% { opacity: 0.8; transform: scale(1.1); }
-                }
-                .glass-panel {
-                    background: rgba(255, 255, 255, 0.25);
-                    backdrop-filter: blur(12px);
-                    -webkit-backdrop-filter: blur(12px);
-                    border: 1px solid rgba(255, 255, 255, 0.2);
-                    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
-                }
-                .dark .glass-panel {
-                    background: rgba(17, 24, 39, 0.3);
-                    border: 1px solid rgba(255, 255, 255, 0.05);
-                    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
-                }
-            `}</style>
-            <header className="glass-panel sticky top-4 z-50 mx-4 sm:mx-8 rounded-2xl mt-4 transition-all duration-300">
+                  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+                  :root {
+                      --sat: env(safe-area-inset-top);
+                      --sab: env(safe-area-inset-bottom);
+                      --sal: env(safe-area-inset-left);
+                      --sar: env(safe-area-inset-right);
+                  }
+                  body, h1, h2, h3, h4, h5, h6, p, span, div, button, input, textarea, label {
+                      font-family: 'Inter', sans-serif;
+                  }
+                  html, body {
+                      overscroll-behavior-y: none; /* Disable pull-to-refresh/bounce */
+                  }
+                  button, a, .interactive {
+                      user-select: none;
+                      -webkit-user-select: none;
+                      -webkit-touch-callout: none;
+                  }
+                  .page-content {
+                      /* Removed legacy animation for Framer Motion */
+                  }
+                  .animate-pulse-slow {
+                      animation: pulse 10s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+                  }
+                  @keyframes pulse {
+                      0%, 100% { opacity: 0.5; transform: scale(1); }
+                      50% { opacity: 0.8; transform: scale(1.1); }
+                  }
+                  .glass-panel {
+                      background: rgba(255, 255, 255, 0.25);
+                      backdrop-filter: blur(12px);
+                      -webkit-backdrop-filter: blur(12px);
+                      border: 1px solid rgba(255, 255, 255, 0.2);
+                      box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
+                  }
+                  .dark .glass-panel {
+                      background: rgba(17, 24, 39, 0.3);
+                      border: 1px solid rgba(255, 255, 255, 0.05);
+                      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
+                  }
+                  /* Safe area padding classes */
+                  .pt-safe { padding-top: var(--sat); }
+                  .pb-safe { padding-bottom: var(--sab); }
+                  .pl-safe { padding-left: var(--sal); }
+                  .pr-safe { padding-right: var(--sar); }
+                  .pb-safe-nav { padding-bottom: calc(var(--sab) + 4rem); } /* For bottom tab bar spacing */
+              `}</style>
+            <header className="glass-panel sticky top-4 z-50 mx-4 sm:mx-8 rounded-2xl mt-4 transition-all duration-300 pt-safe">
                 <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="flex justify-between items-center py-3">
                         <div className="flex items-center gap-4">
+                            {/* Back Button (Mobile Only, not on Home) */}
+                            {location.pathname !== "/" && location.pathname !== "/Home" && (
+                                <Button 
+                                    variant="ghost" 
+                                    size="icon" 
+                                    onClick={() => navigate(-1)}
+                                    className="md:hidden -ml-2 text-slate-700 dark:text-slate-200"
+                                >
+                                    <ArrowLeft className="h-5 w-5" />
+                                </Button>
+                            )}
+                            
                             <Link to={createPageUrl("Home")} className="flex items-center gap-2 font-bold text-lg text-slate-900 dark:text-slate-100">
                                 {/* You can add a logo here in the future */}
                                 ST-RADS Calc
@@ -171,10 +229,46 @@ export default function Layout({ children, currentPageName }) {
                     </div>
                 </div>
             </header>
-            <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 page-content">
-                {children}
+            <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pb-safe-nav md:pb-8">
+                <AnimatePresence mode="wait">
+                    <motion.div
+                        key={location.pathname}
+                        initial={{ x: 20, opacity: 0 }}
+                        animate={{ x: 0, opacity: 1 }}
+                        exit={{ x: -20, opacity: 0 }}
+                        transition={{ duration: 0.2, ease: "easeOut" }}
+                        className="w-full"
+                    >
+                        {children}
+                    </motion.div>
+                </AnimatePresence>
             </main>
-             <footer className="mt-20 border-t border-slate-200 dark:border-slate-800 bg-white/50 dark:bg-gray-950/50 backdrop-blur-sm">
+
+             {/* Mobile Bottom Tab Bar */}
+             <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white/80 dark:bg-gray-950/80 backdrop-blur-lg border-t border-slate-200 dark:border-slate-800 pb-safe z-50">
+                 <div className="flex justify-around items-center p-2">
+                     <Link to={createPageUrl("Home")} className="flex flex-col items-center p-2 text-xs font-medium text-slate-500 dark:text-slate-400 aria-[current=page]:text-blue-600 dark:aria-[current=page]:text-blue-400" aria-current={currentPageName === 'Home' ? 'page' : undefined}>
+                         <Home className="w-6 h-6 mb-1" />
+                         Home
+                     </Link>
+                     <Link to={createPageUrl("Calculator")} className="flex flex-col items-center p-2 text-xs font-medium text-slate-500 dark:text-slate-400 aria-[current=page]:text-blue-600 dark:aria-[current=page]:text-blue-400" aria-current={currentPageName === 'Calculator' ? 'page' : undefined}>
+                         <Calculator className="w-6 h-6 mb-1" />
+                         Calc
+                     </Link>
+                     {user?.subscription_tier === 'premium' && (
+                         <Link to={createPageUrl("CaseReview")} className="flex flex-col items-center p-2 text-xs font-medium text-slate-500 dark:text-slate-400 aria-[current=page]:text-blue-600 dark:aria-[current=page]:text-blue-400" aria-current={currentPageName === 'CaseReview' ? 'page' : undefined}>
+                             <FileText className="w-6 h-6 mb-1" />
+                             Review
+                         </Link>
+                     )}
+                     <Link to={createPageUrl("Account")} className="flex flex-col items-center p-2 text-xs font-medium text-slate-500 dark:text-slate-400 aria-[current=page]:text-blue-600 dark:aria-[current=page]:text-blue-400" aria-current={currentPageName === 'Account' ? 'page' : undefined}>
+                         <UserIcon className="w-6 h-6 mb-1" />
+                         Account
+                     </Link>
+                 </div>
+             </div>
+
+             <footer className="mt-20 border-t border-slate-200 dark:border-slate-800 bg-white/50 dark:bg-gray-950/50 backdrop-blur-sm pb-24 md:pb-0">
                  <div className="max-w-6xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
                      <div className="grid md:grid-cols-4 gap-8 mb-8">
                          <div className="col-span-2">
