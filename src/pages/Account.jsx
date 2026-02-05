@@ -17,6 +17,19 @@ import {
 import { cancelSubscription } from "@/functions/cancelSubscription";
 import { Input } from "@/components/ui/input";
 import { Link } from 'react-router-dom'; // Added Link import
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import { Trash2 } from "lucide-react";
+import { base44 } from "@/api/base44Client";
 
 export default function AccountPage() {
     const [user, setUser] = useState(null);
@@ -87,6 +100,21 @@ export default function AccountPage() {
             alert("An error occurred while cancelling your subscription.");
         } finally {
             setIsCancelling(false);
+        }
+    };
+
+    const handleDeleteAccount = async () => {
+        try {
+            const { data } = await base44.functions.invoke("deleteAccount", {});
+            if (data.success) {
+                await User.logout();
+                window.location.href = "/";
+            } else {
+                 alert("Failed to delete account. Please try again.");
+            }
+        } catch (err) {
+            console.error("Failed to delete account", err);
+            alert("An error occurred while deleting your account.");
         }
     };
 
@@ -322,6 +350,50 @@ export default function AccountPage() {
                     </CardContent>
                 </Card>
             )}
+
+            {/* Delete Account Section */}
+            <Card className="border-red-200 dark:border-red-900 bg-red-50 dark:bg-red-950/20">
+                <CardHeader>
+                    <CardTitle className="text-red-600 dark:text-red-400 flex items-center gap-2">
+                        <Trash2 className="w-5 h-5" />
+                        Danger Zone
+                    </CardTitle>
+                    <CardDescription className="text-red-700/70 dark:text-red-300/70">Irreversible actions for your account</CardDescription>
+                </CardHeader>
+                <CardContent>
+                    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                        <div>
+                            <p className="font-medium text-red-900 dark:text-red-100">Delete Account</p>
+                            <p className="text-sm text-red-700 dark:text-red-300 mt-1">
+                                Permanently delete your account and all associated data.
+                            </p>
+                        </div>
+                        <AlertDialog>
+                            <AlertDialogTrigger asChild>
+                                <Button variant="destructive" className="w-full sm:w-auto gap-2 bg-red-600 hover:bg-red-700">
+                                    <Trash2 className="w-4 h-4" />
+                                    Delete Account
+                                </Button>
+                            </AlertDialogTrigger>
+                            <AlertDialogContent>
+                                <AlertDialogHeader>
+                                    <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                                    <AlertDialogDescription>
+                                        This action cannot be undone. This will permanently delete your account,
+                                        subscription, and remove all your data from our servers.
+                                    </AlertDialogDescription>
+                                </AlertDialogHeader>
+                                <AlertDialogFooter>
+                                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                    <AlertDialogAction onClick={handleDeleteAccount} className="bg-red-600 hover:bg-red-700">
+                                        Delete Account
+                                    </AlertDialogAction>
+                                </AlertDialogFooter>
+                            </AlertDialogContent>
+                        </AlertDialog>
+                    </div>
+                </CardContent>
+            </Card>
         </div>
     );
 }
