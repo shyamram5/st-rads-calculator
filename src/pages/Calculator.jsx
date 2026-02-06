@@ -108,6 +108,34 @@ export default function CalculatorPage() {
     return r;
   }, [showResult, caseData]);
 
+  if (authLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="w-16 h-16 border-4 border-slate-200 dark:border-slate-700 border-t-blue-500 rounded-full animate-spin"></div>
+      </div>
+    );
+  }
+
+  if (!user) {
+    return (
+      <div className="min-h-[70vh] flex items-center justify-center p-4">
+        <Card className="shadow-2xl border-0 bg-white dark:bg-slate-900 max-w-md w-full text-center">
+          <CardContent className="p-8 space-y-6">
+            <Calculator className="w-16 h-16 text-blue-500 mx-auto" />
+            <h2 className="text-2xl font-bold text-slate-900 dark:text-slate-100">Sign Up to Use the Calculator</h2>
+            <p className="text-slate-600 dark:text-slate-400">Create a free account to access the ST-RADS Calculator and get your first 5 analyses free.</p>
+            <Button
+              onClick={() => User.login()}
+              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-full text-lg"
+            >
+              <LogIn className="mr-2 h-5 w-5" /> Sign Up / Log In
+            </Button>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
   if (showResult && result) {
     return (
       <div className="min-h-screen space-y-8">
