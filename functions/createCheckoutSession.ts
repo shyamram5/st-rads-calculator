@@ -26,7 +26,7 @@ Deno.serve(async (req) => {
             payment_method_types: ['card'],
             mode: 'subscription',
             line_items: [{
-                price: 'price_1RnAaSGCrIcHEpWiuXJImuLd', // Price ID for the $9.99/month plan
+                price: 'price_YEARLY_30', // Price ID for the $30/year plan — REPLACE with your actual Stripe Price ID
                 quantity: 1,
             }],
             // Use client_reference_id to link the session to your user
