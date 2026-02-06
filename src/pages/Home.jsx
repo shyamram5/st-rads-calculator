@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { User } from "@/components/User";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Sparkles, User as UserIcon, FileUp, ClipboardCheck, Activity, Shield } from "lucide-react";
+import { ArrowRight, Sparkles, ClipboardCheck, Activity, Shield, FileSearch, BookOpen, Stethoscope } from "lucide-react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { getStats } from "@/functions/getStats";
@@ -44,74 +44,73 @@ export default function LandingPage() {
                     ST-RADS
                 </h1>
                 <p className="text-xl md:text-2xl text-slate-600 dark:text-slate-300 font-light tracking-wide max-w-2xl mx-auto">
-                    AI-Powered Soft Tissue Lesion Analysis
+                    Evidence-Based MRI Risk Stratification for Soft-Tissue Tumors
+                </p>
+                <p className="text-sm text-slate-500 dark:text-slate-400 max-w-lg mx-auto">
+                    Interactive decision engine implementing the official ACR Soft Tissue-RADS v2025 framework
                 </p>
              </div>
 
             <div className="flex flex-col sm:flex-row items-center justify-center gap-5">
                 <Link to={createPageUrl("Calculator")}>
                     <Button size="lg" className="h-14 px-10 text-lg rounded-full bg-blue-600 hover:bg-blue-700 text-white shadow-lg hover:shadow-blue-500/20 transition-all duration-300 hover:scale-105">
-                        Start Analysis <ArrowRight className="ml-2 h-5 w-5" />
+                        Start Case <ArrowRight className="ml-2 h-5 w-5" />
                     </Button>
                 </Link>
-                {!user && (
+                <Link to={createPageUrl("About")}>
                     <Button
                         variant="ghost"
                         size="lg"
-                        onClick={() => User.login()}
-                        className="h-14 px-8 text-lg font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-100/50 dark:hover:bg-slate-800/50 rounded-full transition-all"
+                        className="h-14 px-8 text-lg font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-100/50 dark:hover:bg-slate-800/50 rounded-full transition-all gap-2"
                     >
-                        Sign Up Free
+                        <BookOpen className="h-5 w-5" /> Learn ST-RADS
                     </Button>
-                )}
+                </Link>
             </div>
 
             {/* Minimal Stats Pill */}
             <div className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full glass-panel text-sm font-medium text-slate-600 dark:text-slate-300 animate-in fade-in delay-500 duration-1000">
                 <Activity className="w-4 h-4 text-blue-500" />
                 <span>{totalAnalyses > 0 ? totalAnalyses.toLocaleString() : "..."}</span>
-                <span className="opacity-70">analyses performed</span>
+                <span className="opacity-70">cases analyzed</span>
             </div>
 
             {/* Privacy Disclaimer */}
             <div className="flex items-center justify-center gap-2 text-slate-500 dark:text-slate-400 text-sm animate-in fade-in delay-700 duration-1000">
                 <Shield className="w-4 h-4" />
-                <span>Your privacy is priority. No PHI or images are permanently stored.</span>
+                <span>No patient data stored. Fully deterministic, rule-based classification.</span>
             </div>
         </div>
 
-        {/* Minimal 3-Step Process */}
+        {/* 3-Step Process */}
         <div className="grid md:grid-cols-3 gap-8 md:gap-16 max-w-5xl mx-auto w-full px-6">
-            {/* Step 1 */}
             <div className="flex flex-col items-center text-center space-y-4 group">
                 <div className="w-14 h-14 flex items-center justify-center rounded-2xl glass-panel group-hover:bg-white/50 dark:group-hover:bg-indigo-900/30 transition-colors duration-300 text-indigo-600 dark:text-indigo-400 shadow-sm">
-                    <FileUp className="w-7 h-7" />
+                    <FileSearch className="w-7 h-7" />
                 </div>
                 <div>
-                    <h3 className="font-semibold text-lg text-slate-900 dark:text-slate-100 mb-1">Upload MRI</h3>
-                    <p className="text-sm text-slate-500 dark:text-slate-400 font-light">T1, T2, and Contrast slices</p>
+                    <h3 className="font-semibold text-lg text-slate-900 dark:text-slate-100 mb-1">Answer Questions</h3>
+                    <p className="text-sm text-slate-500 dark:text-slate-400 font-light">Step-by-step wizard following official flowcharts</p>
                 </div>
             </div>
 
-            {/* Step 2 */}
             <div className="flex flex-col items-center text-center space-y-4 group">
                 <div className="w-14 h-14 flex items-center justify-center rounded-2xl glass-panel group-hover:bg-white/50 dark:group-hover:bg-blue-900/30 transition-colors duration-300 text-blue-600 dark:text-blue-400 shadow-sm">
+                    <Stethoscope className="w-7 h-7" />
+                </div>
+                <div>
+                    <h3 className="font-semibold text-lg text-slate-900 dark:text-slate-100 mb-1">Get Classification</h3>
+                    <p className="text-sm text-slate-500 dark:text-slate-400 font-light">ST-RADS 0–6 with risk level & differentials</p>
+                </div>
+            </div>
+
+            <div className="flex flex-col items-center text-center space-y-4 group">
+                <div className="w-14 h-14 flex items-center justify-center rounded-2xl glass-panel group-hover:bg-white/50 dark:group-hover:bg-green-900/30 transition-colors duration-300 text-green-600 dark:text-green-400 shadow-sm">
                     <ClipboardCheck className="w-7 h-7" />
                 </div>
                 <div>
-                    <h3 className="font-semibold text-lg text-slate-900 dark:text-slate-100 mb-1">Select Features</h3>
-                    <p className="text-sm text-slate-500 dark:text-slate-400 font-light">Interactive diagnostic flowchart</p>
-                </div>
-            </div>
-
-            {/* Step 3 */}
-            <div className="flex flex-col items-center text-center space-y-4 group">
-                 <div className="w-14 h-14 flex items-center justify-center rounded-2xl glass-panel group-hover:bg-white/50 dark:group-hover:bg-green-900/30 transition-colors duration-300 text-green-600 dark:text-green-400 shadow-sm">
-                    <Sparkles className="w-7 h-7" />
-                </div>
-                <div>
-                    <h3 className="font-semibold text-lg text-slate-900 dark:text-slate-100 mb-1">Get Analysis</h3>
-                    <p className="text-sm text-slate-500 dark:text-slate-400 font-light">Instant classification & report</p>
+                    <h3 className="font-semibold text-lg text-slate-900 dark:text-slate-100 mb-1">Copy Report</h3>
+                    <p className="text-sm text-slate-500 dark:text-slate-400 font-light">Structured report with one-click copy</p>
                 </div>
             </div>
         </div>
