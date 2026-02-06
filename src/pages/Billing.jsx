@@ -138,7 +138,7 @@ export default function BillingPage() {
                             </div>
                             {isPremium ? (
                                 <div className="space-y-1">
-                                    <p className="text-2xl font-bold text-slate-900 dark:text-slate-100">$30.00 <span className="text-base font-normal text-slate-500">/year</span></p>
+                                    <p className="text-2xl font-bold text-slate-900 dark:text-slate-100">$9.99 <span className="text-base font-normal text-slate-500">/month</span></p>
                                     <div className="flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400">
                                         <Calendar className="w-4 h-4" />
                                         Subscribed since {subscriptionDate}
@@ -146,7 +146,7 @@ export default function BillingPage() {
                                 </div>
                             ) : (
                                 <div className="space-y-1">
-                                    <p className="text-2xl font-bold text-slate-900 dark:text-slate-100">$0 <span className="text-base font-normal text-slate-500">/year</span></p>
+                                    <p className="text-2xl font-bold text-slate-900 dark:text-slate-100">$0 <span className="text-base font-normal text-slate-500">/month</span></p>
                                     <p className="text-sm text-slate-500 dark:text-slate-400">{analysesUsed} of 5 free analyses used</p>
                                 </div>
                             )}
@@ -161,7 +161,7 @@ export default function BillingPage() {
                                 {isRedirecting ? (
                                     <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Redirecting...</>
                                 ) : (
-                                    <><Crown className="mr-2 h-4 w-4" /> Upgrade to Premium — $30/yr</>
+                                    <><Crown className="mr-2 h-4 w-4" /> Upgrade to Premium — $9.99/mo</>
                                 )}
                             </Button>
                         )}

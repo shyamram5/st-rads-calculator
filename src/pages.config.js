@@ -49,6 +49,7 @@
  */
 import About from './pages/About';
 import Account from './pages/Account';
+import Billing from './pages/Billing';
 import Calculator from './pages/Calculator';
 import CaseReview from './pages/CaseReview';
 import Home from './pages/Home';
@@ -56,13 +57,13 @@ import PaymentCancel from './pages/PaymentCancel';
 import PaymentSuccess from './pages/PaymentSuccess';
 import Premium from './pages/Premium';
 import Support from './pages/Support';
-import Billing from './pages/Billing';
 import __Layout from './Layout.jsx';
 
 
 export const PAGES = {
     "About": About,
     "Account": Account,
+    "Billing": Billing,
     "Calculator": Calculator,
     "CaseReview": CaseReview,
     "Home": Home,
@@ -70,7 +71,6 @@ export const PAGES = {
     "PaymentSuccess": PaymentSuccess,
     "Premium": Premium,
     "Support": Support,
-    "Billing": Billing,
 }
 
 export const pagesConfig = {

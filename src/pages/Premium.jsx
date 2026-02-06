@@ -197,9 +197,8 @@ export default function PremiumPage() {
                             <CardTitle className="text-2xl text-slate-900 dark:text-slate-100">Premium</CardTitle>
                         </div>
                         <div className="text-3xl font-bold text-slate-900 dark:text-slate-100">
-                            $30<span className="text-lg font-normal text-slate-600 dark:text-slate-400">/year</span>
+                            $9.99<span className="text-lg font-normal text-slate-600 dark:text-slate-400">/month</span>
                         </div>
-                        <p className="text-sm text-green-600 dark:text-green-400 font-medium">Just $2.50/month</p>
                     </CardHeader>
                     <CardContent className="p-6 space-y-6">
                         <ul className="space-y-3">

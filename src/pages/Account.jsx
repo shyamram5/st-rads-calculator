@@ -270,7 +270,7 @@ export default function AccountPage() {
                         <div className="space-y-6">
                             <div className="bg-amber-50 dark:bg-amber-900/20 p-4 rounded-lg border border-amber-200 dark:border-amber-800">
                                 <h3 className="font-semibold text-amber-800 dark:text-amber-200 mb-2">Current Plan: Premium</h3>
-                                      <p className="text-amber-700 dark:text-amber-300">$30/year • Unlimited ST-RADS analyses</p>
+                                      <p className="text-amber-700 dark:text-amber-300">$9.99/month • Unlimited ST-RADS analyses</p>
                             </div>
 
                             <div className="space-y-4">
