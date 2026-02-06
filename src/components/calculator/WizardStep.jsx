@@ -36,7 +36,7 @@ export default function WizardStep({ title, description, questions, values, onCh
                 <RadioGroup value={values[q.id] || ""} onValueChange={(v) => onChange(q.id, v)}>
                   <div className="space-y-2">
                     {q.options.map((opt) => (
-                      <div key={opt.value} className="flex items-center space-x-3 p-2.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700/50 transition-colors cursor-pointer">
+                      <div key={opt.value} className="flex items-center space-x-3 p-3 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700/50 transition-colors cursor-pointer min-h-[48px]">
                         <RadioGroupItem value={opt.value} id={`${q.id}-${opt.value}`} />
                         <Label htmlFor={`${q.id}-${opt.value}`} className="cursor-pointer text-sm flex-1 text-slate-700 dark:text-slate-300">{opt.label}</Label>
                       </div>
@@ -48,7 +48,7 @@ export default function WizardStep({ title, description, questions, values, onCh
               {q.type === "checkbox" && (
                 <div className="space-y-2">
                   {q.options.map((opt) => (
-                    <div key={opt.value} className="flex items-center space-x-3 p-2.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700/50 transition-colors">
+                    <div key={opt.value} className="flex items-center space-x-3 p-3 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700/50 transition-colors min-h-[48px]">
                       <Checkbox
                         id={`${q.id}-${opt.value}`}
                         checked={(values[q.id] || []).includes(opt.value)}
@@ -74,7 +74,7 @@ export default function WizardStep({ title, description, questions, values, onCh
                     placeholder={q.placeholder || "Enter value"}
                     value={values[q.id] || ""}
                     onChange={(e) => onChange(q.id, e.target.value)}
-                    className="max-w-xs bg-white dark:bg-slate-900"
+                    className="max-w-xs bg-white dark:bg-slate-900 min-h-[44px]"
                   />
                   {q.unit && <span className="text-sm text-slate-500">{q.unit}</span>}
                 </div>

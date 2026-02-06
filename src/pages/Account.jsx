@@ -201,26 +201,25 @@ export default function AccountPage() {
                                     {!isEditingName ? (
                                         <div className="flex items-center justify-between">
                                             <p className="font-semibold text-slate-900 dark:text-slate-100">{user.full_name}</p>
-                                            <Button variant="ghost" size="sm" onClick={() => setIsEditingName(true)}>
-                                                Edit
-                                            </Button>
+                                            <Button variant="ghost" size="sm" onClick={() => setIsEditingName(true)} className="min-h-[44px]">
+                                                  Edit
+                                              </Button>
                                         </div>
                                     ) : (
                                         <div className="flex items-center gap-2 mt-1">
                                             <Input
                                                 value={newName}
                                                 onChange={(e) => setNewName(e.target.value)}
-                                                className="h-9"
-                                                disabled={isSavingName}
+                                                className="min-h-[44px]"
                                             />
-                                            <Button size="sm" onClick={handleSaveName} disabled={isSavingName}>
-                                                {isSavingName ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Save'}
+                                            <Button size="sm" onClick={handleSaveName} className="min-h-[44px]">
+                                                Save
                                             </Button>
                                             <Button 
                                                 size="sm" 
                                                 variant="outline" 
                                                 onClick={() => { setIsEditingName(false); setNewName(user.full_name); }} 
-                                                disabled={isSavingName}
+                                                className="min-h-[44px]"
                                             >
                                                 Cancel
                                             </Button>
