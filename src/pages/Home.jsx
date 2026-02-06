@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { User } from "@/components/User";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Sparkles, ClipboardCheck, Activity, Shield, FileSearch, BookOpen, Stethoscope } from "lucide-react";
+import { ArrowRight, Sparkles, ClipboardCheck, Activity, Shield, FileSearch, BookOpen, Stethoscope, Heart, Crown } from "lucide-react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { getStats } from "@/functions/getStats";
@@ -112,6 +112,24 @@ export default function LandingPage() {
                     <h3 className="font-semibold text-lg text-slate-900 dark:text-slate-100 mb-1">Copy Report</h3>
                     <p className="text-sm text-slate-500 dark:text-slate-400 font-light">Structured report with one-click copy</p>
                 </div>
+            </div>
+        </div>
+
+        {/* Support Blurb */}
+        <div className="max-w-2xl mx-auto w-full px-6">
+            <div className="glass-panel rounded-2xl p-8 text-center space-y-5">
+                <Heart className="w-8 h-8 text-rose-500 mx-auto" />
+                <h3 className="text-xl font-bold text-slate-900 dark:text-slate-100">Built by a Student, for the Community</h3>
+                <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+                    This project was bootstrapped entirely on student loans — from development and hosting to design. 
+                    Every Premium subscription directly supports keeping this tool free for learners and helps fund future features. 
+                    If ST-RADS Calc has helped you, consider upgrading to Premium to keep it going.
+                </p>
+                <Link to={createPageUrl("Premium")}>
+                    <Button className="rounded-full bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-semibold px-6 py-3 shadow-lg hover:shadow-xl transition-all mt-2">
+                        <Crown className="mr-2 h-4 w-4" /> Support & Go Premium — $9.99/mo
+                    </Button>
+                </Link>
             </div>
         </div>
     </div>
