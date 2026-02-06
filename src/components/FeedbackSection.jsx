@@ -3,8 +3,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Star, MessageSquare, ThumbsUp } from "lucide-react";
-import { AnalysisFeedback } from "@/entities/AnalysisFeedback";
-import { User } from "@/entities/User";
+import { base44 } from "@/api/base44Client";
+import { User } from "@/components/User";
 
 export default function FeedbackSection({ analysisId }) {
     const [rating, setRating] = useState(0);
@@ -12,24 +12,28 @@ export default function FeedbackSection({ analysisId }) {
     const [comment, setComment] = useState("");
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isSubmitted, setIsSubmitted] = useState(false);
+    const [submitError, setSubmitError] = useState(false);
 
     const handleSubmitFeedback = async () => {
         if (rating === 0) return;
         
-        setIsSubmitting(true);
+        // Optimistic: show success immediately
+        setIsSubmitted(true);
+        setSubmitError(false);
+        
         try {
             const user = await User.me();
-            await AnalysisFeedback.create({
+            await base44.entities.AnalysisFeedback.create({
                 analysis_id: analysisId,
                 rating: rating,
                 feedback_comment: comment,
                 user_email: user.email
             });
-            setIsSubmitted(true);
         } catch (error) {
             console.error("Failed to submit feedback:", error);
-        } finally {
-            setIsSubmitting(false);
+            // Revert optimistic update
+            setIsSubmitted(false);
+            setSubmitError(true);
         }
     };
 
@@ -97,10 +101,13 @@ export default function FeedbackSection({ analysisId }) {
                     />
                 </div>
 
+                {submitError && (
+                    <p className="text-sm text-red-500 text-center">Failed to submit. Please try again.</p>
+                )}
                 <Button
                     onClick={handleSubmitFeedback}
                     disabled={rating === 0 || isSubmitting}
-                    className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3"
+                    className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 min-h-[44px]"
                 >
                     {isSubmitting ? "Submitting..." : "Submit Feedback"}
                 </Button>
