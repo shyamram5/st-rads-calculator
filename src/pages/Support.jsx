@@ -22,10 +22,10 @@ export default function SupportPage() {
             <div>
               <p className="text-sm text-slate-500 dark:text-slate-400 mb-1">Email us at</p>
               <a
-                href="mailto:support@strads.app"
+                href="mailto:shyam1997ram@gmail.com"
                 className="text-blue-600 dark:text-blue-400 font-semibold hover:underline text-lg"
               >
-                support@strads.app
+                shyam1997ram@gmail.com
               </a>
             </div>
           </div>
