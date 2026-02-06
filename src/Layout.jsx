@@ -13,11 +13,19 @@ import {
   DropdownMenuSeparator
 } from "@/components/ui/dropdown-menu";
 
+const TAB_ROOTS = {
+  Home: "Home",
+  Calculator: "Calculator",
+  CaseReview: "CaseReview",
+  Account: "Account",
+};
+
 export default function Layout({ children, currentPageName }) {
   const [user, setUser] = useState(null);
   const [theme, setTheme] = useState("system");
   const location = useLocation();
   const navigate = useNavigate();
+  const prevTabRef = React.useRef(currentPageName);
 
   // Listen for system theme changes
   useEffect(() => {
@@ -100,9 +108,18 @@ export default function Layout({ children, currentPageName }) {
                       overscroll-behavior-y: none; /* Disable pull-to-refresh/bounce */
                   }
                   button, a, .interactive {
-                      user-select: none;
-                      -webkit-user-select: none;
-                      -webkit-touch-callout: none;
+                     user-select: none;
+                     -webkit-user-select: none;
+                     -webkit-touch-callout: none;
+                  }
+                  /* Mobile touch targets - min 44px */
+                  @media (max-width: 767px) {
+                     button, [role="button"], input, select, textarea, [type="radio"], [type="checkbox"] {
+                         min-height: 44px;
+                     }
+                     input[type="number"], input[type="text"], input[type="email"], input[type="search"], textarea {
+                         font-size: 16px; /* Prevent iOS zoom */
+                     }
                   }
                   .page-content {
                       /* Removed legacy animation for Framer Motion */
@@ -247,24 +264,37 @@ export default function Layout({ children, currentPageName }) {
              {/* Mobile Bottom Tab Bar */}
              <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white/80 dark:bg-gray-950/80 backdrop-blur-lg border-t border-slate-200 dark:border-slate-800 pb-safe z-50">
                  <div className="flex justify-around items-center p-2">
-                     <Link to={createPageUrl("Home")} className="flex flex-col items-center p-2 text-xs font-medium text-slate-500 dark:text-slate-400 aria-[current=page]:text-blue-600 dark:aria-[current=page]:text-blue-400" aria-current={currentPageName === 'Home' ? 'page' : undefined}>
-                         <Home className="w-6 h-6 mb-1" />
-                         Home
-                     </Link>
-                     <Link to={createPageUrl("Calculator")} className="flex flex-col items-center p-2 text-xs font-medium text-slate-500 dark:text-slate-400 aria-[current=page]:text-blue-600 dark:aria-[current=page]:text-blue-400" aria-current={currentPageName === 'Calculator' ? 'page' : undefined}>
-                         <Calculator className="w-6 h-6 mb-1" />
-                         Calc
-                     </Link>
-                     {user?.subscription_tier === 'premium' && (
-                         <Link to={createPageUrl("CaseReview")} className="flex flex-col items-center p-2 text-xs font-medium text-slate-500 dark:text-slate-400 aria-[current=page]:text-blue-600 dark:aria-[current=page]:text-blue-400" aria-current={currentPageName === 'CaseReview' ? 'page' : undefined}>
-                             <FileText className="w-6 h-6 mb-1" />
-                             Review
-                         </Link>
-                     )}
-                     <Link to={createPageUrl("Account")} className="flex flex-col items-center p-2 text-xs font-medium text-slate-500 dark:text-slate-400 aria-[current=page]:text-blue-600 dark:aria-[current=page]:text-blue-400" aria-current={currentPageName === 'Account' ? 'page' : undefined}>
-                         <UserIcon className="w-6 h-6 mb-1" />
-                         Account
-                     </Link>
+                     {[
+                       { name: "Home", icon: Home, label: "Home" },
+                       { name: "Calculator", icon: Calculator, label: "Calc" },
+                       ...(user?.subscription_tier === 'premium' ? [{ name: "CaseReview", icon: FileText, label: "Review" }] : []),
+                       { name: "Account", icon: UserIcon, label: "Account" },
+                     ].map(tab => {
+                       const isActive = currentPageName === tab.name;
+                       const TabIcon = tab.icon;
+                       return (
+                         <button
+                           key={tab.name}
+                           onClick={() => {
+                             if (isActive) {
+                               // Re-tap active tab: scroll to top & navigate to root
+                               window.scrollTo({ top: 0, behavior: "smooth" });
+                               navigate(createPageUrl(tab.name), { replace: true });
+                             } else {
+                               navigate(createPageUrl(tab.name));
+                             }
+                           }}
+                           className={`flex flex-col items-center p-2 min-h-[44px] text-xs font-medium transition-colors ${
+                             isActive
+                               ? "text-blue-600 dark:text-blue-400"
+                               : "text-slate-500 dark:text-slate-400"
+                           }`}
+                         >
+                           <TabIcon className="w-6 h-6 mb-1" />
+                           {tab.label}
+                         </button>
+                       );
+                     })}
                  </div>
              </div>
 

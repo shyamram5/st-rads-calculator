@@ -60,24 +60,23 @@ export default function AccountPage() {
     const handleSaveName = async () => {
         if (!newName.trim() || newName.trim() === user.full_name) {
             setIsEditingName(false);
-            setNewName(user.full_name); // Revert newName to current user's name if not changed or empty
+            setNewName(user.full_name);
             return;
         }
 
-        setIsSavingName(true);
+        // Optimistic update: show the new name immediately
+        const previousName = user.full_name;
+        setUser(prev => ({ ...prev, full_name: newName.trim() }));
+        setIsEditingName(false);
+        
         try {
             await User.updateMyUserData({ full_name: newName.trim() });
-            const updatedUser = await User.me();
-            setUser(updatedUser);
-            setIsEditingName(false);
-            // Optional: force reload to update layout header instantly
-            // window.location.reload(); 
         } catch (error) {
             console.error("Failed to update name:", error);
-            // Optionally show an error message to the user
+            // Revert optimistic update
+            setUser(prev => ({ ...prev, full_name: previousName }));
+            setNewName(previousName);
             alert("Failed to update name. Please try again.");
-        } finally {
-            setIsSavingName(false);
         }
     };
 
