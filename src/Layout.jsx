@@ -315,6 +315,7 @@ export default function Layout({ children, currentPageName }) {
                                  <li><Link to={createPageUrl("About")} className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">About</Link></li>
                                  <li><Link to={createPageUrl("Calculator")} className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Calculator</Link></li>
                                  <li><Link to={createPageUrl("Premium")} className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Premium</Link></li>
+                                 <li><Link to={createPageUrl("Support")} className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Support</Link></li>
                              </ul>
                          </div>
                          <div>
