@@ -167,7 +167,7 @@ export default function Layout({ children, currentPageName }) {
                             
                             <Link to={createPageUrl("Home")} className="flex items-center gap-2 font-bold text-lg text-slate-900 dark:text-slate-100">
                                 {/* You can add a logo here in the future */}
-                                ST-RADS Calc
+                                RADS Calc
                             </Link>
                         </div>
                         
