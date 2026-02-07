@@ -49,22 +49,51 @@ export default function CalculatorPage() {
     setShowResult(false);
   }, []);
 
+  const ALL_DETAIL_KEYS = [
+    "knownTumorStatus", "lesionPresent", "tissueType",
+    "lipFatContent", "lipSeptations", "lipEnhancement", "lipVessels", "lipNonFatFeatures",
+    "cystCommunication", "cystLocation", "cystFlowVoids", "cystSeptations", "cystHematoma",
+    "solidCompartment",
+    "vascularT2", "vascularPhleboliths", "vascularFluidLevels", "vascHemosiderin", "vascBloomingGRE", "vascEnhancement",
+    "iaHemosiderin", "iaBloomingGRE",
+    "nerveTargetSign", "nerveADC",
+    "cutGrowthPattern", "cutEnhancement",
+    "deepMuscleSignature", "deepHistory", "deepEdema", "deepMineralization",
+    "fascialNoduleSize", "fascialMultifocal",
+    "subungualSize", "subungualSignal",
+    "tendonSize", "tendonAutoimmune", "tendonHemosiderin", "tendonBloomingGRE",
+    "adcValue", "ancillaryFeatures"
+  ];
+
   const getDependentKeys = (changedKey) => {
     const deps = {
-      examAdequacy: ["knownTumor", "knownTumorStatus", "lesionPresent", "tissueType", "lipFatContent", "lipSeptations", "lipEnhancement", "lipVessels", "lipNonFatFeatures", "cystCommunication", "cystLocation", "cystFlowVoids", "cystSeptations", "cystHematoma", "solidCompartment", "vascularT2", "vascularPhleboliths", "vascularFluidLevels", "iaHemosiderin", "iaBloomingGRE", "nerveTargetSign", "nerveADC", "cutGrowthPattern", "cutEnhancement", "deepMuscleSignature", "deepHistory", "deepEdema", "deepMineralization", "fascialNoduleSize", "fascialMultifocal", "subungualSize", "tendonSize", "tendonAutoimmune", "adcValue", "ancillaryFeatures"],
-      knownTumor: ["knownTumorStatus", "lesionPresent", "tissueType", "lipFatContent", "lipSeptations", "lipEnhancement", "lipVessels", "lipNonFatFeatures", "cystCommunication", "cystLocation", "cystFlowVoids", "cystSeptations", "cystHematoma", "solidCompartment", "adcValue", "ancillaryFeatures"],
-      lesionPresent: ["tissueType", "lipFatContent", "lipSeptations", "lipEnhancement", "lipVessels", "lipNonFatFeatures", "cystCommunication", "cystLocation", "cystFlowVoids", "cystSeptations", "cystHematoma", "solidCompartment", "adcValue", "ancillaryFeatures"],
-      tissueType: ["lipFatContent", "lipSeptations", "lipEnhancement", "lipVessels", "lipNonFatFeatures", "cystCommunication", "cystLocation", "cystFlowVoids", "cystSeptations", "cystHematoma", "solidCompartment", "vascularT2", "vascularPhleboliths", "vascularFluidLevels", "iaHemosiderin", "iaBloomingGRE", "nerveTargetSign", "nerveADC", "cutGrowthPattern", "cutEnhancement", "deepMuscleSignature", "deepHistory", "deepEdema", "deepMineralization", "fascialNoduleSize", "fascialMultifocal", "subungualSize", "tendonSize", "tendonAutoimmune", "adcValue", "ancillaryFeatures"],
+      examAdequacy: ["knownTumor", ...ALL_DETAIL_KEYS],
+      knownTumor: ALL_DETAIL_KEYS,
+      lesionPresent: ALL_DETAIL_KEYS.filter(k => k !== "knownTumorStatus" && k !== "lesionPresent"),
+      tissueType: ALL_DETAIL_KEYS.filter(k => !["knownTumorStatus", "lesionPresent", "tissueType"].includes(k)),
       lipFatContent: ["lipSeptations", "lipEnhancement", "lipVessels", "lipNonFatFeatures"],
-      lipSeptations: ["lipVessels"],
+      lipSeptations: ["lipEnhancement", "lipVessels"],
+      lipEnhancement: ["lipVessels"],
       cystCommunication: ["cystLocation", "cystFlowVoids", "cystSeptations", "cystHematoma"],
       cystLocation: ["cystFlowVoids", "cystSeptations", "cystHematoma"],
       cystFlowVoids: ["cystSeptations", "cystHematoma"],
       cystHematoma: ["cystSeptations"],
-      solidCompartment: ["vascularT2", "vascularPhleboliths", "vascularFluidLevels", "iaHemosiderin", "iaBloomingGRE", "nerveTargetSign", "nerveADC", "cutGrowthPattern", "cutEnhancement", "deepMuscleSignature", "deepHistory", "deepEdema", "deepMineralization", "fascialNoduleSize", "fascialMultifocal", "subungualSize", "tendonSize", "tendonAutoimmune"],
-      vascularT2: ["vascularPhleboliths", "vascularFluidLevels"],
+      solidCompartment: [
+        "vascularT2", "vascularPhleboliths", "vascularFluidLevels", "vascHemosiderin", "vascBloomingGRE", "vascEnhancement",
+        "iaHemosiderin", "iaBloomingGRE",
+        "nerveTargetSign", "nerveADC",
+        "cutGrowthPattern", "cutEnhancement",
+        "deepMuscleSignature", "deepHistory", "deepEdema", "deepMineralization",
+        "fascialNoduleSize", "fascialMultifocal",
+        "subungualSize", "subungualSignal",
+        "tendonSize", "tendonAutoimmune", "tendonHemosiderin", "tendonBloomingGRE"
+      ],
+      vascularT2: ["vascularPhleboliths", "vascularFluidLevels", "vascHemosiderin", "vascBloomingGRE", "vascEnhancement"],
       deepMuscleSignature: ["deepHistory", "deepEdema", "deepMineralization"],
       cutGrowthPattern: ["cutEnhancement"],
+      nerveTargetSign: ["nerveADC"],
+      tendonSize: ["tendonAutoimmune", "tendonHemosiderin", "tendonBloomingGRE"],
+      tendonHemosiderin: ["tendonBloomingGRE"],
     };
     return deps[changedKey] || [];
   };
