@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { User } from "@/components/User";
 import { Button } from "@/components/ui/button";
-import { Sun, Moon, LogOut, ChevronDown, Crown, User as UserIcon, AlertTriangle, Info, Home, Calculator, FileText, ArrowLeft } from "lucide-react";
+import { Sun, Moon, LogOut, ChevronDown, Crown, User as UserIcon, AlertTriangle, Info, Home, Calculator, ArrowLeft } from "lucide-react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { AnimatePresence, motion } from "framer-motion";
@@ -182,11 +182,6 @@ export default function Layout({ children, currentPageName }) {
                             <Link to={createPageUrl("CaseExamples")}>
                                 <Button variant={currentPageName === 'CaseExamples' ? 'secondary' : 'ghost'} className="font-semibold">Cases</Button>
                             </Link>
-                            {user && user.subscription_tier === 'premium' && (
-                                <Link to={createPageUrl("CaseReview")}>
-                                    <Button variant={currentPageName === 'CaseReview' ? 'secondary' : 'ghost'} className="font-semibold">AI Review</Button>
-                                </Link>
-                            )}
                              <Link to={createPageUrl("About")}>
                                 <Button variant={currentPageName === 'About' ? 'secondary' : 'ghost'} className="font-semibold">About</Button>
                              </Link>
