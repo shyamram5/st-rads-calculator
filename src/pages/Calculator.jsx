@@ -168,6 +168,9 @@ export default function CalculatorPage() {
           <h1 className="text-3xl font-bold text-slate-900 dark:text-slate-100 mb-2">ST-RADS Classification Result</h1>
           <p className="text-slate-600 dark:text-slate-400">Deterministic classification based on the official ST-RADS v2025 flowcharts</p>
         </div>
+        <div className="max-w-md mx-auto">
+          <UsageTracker user={user} analysesUsed={user?.analyses_used || 0} />
+        </div>
         <ResultPanel result={result} caseData={caseData} onReset={handleReset} />
 
         {/* Education Panel on Results Page */}
@@ -194,12 +197,40 @@ export default function CalculatorPage() {
     );
   }
 
+  if (isLimitReached) {
+    return (
+      <div className="min-h-[70vh] flex items-center justify-center p-4">
+        <Card className="shadow-2xl border-0 bg-white dark:bg-slate-900 max-w-md w-full text-center">
+          <CardContent className="p-8 space-y-6">
+            <Lock className="w-16 h-16 text-amber-500 mx-auto" />
+            <h2 className="text-2xl font-bold text-slate-900 dark:text-slate-100">Free Trial Limit Reached</h2>
+            <p className="text-slate-600 dark:text-slate-400">
+              You've used all 5 free analyses. Upgrade to Premium for unlimited ST-RADS analyses.
+            </p>
+            <Link to={createPageUrl("Premium")}>
+              <Button className="w-full bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-bold py-3 rounded-full text-lg">
+                <Crown className="mr-2 h-5 w-5" /> Upgrade to Premium
+              </Button>
+            </Link>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen space-y-6">
       <div className="text-center">
         <h1 className="text-3xl font-bold text-slate-900 dark:text-slate-100 mb-1">ST-RADS Calculator</h1>
         <p className="text-slate-600 dark:text-slate-400 text-sm">Interactive decision engine based on the official ACR ST-RADS v2025 framework</p>
       </div>
+      
+      {/* Usage Tracker */}
+      {!isPremium && (
+        <div className="max-w-md mx-auto">
+          <UsageTracker user={user} analysesUsed={analysesUsed} />
+        </div>
+      )}
 
       {/* Progress Bar */}
       <div className="max-w-2xl mx-auto">
