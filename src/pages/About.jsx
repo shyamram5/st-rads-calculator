@@ -4,7 +4,7 @@ import { Badge } from '@/components/ui/badge';
 import { Mail, BookOpen, Lightbulb, Linkedin, Github } from 'lucide-react';
 
 export default function AboutPage() {
-  const imageUrl = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/687d2440273fea034ed3dfaf/a6944c361_IMG_2259.jpg";
+  const imageUrl = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/687d2440273fea034ed3dfaf/5a8647901_IMG_1641.jpg";
 
   const bio = "Shyam Ramachandran is an M.D. candidate at the Texas A&M Health Sciences Center, College of Medicine. He holds a B.S.A. in Biology Honors with a Kinesiology Minor from The University of Texas at Austin. In addition to his academic pursuits, Shyam is a dedicated researcher and leader. He has authored or co-authored over 20 peer-reviewed publications, and his work has been presented at prominent national and international conferences, including the American Academy of Orthopaedic Surgeons (AAOS) Annual Meeting and the American Roentgen Ray Society (ARRS) Annual Meeting.";
 
