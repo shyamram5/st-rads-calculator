@@ -74,7 +74,7 @@ export default function LandingPage() {
 
         {/* System Tabs */}
         <div className="w-full max-w-3xl mx-auto px-4">
-            <div className="flex items-center justify-center gap-2 sm:gap-3 mb-8">
+            <div className="flex items-center justify-center gap-2 sm:gap-3 mb-2">
                 {RADS_SYSTEMS.map(sys => (
                     <button
                         key={sys.id}
@@ -90,6 +90,12 @@ export default function LandingPage() {
                         }`}
                     >
                         {sys.label}
+                        {sys.available && (
+                            <span className="relative flex h-2 w-2">
+                                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                                <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+                            </span>
+                        )}
                         {!sys.available && (
                             <Badge variant="secondary" className="text-[10px] px-1.5 py-0 font-medium bg-white/20 text-white border-0 dark:bg-white/10" style={{
                                 ...(activeSystem !== sys.id && { background: "rgb(241 245 249)", color: "rgb(100 116 139)" })
@@ -100,6 +106,9 @@ export default function LandingPage() {
                     </button>
                 ))}
             </div>
+            <p className="text-center text-xs text-slate-400 dark:text-slate-500 mb-8">
+                <span className="inline-flex items-center gap-1.5"><span className="inline-block h-1.5 w-1.5 rounded-full bg-green-500"></span> ST-RADS is live now</span> · LI-RADS & BI-RADS coming soon
+            </p>
 
             {/* Active System Content */}
             {current.available ? (
@@ -116,7 +125,7 @@ export default function LandingPage() {
                     <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
                         <Link to={createPageUrl("Calculator")}>
                             <Button size="lg" className="h-13 px-10 text-base rounded-full bg-blue-600 hover:bg-blue-700 text-white shadow-lg shadow-blue-500/20 hover:shadow-blue-500/30 transition-all duration-300 hover:scale-[1.03] font-semibold">
-                                Start a Case <ArrowRight className="ml-2 h-5 w-5" />
+                                Start ST-RADS Case <ArrowRight className="ml-2 h-5 w-5" />
                             </Button>
                         </Link>
                         <Link to={createPageUrl("About")}>
