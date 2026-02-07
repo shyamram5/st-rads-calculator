@@ -302,10 +302,10 @@ export default function Layout({ children, currentPageName }) {
                      <div className="grid md:grid-cols-4 gap-8 mb-8">
                          <div className="col-span-2">
                              <Link to={createPageUrl("Home")} className="font-bold text-xl text-slate-900 dark:text-slate-100 mb-4 block">
-                                 ST-RADS Calculator
+                                 RADS Calculator
                              </Link>
                              <p className="text-sm text-slate-500 dark:text-slate-400 max-w-xs leading-relaxed">
-                                 Evidence-based risk stratification for soft tissue lesions using the ST-RADS v2025 guidelines.
+                                 Evidence-based radiology risk stratification tools — ST-RADS, LI-RADS, BI-RADS and more.
                              </p>
                          </div>
                          <div>
@@ -335,7 +335,7 @@ export default function Layout({ children, currentPageName }) {
                                    </p>
                                </div>
                                <p className="text-xs text-slate-400 font-medium">
-                                   © 2025 ST-RADS Calculator. All rights reserved.
+                                   © 2025 RADS Calculator. All rights reserved.
                                </p>
                           </div>
                      </div>
