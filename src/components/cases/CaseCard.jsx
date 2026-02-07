@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { ChevronDown, ChevronUp, Stethoscope, ClipboardList, Activity } from "lucide-react";
+import { ChevronDown, ChevronUp, Stethoscope, ClipboardList, Activity, Image, ExternalLink } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { PDF_URL } from "./caseExamplesData";
 
 const categoryColors = {
   0: { bg: "bg-slate-100 dark:bg-slate-800", text: "text-slate-700 dark:text-slate-300", ring: "ring-slate-300 dark:ring-slate-600", badge: "bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300" },
@@ -56,6 +57,36 @@ export default function CaseCard({ caseData }) {
             transition={{ duration: 0.3 }}
           >
             <CardContent className="space-y-5 pt-0">
+              {/* Imaging Series */}
+              {caseData.imageDescriptions && (
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <h4 className="flex items-center gap-2 font-semibold text-sm text-slate-700 dark:text-slate-300 uppercase tracking-wider">
+                      <Image className="w-4 h-4" /> Imaging Series ({caseData.figureRef})
+                    </h4>
+                    <a
+                      href={PDF_URL}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-1 text-xs text-blue-600 dark:text-blue-400 hover:underline font-medium"
+                    >
+                      View in Manuscript <ExternalLink className="w-3 h-3" />
+                    </a>
+                  </div>
+                  <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2">
+                    {caseData.imageDescriptions.map((img, i) => (
+                      <div
+                        key={i}
+                        className="bg-slate-900 dark:bg-black rounded-lg p-3 flex flex-col justify-between min-h-[90px]"
+                      >
+                        <p className="text-[11px] font-bold text-slate-300 uppercase tracking-wide mb-1">{img.label}</p>
+                        <p className="text-[11px] text-slate-400 leading-snug">{img.desc}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
               {/* Imaging Findings */}
               <div className="space-y-2">
                 <h4 className="flex items-center gap-2 font-semibold text-sm text-slate-700 dark:text-slate-300 uppercase tracking-wider">
