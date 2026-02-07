@@ -268,8 +268,7 @@ export default function Layout({ children, currentPageName }) {
                      {[
                        { name: "Home", icon: Home, label: "Home" },
                        { name: "Calculator", icon: Calculator, label: "Calc" },
-                       ...(user?.subscription_tier === 'premium' ? [{ name: "CaseReview", icon: FileText, label: "Review" }] : []),
-                       { name: "Account", icon: UserIcon, label: "Account" },
+                        { name: "Account", icon: UserIcon, label: "Account" },
                      ].map(tab => {
                        const isActive = currentPageName === tab.name;
                        const TabIcon = tab.icon;
