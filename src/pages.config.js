@@ -51,13 +51,13 @@ import About from './pages/About';
 import Account from './pages/Account';
 import Billing from './pages/Billing';
 import Calculator from './pages/Calculator';
+import CaseExamples from './pages/CaseExamples';
 import CaseReview from './pages/CaseReview';
 import Home from './pages/Home';
 import PaymentCancel from './pages/PaymentCancel';
 import PaymentSuccess from './pages/PaymentSuccess';
 import Premium from './pages/Premium';
 import Support from './pages/Support';
-import CaseExamples from './pages/CaseExamples';
 import __Layout from './Layout.jsx';
 
 
@@ -66,13 +66,13 @@ export const PAGES = {
     "Account": Account,
     "Billing": Billing,
     "Calculator": Calculator,
+    "CaseExamples": CaseExamples,
     "CaseReview": CaseReview,
     "Home": Home,
     "PaymentCancel": PaymentCancel,
     "PaymentSuccess": PaymentSuccess,
     "Premium": Premium,
     "Support": Support,
-    "CaseExamples": CaseExamples,
 }
 
 export const pagesConfig = {

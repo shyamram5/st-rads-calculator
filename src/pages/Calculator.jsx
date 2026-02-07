@@ -1,9 +1,12 @@
-import React, { useState, useEffect, useMemo, useCallback } from "react";
+import React, { useState, useEffect, useMemo, useCallback, useRef } from "react";
 import { User } from "@/components/User";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ArrowLeft, ArrowRight, RotateCcw, Sparkles, ChevronRight, Calculator, LogIn, BookOpen, ChevronDown, ChevronUp } from "lucide-react";
+import { ArrowLeft, ArrowRight, RotateCcw, Sparkles, ChevronRight, Calculator, LogIn, BookOpen, ChevronDown, ChevronUp, Crown, Lock } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { Link } from "react-router-dom";
+import { createPageUrl } from "@/utils";
+import UsageTracker from "../components/UsageTracker";
 
 import WizardStep from "../components/calculator/WizardStep";
 import ResultPanel from "../components/calculator/ResultPanel";
@@ -18,6 +21,7 @@ export default function CalculatorPage() {
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
   const [showResult, setShowResult] = useState(false);
   const [showEducation, setShowEducation] = useState(false);
+  const hasTrackedRef = useRef(false);
 
   useEffect(() => {
     const checkUser = async () => {
@@ -81,6 +85,7 @@ export default function CalculatorPage() {
     setCaseData({});
     setCurrentStepIndex(0);
     setShowResult(false);
+    hasTrackedRef.current = false;
   };
 
   const canGoNext = currentStepIndex < steps.length - 1;
@@ -109,6 +114,24 @@ export default function CalculatorPage() {
     if (caseData.ancillaryFeatures?.length > 0) r = applyAncillaryModifier(r, caseData.ancillaryFeatures);
     return r;
   }, [showResult, caseData]);
+
+  // Track usage when result is shown
+  useEffect(() => {
+    if (showResult && result && user && !hasTrackedRef.current) {
+      hasTrackedRef.current = true;
+      const isPremium = user.subscription_tier === "premium";
+      if (!isPremium) {
+        const newCount = (user.analyses_used || 0) + 1;
+        User.updateMyUserData({ analyses_used: newCount });
+        setUser(prev => ({ ...prev, analyses_used: newCount }));
+      }
+    }
+  }, [showResult, result]);
+
+  const isPremium = user?.subscription_tier === "premium";
+  const analysesUsed = user?.analyses_used || 0;
+  const freeUsesLeft = Math.max(0, 5 - analysesUsed);
+  const isLimitReached = !isPremium && freeUsesLeft <= 0;
 
   if (authLoading) {
     return (
