@@ -1,3 +1,7 @@
+const PDF_URL = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/687d2440273fea034ed3dfaf/9ffa5a94e_chhabra-et-al-2025-soft-tissue-rads-an-acr-work-in-progress-framework-for-standardized-reporting-of-soft-tissue-lesions.pdf";
+
+export { PDF_URL };
+
 export const CASE_EXAMPLES = [
   {
     id: "case-2",
@@ -7,6 +11,16 @@ export const CASE_EXAMPLES = [
     title: "Geyser Phenomenon (Supraclavicular Mass)",
     patient: "76-year-old patient with gradually increasing supraclavicular mass",
     diagnosis: "Geyser Phenomenon",
+    figureRef: "Figure 3",
+    imageDescriptions: [
+      { label: "A — Axial T1W", desc: "Large well-defined lesion with perilesional edema" },
+      { label: "B — In-phase Dixon T2W", desc: "High signal intensity lesion" },
+      { label: "C — Water Dixon T2W", desc: "Bright fluid-signal content" },
+      { label: "D — Sagittal STIR", desc: "Perilesional edema visible" },
+      { label: "E — Axial DWI", desc: "Increased signal intensity in lesion" },
+      { label: "F — ADC Map", desc: "High ADC value (2.6 × 10⁻³ mm²/s)" },
+      { label: "G — Post-contrast T1W FS", desc: "Peripheral enhancement only" },
+    ],
     findings: "Axial T1W, in-phase Dixon T2W, water Dixon T2W, and sagittal STIR images show a large well-defined lesion with perilesional edema. Axial DWI shows increased signal intensity within the lesion. ADC map demonstrates high ADC value (2.6 × 10⁻³ mm²/s). Axial fat-suppressed contrast-enhanced T1W image shows peripheral enhancement. Findings are classic for geyser phenomenon in the setting of a rotator cuff tear.",
     keyFeatures: [
       "Large, well-defined cyst-like lesion",
@@ -27,6 +41,16 @@ export const CASE_EXAMPLES = [
     title: "Subcutaneous Hematoma (Posterior Forearm)",
     patient: "65-year-old patient with mass in posterior forearm after subacute injury",
     diagnosis: "Hematoma",
+    figureRef: "Figure 4",
+    imageDescriptions: [
+      { label: "A — Axial T1W", desc: "Small well-defined subcutaneous heterogeneous lesion" },
+      { label: "B — In-phase Dixon T2W", desc: "Heterogeneous signal in lesion" },
+      { label: "C — Water Dixon T2W", desc: "Mixed signal intensity" },
+      { label: "D — Axial DWI", desc: "Increased signal intensity" },
+      { label: "E — ADC Map", desc: "High ADC value (1.6 × 10⁻³ mm²/s)" },
+      { label: "F — Pre-contrast T1W FS", desc: "Baseline signal before contrast" },
+      { label: "G — Post-contrast T1W FS", desc: "No significant enhancement" },
+    ],
     findings: "Axial T1W, in-phase Dixon T2W, and water Dixon T2W images show a small well-defined subcutaneous heterogeneous lesion. Axial DWI shows increased signal intensity within the lesion. ADC map demonstrates high ADC value (1.6 × 10⁻³ mm²/s). Axial fat-suppressed T1W images obtained before and after IV contrast media administration show no significant enhancement. Findings are suggestive of hematoma.",
     keyFeatures: [
       "Small, well-defined subcutaneous lesion",
@@ -47,6 +71,13 @@ export const CASE_EXAMPLES = [
     title: "Atypical Lipomatous Tumor (Anterior Thigh)",
     patient: "35-year-old woman with mass in anterior thigh",
     diagnosis: "Atypical Lipomatous Tumor (ALT/WDL)",
+    figureRef: "Figure 5",
+    imageDescriptions: [
+      { label: "A — Axial T1W", desc: "Lipomatous intramuscular lesion with thick septations" },
+      { label: "B — Water Dixon T2W", desc: "Internal vascularity and thick septations visible" },
+      { label: "C — Pre-contrast T1W FS", desc: "Baseline signal" },
+      { label: "D — Post-contrast T1W FS", desc: "Internal enhancement (>10% signal increase)" },
+    ],
     findings: "Axial T1W and water Dixon T2W images show a small well-defined lipomatous intramuscular lesion with internal thick septations and vascularity, measuring less than 5 cm. Axial fat-suppressed T1W images obtained before and after administration of IV contrast media show internal enhancement with signal intensity increase measured greater than 10%. Findings are suggestive of atypical lipomatous tumor.",
     keyFeatures: [
       "Lipomatous intramuscular lesion",
@@ -67,6 +98,12 @@ export const CASE_EXAMPLES = [
     title: "Leiomyosarcoma (Thigh Mass)",
     patient: "45-year-old woman with gradually increasing thigh mass",
     diagnosis: "Leiomyosarcoma",
+    figureRef: "Figure 6",
+    imageDescriptions: [
+      { label: "A — Axial T1W", desc: "Heterogeneous intramuscular solid lesion" },
+      { label: "B — Sagittal STIR", desc: "Associated peritumoral edema" },
+      { label: "C — Post-contrast T1W FS", desc: "Heterogeneous solid enhancement with cystic changes" },
+    ],
     findings: "Axial T1W and sagittal STIR images show a heterogeneous intramuscular solid lesion with associated peritumoral edema. Axial fat-suppressed contrast-enhanced T1W image shows heterogeneous solid enhancement of the lesion with cystic changes. Findings are highly suspicious for a malignant soft-tissue tumor.",
     keyFeatures: [
       "Large heterogeneous intramuscular mass",
@@ -87,6 +124,13 @@ export const CASE_EXAMPLES = [
     title: "Progressive Pleomorphic Rhabdomyosarcoma (Thigh)",
     patient: "45-year-old patient receiving chemotherapy for known pleomorphic rhabdomyosarcoma of thigh",
     diagnosis: "Pleomorphic Rhabdomyosarcoma (Progressive)",
+    figureRef: "Figure 7",
+    imageDescriptions: [
+      { label: "A — Pre-Tx Axial T1W", desc: "Left anterior thigh intramuscular mass" },
+      { label: "B — Pre-Tx Dixon T2W", desc: "Heterogeneous mass prior to treatment" },
+      { label: "C — Post-Tx Axial T1W", desc: "Increase in size of mass" },
+      { label: "D — Post-Tx Dixon T2W", desc: "Progressive disease evident" },
+    ],
     findings: "Axial unenhanced T1W and in-phase Dixon T2W images from the pretreatment MRI examination show a left anterior thigh intramuscular mass. Axial unenhanced T1W and in-phase Dixon T2W images from the posttreatment MRI examination show an increase in size of the mass, consistent with progressive disease.",
     keyFeatures: [
       "Known biopsy-proven malignancy",
