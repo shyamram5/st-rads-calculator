@@ -2,11 +2,12 @@ import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { User } from "@/components/User";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ArrowLeft, ArrowRight, RotateCcw, Sparkles, ChevronRight, Calculator, LogIn } from "lucide-react";
+import { ArrowLeft, ArrowRight, RotateCcw, Sparkles, ChevronRight, Calculator, LogIn, BookOpen, ChevronDown, ChevronUp } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 import WizardStep from "../components/calculator/WizardStep";
 import ResultPanel from "../components/calculator/ResultPanel";
+import EducationSidebar from "../components/calculator/EducationSidebar";
 import { getWizardSteps } from "../components/calculator/wizardSteps";
 import { calculateSTRADS, applyADCModifier, applyAncillaryModifier } from "../components/calculator/stradsRuleEngine";
 
@@ -16,6 +17,7 @@ export default function CalculatorPage() {
   const [caseData, setCaseData] = useState({});
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
   const [showResult, setShowResult] = useState(false);
+  const [showEducation, setShowEducation] = useState(false);
 
   useEffect(() => {
     const checkUser = async () => {
@@ -144,6 +146,27 @@ export default function CalculatorPage() {
           <p className="text-slate-600 dark:text-slate-400">Deterministic classification based on the official ST-RADS v2025 flowcharts</p>
         </div>
         <ResultPanel result={result} caseData={caseData} onReset={handleReset} />
+
+        {/* Education Panel on Results Page */}
+        <div className="border-t border-slate-200 dark:border-slate-700 pt-8">
+          <button
+            onClick={() => setShowEducation(!showEducation)}
+            className="flex items-center gap-2 mx-auto px-5 py-2.5 rounded-full glass-panel text-sm font-semibold text-slate-700 dark:text-slate-300 hover:bg-white/50 dark:hover:bg-slate-800/50 transition-all"
+          >
+            <BookOpen className="w-4 h-4 text-blue-500" />
+            Learn More About ST-RADS
+            {showEducation ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+          </button>
+          {showEducation && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              className="mt-6"
+            >
+              <EducationSidebar />
+            </motion.div>
+          )}
+        </div>
       </div>
     );
   }
@@ -227,6 +250,27 @@ export default function CalculatorPage() {
               </Button>
             )}
           </div>
+        </div>
+
+        {/* Education Toggle */}
+        <div className="mt-10 border-t border-slate-200 dark:border-slate-700 pt-6">
+          <button
+            onClick={() => setShowEducation(!showEducation)}
+            className="flex items-center gap-2 mx-auto px-5 py-2.5 rounded-full glass-panel text-sm font-semibold text-slate-700 dark:text-slate-300 hover:bg-white/50 dark:hover:bg-slate-800/50 transition-all"
+          >
+            <BookOpen className="w-4 h-4 text-blue-500" />
+            Learn About ST-RADS
+            {showEducation ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+          </button>
+          {showEducation && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              className="mt-6"
+            >
+              <EducationSidebar />
+            </motion.div>
+          )}
         </div>
       </div>
     </div>
