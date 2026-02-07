@@ -88,6 +88,7 @@ const REFERENCES = [
 
 const typeColors = {
   "Primary Guideline": "bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300",
+  "Validation Study": "bg-teal-100 dark:bg-teal-900/40 text-teal-700 dark:text-teal-300",
   "Review Article": "bg-purple-100 dark:bg-purple-900/40 text-purple-700 dark:text-purple-300",
   "Reference Textbook": "bg-amber-100 dark:bg-amber-900/40 text-amber-700 dark:text-amber-300",
   "Research Article": "bg-green-100 dark:bg-green-900/40 text-green-700 dark:text-green-300",
