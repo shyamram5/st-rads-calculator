@@ -16,7 +16,6 @@ import {
 const TAB_ROOTS = {
   Home: "Home",
   Calculator: "Calculator",
-  CaseReview: "CaseReview",
   Account: "Account",
 };
 
@@ -306,7 +305,7 @@ export default function Layout({ children, currentPageName }) {
                                  ST-RADS Calculator
                              </Link>
                              <p className="text-sm text-slate-500 dark:text-slate-400 max-w-xs leading-relaxed">
-                                 Advanced AI-powered analysis for soft tissue lesions using the latest ST-RADS v2025 guidelines.
+                                 Evidence-based risk stratification for soft tissue lesions using the ST-RADS v2025 guidelines.
                              </p>
                          </div>
                          <div>
