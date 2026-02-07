@@ -51,17 +51,29 @@ export default function CalculatorPage() {
 
   const ALL_DETAIL_KEYS = [
     "knownTumorStatus", "lesionPresent", "tissueType",
-    "lipFatContent", "lipSeptations", "lipEnhancement", "lipVessels", "lipNonFatFeatures",
-    "cystCommunication", "cystLocation", "cystFlowVoids", "cystSeptations", "cystHematoma",
+    // Lipomatous
+    "lipFatContent", "lipSeptationEnhancement", "lipVessels", "lipNonFatFeatures",
+    // Cyst-like
+    "cystLocationComm", "cystFlowVoids", "cystHematoma", "cystSeptations",
+    // Solid compartments
     "solidCompartment",
-    "vascularT2", "vascularPhleboliths", "vascularFluidLevels", "vascHemosiderin", "vascBloomingGRE", "vascEnhancement",
-    "iaHemosiderin", "iaBloomingGRE",
+    // Intravascular
+    "vascMorphology", "vascHemosiderinBlooming", "vascT2Enhancement",
+    // Intraarticular
+    "iaMorphology", "iaHemosiderinBlooming", "iaT2Enhancement",
+    // Intraneural
     "nerveTargetSign", "nerveADC",
+    // Cutaneous
     "cutGrowthPattern", "cutEnhancement",
-    "deepMuscleSignature", "deepHistory", "deepEdema", "deepMineralization",
+    // Deep
+    "deepMuscleSignature", "deepBenignTriad",
+    // Tendon
+    "tendonMorphology", "tendonHemosiderinBlooming",
+    // Fascial
     "fascialNoduleSize", "fascialMultifocal",
-    "subungualSize", "subungualSignal",
-    "tendonSize", "tendonAutoimmune", "tendonHemosiderin", "tendonBloomingGRE",
+    // Subungual
+    "subungualSize",
+    // Optional
     "adcValue", "ancillaryFeatures"
   ];
 
@@ -69,31 +81,38 @@ export default function CalculatorPage() {
     const deps = {
       examAdequacy: ["knownTumor", ...ALL_DETAIL_KEYS],
       knownTumor: ALL_DETAIL_KEYS,
-      lesionPresent: ALL_DETAIL_KEYS.filter(k => k !== "knownTumorStatus" && k !== "lesionPresent"),
+      lesionPresent: ALL_DETAIL_KEYS.filter(k => !["knownTumorStatus", "lesionPresent"].includes(k)),
       tissueType: ALL_DETAIL_KEYS.filter(k => !["knownTumorStatus", "lesionPresent", "tissueType"].includes(k)),
-      lipFatContent: ["lipSeptations", "lipEnhancement", "lipVessels", "lipNonFatFeatures"],
-      lipSeptations: ["lipEnhancement", "lipVessels"],
-      lipEnhancement: ["lipVessels"],
-      cystCommunication: ["cystLocation", "cystFlowVoids", "cystSeptations", "cystHematoma"],
-      cystLocation: ["cystFlowVoids", "cystSeptations", "cystHematoma"],
-      cystFlowVoids: ["cystSeptations", "cystHematoma"],
+      // Lipomatous
+      lipFatContent: ["lipSeptationEnhancement", "lipVessels", "lipNonFatFeatures"],
+      lipSeptationEnhancement: ["lipVessels"],
+      // Cyst-like
+      cystLocationComm: ["cystFlowVoids", "cystHematoma", "cystSeptations"],
+      cystFlowVoids: ["cystHematoma", "cystSeptations"],
       cystHematoma: ["cystSeptations"],
+      // Solid compartment
       solidCompartment: [
-        "vascularT2", "vascularPhleboliths", "vascularFluidLevels", "vascHemosiderin", "vascBloomingGRE", "vascEnhancement",
-        "iaHemosiderin", "iaBloomingGRE",
+        "vascMorphology", "vascHemosiderinBlooming", "vascT2Enhancement",
+        "iaMorphology", "iaHemosiderinBlooming", "iaT2Enhancement",
         "nerveTargetSign", "nerveADC",
         "cutGrowthPattern", "cutEnhancement",
-        "deepMuscleSignature", "deepHistory", "deepEdema", "deepMineralization",
+        "deepMuscleSignature", "deepBenignTriad",
+        "tendonMorphology", "tendonHemosiderinBlooming",
         "fascialNoduleSize", "fascialMultifocal",
-        "subungualSize", "subungualSignal",
-        "tendonSize", "tendonAutoimmune", "tendonHemosiderin", "tendonBloomingGRE"
+        "subungualSize"
       ],
-      vascularT2: ["vascularPhleboliths", "vascularFluidLevels", "vascHemosiderin", "vascBloomingGRE", "vascEnhancement"],
-      deepMuscleSignature: ["deepHistory", "deepEdema", "deepMineralization"],
-      cutGrowthPattern: ["cutEnhancement"],
+      // Intravascular
+      vascMorphology: ["vascHemosiderinBlooming", "vascT2Enhancement"],
+      // Intraarticular
+      iaMorphology: ["iaHemosiderinBlooming", "iaT2Enhancement"],
+      // Intraneural
       nerveTargetSign: ["nerveADC"],
-      tendonSize: ["tendonAutoimmune", "tendonHemosiderin", "tendonBloomingGRE"],
-      tendonHemosiderin: ["tendonBloomingGRE"],
+      // Cutaneous
+      cutGrowthPattern: ["cutEnhancement"],
+      // Deep
+      deepMuscleSignature: ["deepBenignTriad"],
+      // Tendon
+      tendonMorphology: ["tendonHemosiderinBlooming"],
     };
     return deps[changedKey] || [];
   };
