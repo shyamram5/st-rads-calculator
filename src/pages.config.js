@@ -58,6 +58,7 @@ import PaymentCancel from './pages/PaymentCancel';
 import PaymentSuccess from './pages/PaymentSuccess';
 import Premium from './pages/Premium';
 import Support from './pages/Support';
+import Algorithm from './pages/Algorithm';
 import __Layout from './Layout.jsx';
 
 
@@ -73,6 +74,7 @@ export const PAGES = {
     "PaymentSuccess": PaymentSuccess,
     "Premium": Premium,
     "Support": Support,
+    "Algorithm": Algorithm,
 }
 
 export const pagesConfig = {
