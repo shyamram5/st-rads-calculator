@@ -49,34 +49,30 @@ export const STRADS_CATEGORIES = {
   }
 };
 
-// ─── MAIN ENTRY POINT ───────────────────────────────────────────
+// ─── MAIN ENTRY POINT (Figure 1) ────────────────────────────────
 
 export function calculateSTRADS(caseData) {
   const { examAdequacy, lesionPresent, knownTumor, knownTumorStatus, tissueType } = caseData;
 
-  // ── Figure 1: General Algorithm ──
-
-  // Step 1: Exam completeness
   if (examAdequacy === "incomplete") {
     return r(0, "Incomplete imaging limits diagnostic interpretation.");
   }
 
-  // Known treated tumor → Category 6 (bypasses flowchart entirely)
+  // Category 6 is assigned directly based on clinical context, without use of flowcharts
   if (knownTumor === "yes") {
     if (knownTumorStatus === "no_residual") return r("6A", "Known treated tumor with no imaging evidence of residual disease.");
     if (knownTumorStatus === "residual") return r("6B", "Known treated tumor with residual disease (≤20% increase in largest dimension).");
     if (knownTumorStatus === "progressive") return r("6C", "Known treated tumor with progressive or recurrent disease (>20% increase in largest dimension).");
   }
 
-  // Step 2: Lesion present?
   if (lesionPresent === "no") {
     return r(1, "No soft-tissue lesion identified on MRI.");
   }
 
-  // Step 3: Tissue type branching (per Figure 1)
-  // - Macroscopic fat on T1W → Lipomatous Algorithm (Fig 2A)
-  // - No macroscopic fat, markedly high T2 AND <20% enhancement → Cyst-like Algorithm (Fig 2B)
-  // - No macroscopic fat, no variable high T2 OR >20% enhancement → Indeterminate Solid (Fig 2C/2D)
+  // Figure 1 tissue-type branching:
+  // Macroscopic fat on T1W → Fig 2A
+  // No macroscopic fat + markedly high T2 AND <20% enhancement → Fig 2B
+  // No macroscopic fat + no variable high T2 OR >20% enhancement → Fig 2C/2D
   if (tissueType === "lipomatous") return scoreLipomatous(caseData);
   if (tissueType === "cystlike") return scoreCystlike(caseData);
   if (tissueType === "indeterminate_solid") return scoreIndeterminateSolid(caseData);
@@ -84,123 +80,169 @@ export function calculateSTRADS(caseData) {
   return r(0, "Insufficient data to classify. Please complete all required steps.");
 }
 
-// ─── Figure 2A: LIPOMATOUS ALGORITHM ────────────────────────────
+// ═══════════════════════════════════════════════════════════════
+// Figure 2A: LIPOMATOUS SOFT-TISSUE LESION
+//
+// Flowchart structure (from PDF page 22):
+//
+// Predominantly lipomatous (>90%)
+//   ├── LEFT: "Thin septations (<2mm) OR absence of nodules
+//   │   and like subcutaneous fat intensity on all sequences"
+//   │   └── Thin septations <2mm OR Enhancement <10%
+//   │       ├── Many prominent vessels → RADS-2
+//   │       │   (lipoma, myolipoma, lipoma of nerve, lipoma arborescens)
+//   │       └── Few prominent vessels → RADS-3 (angiolipoma)
+//   │
+//   ├── MIDDLE: "Septations and presence of nodules and like
+//   │   subcutaneous fat intensity on all sequences"
+//   │   └── SAME decision: thin sept <2mm OR enh <10% → vessels → RADS 2/3
+//   │       AND: thick sept ≥2mm OR enh >10% → RADS-4 (ALT/WDL)
+//   │
+//   └── RIGHT (shared): Thick septations ≥2mm OR Enhancement >10%*
+//       → RADS-4 (ALT/WDL)
+//
+// Not predominantly lipomatous (≤90%)
+//   ├── No enhancing nodule(s) OR proportionately larger lipomatous → RADS-4
+//   └── Enhancing nodule(s) OR proportionately smaller lipomatous → RADS-5**
+//
+// * Identify and exclude common benign lesions first
+// ** Ancillary features may include necrosis, hemorrhage, peritumoral edema, low ADC <1.1
+// ═══════════════════════════════════════════════════════════════
 
 function scoreLipomatous(caseData) {
-  const { lipFatContent, lipSeptations, lipEnhancement, lipVessels, lipNonFatFeatures } = caseData;
+  const { lipFatContent, lipSeptationEnhancement, lipVessels, lipNonFatFeatures } = caseData;
 
-  // Branch 1: Predominantly lipomatous (>90%)
+  // Branch: Predominantly lipomatous (>90%)
   if (lipFatContent === "predominantly") {
-
-    // Sub-branch A: Thin septations (<2mm) OR absence of nodules, like subcutaneous fat on all sequences
-    if (lipSeptations === "thin_or_none") {
-      // Now check enhancement
-      if (lipEnhancement === "less_than_10") {
-        // Check vessels
-        if (lipVessels === "many") {
-          return r(2, "Predominantly lipomatous (>90%) with thin/no septations, <10% enhancement, and many prominent vessels. Consider subcutaneous/intramuscular lipoma (including myolipoma), intraneural lipoma of nerve, or intra-articular lipoma arborescens.",
-            ["Lipoma", "Myolipoma", "Lipoma of nerve", "Lipoma arborescens"]);
-        }
-        // Few or no prominent vessels → Angiolipoma (RADS-3 per flowchart)
-        return r(3, "Predominantly lipomatous (>90%) with thin/no septations, <10% enhancement, and few prominent vessels. Consider angiolipoma.",
-          ["Angiolipoma"]);
+    // The flowchart merges into one decision node:
+    // "Thin septations <2mm OR Enhancement <10%" vs "Thick septations ≥2mm OR Enhancement >10%"
+    if (lipSeptationEnhancement === "thin_or_low_enhancement") {
+      // Next: many vs few prominent vessels
+      if (lipVessels === "many") {
+        return r(2,
+          "Predominantly lipomatous (>90%) with thin septations (<2 mm) or <10% enhancement and many prominent vessels. Consider: subcutaneous, inter or intramuscular lipoma (including myolipoma), intra-neural lipoma of nerve, or intra-articular lipoma arborescens.",
+          ["Lipoma", "Myolipoma", "Lipoma of nerve", "Lipoma arborescens"]);
       }
-      // Enhancement ≥10% but thin septations → goes to thick septation / >10% enhancement branch → RADS-4
-      if (lipEnhancement === "more_than_10") {
-        return r(4, "Predominantly lipomatous (>90%) with thin septations but >10% enhancement increase. Suspicious for atypical lipomatous tumor / well-differentiated liposarcoma (ALT/WDL).",
-          ["Atypical lipomatous tumor", "Well-differentiated liposarcoma"]);
+      if (lipVessels === "few") {
+        return r(3,
+          "Predominantly lipomatous (>90%) with thin septations (<2 mm) or <10% enhancement and few prominent vessels. Consider angiolipoma.",
+          ["Angiolipoma"]);
       }
     }
 
-    // Sub-branch B: Septations AND presence of nodules, like subcutaneous fat intensity on ALL sequences
-    if (lipSeptations === "septations_with_nodules") {
-      // Per flowchart: still check thin vs thick septations and enhancement
-      if (lipEnhancement === "less_than_10") {
-        if (lipVessels === "many") {
-          return r(2, "Predominantly lipomatous (>90%) with septations and nodules showing subcutaneous fat intensity on all sequences, <10% enhancement, and many prominent vessels. Consider lipoma variants.",
-            ["Lipoma", "Myolipoma", "Lipoma of nerve", "Lipoma arborescens"]);
-        }
-        return r(3, "Predominantly lipomatous (>90%) with septations and nodules, <10% enhancement, and few prominent vessels. Consider angiolipoma.",
-          ["Angiolipoma"]);
-      }
-      // >10% enhancement
-      return r(4, "Predominantly lipomatous (>90%) with septations, nodules, and >10% enhancement. Suspicious for ALT/WDL.",
-        ["Atypical lipomatous tumor", "Well-differentiated liposarcoma"]);
-    }
-
-    // Sub-branch C: Thick septations (≥2mm)
-    if (lipSeptations === "thick") {
-      return r(4, "Predominantly lipomatous (>90%) with thick septations (≥2 mm). Suspicious for atypical lipomatous tumor / well-differentiated liposarcoma (ALT/WDL).",
+    if (lipSeptationEnhancement === "thick_or_high_enhancement") {
+      return r(4,
+        "Predominantly lipomatous (>90%) with thick septations (≥2 mm) or >10% increase in signal intensity between precontrast and postcontrast images. Suspicious for atypical lipomatous tumor / well-differentiated liposarcoma (ALT/WDL).",
         ["Atypical lipomatous tumor", "Well-differentiated liposarcoma"]);
     }
   }
 
-  // Branch 2: Not predominantly lipomatous (≤90% fat)
+  // Branch: Not predominantly lipomatous (≤90%)
   if (lipFatContent === "not_predominantly") {
-    // No enhancing nodule(s) OR proportionately larger lipomatous component
     if (lipNonFatFeatures === "no_enhancing_nodules") {
-      return r(4, "Not predominantly lipomatous (≤90%) without enhancing nodules, or with proportionately larger lipomatous component than soft-tissue component. Suspicious for ALT/WDL.",
+      return r(4,
+        "Not predominantly lipomatous (≤90%) with no enhancing nodule(s) or proportionately larger lipomatous component than soft-tissue component. Suspicious for ALT/WDL.",
         ["Atypical lipomatous tumor", "Well-differentiated liposarcoma"]);
     }
-    // Enhancing nodule(s) OR proportionately smaller lipomatous component than soft tissue
     if (lipNonFatFeatures === "enhancing_nodules") {
-      return r(5, "Not predominantly lipomatous (≤90%) with enhancing nodule(s) or proportionately smaller lipomatous component. Highly suspicious for dedifferentiated liposarcoma, myxoid liposarcoma, or pleomorphic sarcoma. Other ancillary features (necrosis, hemorrhage, peritumoral edema, low ADC <1.1, rapid growth, metastasis) may also be present.",
+      return r(5,
+        "Not predominantly lipomatous (≤90%) with enhancing nodule(s) or proportionately smaller lipomatous component than soft-tissue component. Highly suspicious for dedifferentiated liposarcoma, myxoid liposarcoma, or pleomorphic sarcoma. Other ancillary features (necrosis, hemorrhage, peritumoral edema, low ADC <1.1, rapid growth, metastasis) may be present.",
         ["Dedifferentiated liposarcoma", "Myxoid liposarcoma", "Pleomorphic sarcoma"]);
     }
   }
 
-  return r(0, "Lipomatous lesion with incomplete characterization.");
+  return r(0, "Lipomatous lesion — incomplete characterization.");
 }
 
-// ─── Figure 2B: CYST-LIKE / HIGH WATER CONTENT ALGORITHM ────────
+// ═══════════════════════════════════════════════════════════════
+// Figure 2B: CYST-LIKE OR HIGH-WATER-CONTENT SOFT-TISSUE LESION
+//
+// Flowchart structure (from PDF page 23):
+//
+// LEFT branch: Communicates with joint/tendon sheath/bursa
+//   OR Cutaneous or subcutaneous location
+//   OR Intra-neural location
+//   → RADS-2
+//     (ganglion, synovial cyst, geyser phenomenon, tenosynovitis,
+//      epidermoid cyst, bursitis, Morel-Lavallée lesion, intraneural cyst)
+//
+// RIGHT branch: No communication with joint/tendon sheath/bursa
+//   OR deeper location (subfascial)
+//   │
+//   ├── Predominantly comprised of flow voids or fluid-fluid levels
+//   │   → RADS-2
+//   │     (low- or high-flow vascular malformation, aneurysm, thrombophlebitis)
+//   │
+//   └── Not predominantly comprised of flow voids/fluid-fluid levels
+//       │
+//       ├── Features suggesting hematoma → RADS-3
+//       │   (hematoma, chronic expanding hematoma)
+//       │
+//       └── No hematoma features
+//           ├── Absence of thick enhancing septations AND small mural nodule(s) <1 cm
+//           │   → RADS-3 or RADS-4 (radiologist choice)
+//           │   (intramuscular myxoma, benign PNST, cysticercosis,
+//           │    hydatid cyst, myxoid liposarcoma, myxofibrosarcoma)
+//           │
+//           └── Presence of thick enhancing septations AND/OR mural nodule(s) ≥1 cm
+//               or larger soft tissue component
+//               → RADS-5*
+//               (synovial sarcoma, hemangioendothelioma, angiosarcoma,
+//                synovial sarcoma, extraskeletal myxoid chondrosarcoma,
+//                myxoinflammatory fibroblastic sarcoma, myxofibrosarcoma)
+// ═══════════════════════════════════════════════════════════════
 
 function scoreCystlike(caseData) {
-  const { cystCommunication, cystLocation, cystFlowVoids, cystHematoma, cystSeptations } = caseData;
+  const { cystLocationComm, cystFlowVoids, cystHematoma, cystSeptations } = caseData;
 
-  // LEFT branch: Communicates with joint/tendon sheath/bursa OR cutaneous/subcutaneous OR intraneural
-  if (cystCommunication === "communicates" || cystLocation === "cutaneous_subcutaneous" || cystLocation === "intraneural") {
-    return r(2, "Cyst-like lesion that communicates with joint, tendon sheath, or bursa; OR is in a cutaneous/subcutaneous location; OR is in an intraneural location. Classic benign entity.",
+  // LEFT: Communicates OR cutaneous/subcutaneous OR intraneural
+  if (cystLocationComm === "communicates_or_superficial_or_intraneural") {
+    return r(2,
+      "Cyst-like lesion that communicates with joint, tendon sheath, or bursa; OR is in a cutaneous/subcutaneous location; OR is in an intraneural location. Classic benign entity.",
       ["Ganglion", "Synovial cyst", "Geyser phenomenon", "Tenosynovitis", "Epidermoid cyst", "Bursitis", "Morel-Lavallée lesion", "Intraneural cyst"]);
   }
 
-  // RIGHT branch: No communication with joint/tendon/bursa AND deeper location
-  if (cystLocation === "deeper" || cystCommunication === "no_communication") {
-    // Check flow voids / fluid-fluid levels
-    if (cystFlowVoids === "predominantly_flow_voids") {
-      return r(2, "Deep cyst-like lesion predominantly comprised of flow voids or fluid-fluid levels. Consistent with low- or high-flow vascular malformation, aneurysm, or thrombophlebitis.",
+  // RIGHT: No communication, deeper (subfascial) location
+  if (cystLocationComm === "no_communication_deeper") {
+    // Flow voids / fluid-fluid levels
+    if (cystFlowVoids === "predominantly") {
+      return r(2,
+        "Deep cyst-like lesion predominantly comprised of flow voids or fluid-fluid levels. Consistent with low- or high-flow vascular malformation, aneurysm, or thrombophlebitis.",
         ["Low-flow vascular malformation", "High-flow vascular malformation", "Aneurysm", "Thrombophlebitis"]);
     }
 
-    // Not predominantly flow voids → check for hematoma features
-    if (cystHematoma === "yes") {
-      return r(3, "Deep cyst-like lesion with features suggesting hematoma. Follow-up to resolution is important as hematoma may mask underlying neoplasm.",
-        ["Hematoma", "Chronic expanding hematoma"]);
-    }
+    if (cystFlowVoids === "not_predominantly") {
+      // Hematoma features
+      if (cystHematoma === "yes") {
+        return r(3,
+          "Deep cyst-like lesion with features suggesting hematoma. Follow-up to resolution is important as hematoma may mask underlying neoplasm.",
+          ["Hematoma", "Chronic expanding hematoma"]);
+      }
 
-    // No hematoma features → assess septations/nodules
-    // Absence of thick enhancing septations and small mural nodules <1 cm
-    if (cystSeptations === "absent_or_thin") {
-      return r(3, "Deep cyst-like lesion without thick enhancing septations, with small mural nodules <1 cm. Consider intramuscular myxoma, benign peripheral nerve sheath tumor, cysticercosis, hydatid cyst, myxoid liposarcoma, or myxofibrosarcoma.",
-        ["Intramuscular myxoma", "Benign PNST", "Cysticercosis", "Hydatid cyst", "Myxoid liposarcoma", "Myxofibrosarcoma"]);
-    }
-
-    // Small enhancing septations or small mural nodules (<1 cm) — RADS 3 or 4
-    if (cystSeptations === "small_nodules") {
-      return r(4, "Deep cyst-like lesion with enhancing septations and/or small mural nodules (<1 cm). Consider benign PNST with edema, cysticercosis, hydatid cyst, or low-grade myxoid sarcoma. The radiologist may assign category 3 if findings favor a benign entity.",
-        ["Cystic PNST with edema", "Cysticercosis", "Hydatid cyst", "Myxoid liposarcoma", "Myxofibrosarcoma"]);
-    }
-
-    // Thick enhancing septations AND/OR mural nodule(s) ≥1 cm or larger soft tissue component → RADS-5
-    if (cystSeptations === "thick_or_nodules") {
-      return r(5, "Deep cyst-like lesion with thick enhancing septations and/or mural nodule(s) ≥1 cm or larger soft-tissue component. Highly suspicious for malignancy. Ancillary features (hemorrhage, peritumoral edema, fascial tails, intercompartmental extension, necrosis, low ADC <1.1, rapid growth, metastasis) may be present.",
-        ["Synovial sarcoma", "Hemangioendothelioma", "Angiosarcoma", "Extraskeletal myxoid chondrosarcoma", "Myxoinflammatory fibroblastic sarcoma", "Myxofibrosarcoma"]);
+      if (cystHematoma === "no") {
+        // Septations / nodules assessment
+        if (cystSeptations === "absent_small") {
+          // Per flowchart: yields RADS-3 or RADS-4 (radiologist's choice)
+          return r(3,
+            "Deep cyst-like lesion with absence of thick enhancing septations and small mural nodule(s) <1 cm. ST-RADS 3 or 4 (radiologist's judgment). Consider intramuscular myxoma, benign peripheral nerve sheath tumor, cysticercosis, hydatid cyst, myxoid liposarcoma, or myxofibrosarcoma.",
+            ["Intramuscular myxoma", "Benign PNST", "Cysticercosis", "Hydatid cyst", "Myxoid liposarcoma", "Myxofibrosarcoma"],
+            true); // flag: radiologist may upgrade to 4
+        }
+        if (cystSeptations === "thick_or_large_nodules") {
+          return r(5,
+            "Deep cyst-like lesion with presence of thick enhancing septations and/or mural nodule(s) ≥1 cm or larger soft-tissue component. Highly suspicious for malignancy. Ancillary features (hemorrhage, peritumoral edema, fascial tails, intercompartmental extension, necrosis, low ADC <1.1, rapid growth, metastasis) may be present.",
+            ["Synovial sarcoma", "Hemangioendothelioma", "Angiosarcoma", "Extraskeletal myxoid chondrosarcoma", "Myxoinflammatory fibroblastic sarcoma", "Myxofibrosarcoma"]);
+        }
+      }
     }
   }
 
-  return r(0, "Cyst-like lesion with incomplete characterization.");
+  return r(0, "Cyst-like lesion — incomplete characterization.");
 }
 
-// ─── Figures 2C & 2D: INDETERMINATE SOLID ALGORITHM ─────────────
+// ═══════════════════════════════════════════════════════════════
+// Figures 2C & 2D: INDETERMINATE SOLID SOFT-TISSUE LESION
+// ═══════════════════════════════════════════════════════════════
 
 function scoreIndeterminateSolid(caseData) {
   const { solidCompartment } = caseData;
@@ -209,270 +251,359 @@ function scoreIndeterminateSolid(caseData) {
   if (solidCompartment === "intravascular") return scoreIntravascular(caseData);
   if (solidCompartment === "intraarticular") return scoreIntraarticular(caseData);
   if (solidCompartment === "intraneural") return scoreIntraneural(caseData);
-  if (solidCompartment === "cutaneous_subcutaneous") return scoreCutaneousSubcutaneous(caseData);
+  if (solidCompartment === "cutaneous_subcutaneous") return scoreCutaneous(caseData);
 
   // Figure 2C compartments
-  if (solidCompartment === "deep_intramuscular") return scoreDeepIntramuscular(caseData);
-  if (solidCompartment === "intratendinous") return scoreIntratendinous(caseData);
-  if (solidCompartment === "plantar_palmar") return scorePalmarPlantar(caseData);
+  if (solidCompartment === "deep_intramuscular") return scoreDeep(caseData);
+  if (solidCompartment === "intratendinous") return scoreTendon(caseData);
+  if (solidCompartment === "plantar_palmar") return scoreFascial(caseData);
   if (solidCompartment === "subungual") return scoreSubungual(caseData);
 
-  return r(0, "Indeterminate solid lesion with incomplete compartment data.");
+  return r(0, "Indeterminate solid lesion — incomplete compartment data.");
 }
 
 // ─── Figure 2D: Intravascular / Vessel-Related ──────────────────
+// Excludes venous thrombosis, thrombophlebitis, (pseudo)aneurysm, vascular malformation
+//
+// THREE columns:
+// 1) Hyperintense lobules/tubules on T2W WITH hypointense phleboliths WITH fluid-fluid levels
+//    → RADS-2 (venous or venolymphatic malformation)
+//
+// 2) Hyperintense lobules/tubules on T2W WITHOUT hypointense phleboliths WITHOUT fluid-fluid levels
+//    → RADS-4 / RADS-5**
+//    (hemangioendothelioma, Kaposi sarcoma, angiosarcoma, leiomyosarcoma)
+//
+// 3) Calcified/ossified on XR or CT AND/OR predominantly hypointense foci on T2W
+//    ├── Hemosiderin staining with blooming on GRE → RADS-2
+//    │   (synovial chondromatosis, synovial hemangioma)
+//    └── Hemosiderin staining without blooming on GRE → RADS-2
+//        (gout, amyloid, xanthoma)
+//
+// 4) Not calcified/ossified on XR or CT OR predominantly hyperintense foci on T2W
+//    ├── Hyperintense on T2W and peripheral enhancement → RADS-3
+//    │   (TSGCT, synovial chondromatosis)
+//    └── Hypointense on T2W and no peripheral enhancement → RADS-4
+//        (TSGCT)
 
 function scoreIntravascular(caseData) {
-  const { vascularT2, vascularPhleboliths, vascularFluidLevels } = caseData;
+  const { vascMorphology } = caseData;
 
-  // Hyperintense lobules/tubules on T2W WITH hypointense phleboliths WITH fluid-fluid levels → RADS-2
-  if (vascularT2 === "hyperintense_with_phleboliths" && vascularPhleboliths === "yes" && vascularFluidLevels === "yes") {
-    return r(2, "Hyperintense lobules/tubules on T2W with hypointense phleboliths and fluid-fluid levels. Classic venous or venolymphatic malformation.",
+  if (vascMorphology === "hyperintense_with_phleboliths_and_fluid") {
+    return r(2,
+      "Hyperintense lobules/tubules on T2W with hypointense phleboliths and fluid-fluid levels. Classic venous or venolymphatic malformation.",
       ["Venous malformation", "Venolymphatic malformation"]);
   }
 
-  // Hyperintense lobules/tubules WITHOUT phleboliths or WITHOUT fluid-fluid levels → RADS-4/5
-  if (vascularT2 === "hyperintense_with_phleboliths" && (vascularPhleboliths === "no" || vascularFluidLevels === "no")) {
-    return r(4, "Hyperintense lobules/tubules on T2W without classic phleboliths or fluid-fluid levels. Consider hemangioendothelioma, Kaposi sarcoma, angiosarcoma, or leiomyosarcoma. Features favoring RADS-5: solid enhancing nodules >2 cm, fascial tails, extra-compartmental extension, necrosis, hemorrhage, peritumoral edema, low ADC <1.1, rapid growth, or metastasis.",
-      ["Hemangioendothelioma", "Kaposi sarcoma", "Angiosarcoma", "Leiomyosarcoma"]);
+  if (vascMorphology === "hyperintense_without_phleboliths") {
+    return r(4,
+      "Hyperintense lobules/tubules on T2W without hypointense phleboliths and without fluid-fluid levels. ST-RADS 4 or 5. Consider hemangioendothelioma, Kaposi sarcoma, angiosarcoma, or leiomyosarcoma. Features favoring RADS-5: presence of internal hemorrhage, necrosis, peritumoral edema, crossing compartments, low ADC <1.1, rapid growth, or metastasis.",
+      ["Hemangioendothelioma", "Kaposi sarcoma", "Angiosarcoma", "Leiomyosarcoma"],
+      true); // radiologist may upgrade to 5
   }
 
-  // Hyperintense lobules/tubules on T2W WITHOUT phleboliths, WITHOUT fluid-fluid levels
-  if (vascularT2 === "hyperintense_no_phleboliths") {
-    return r(4, "Hyperintense lobules/tubules on T2W without hypointense phleboliths and without fluid-fluid levels. Consider hemangioendothelioma, Kaposi sarcoma, angiosarcoma, or leiomyosarcoma.",
-      ["Hemangioendothelioma", "Kaposi sarcoma", "Angiosarcoma", "Leiomyosarcoma"]);
-  }
-
-  // Calcified/ossified on XR or CT AND/OR predominantly hypointense foci on T2W → check hemosiderin
-  if (vascularT2 === "calcified_hypointense") {
-    const { vascHemosiderin, vascBloomingGRE } = caseData;
-    // Hemosiderin staining WITH blooming on GRE → RADS-2 (synovial chondromatosis, synovial hemangioma)
-    if (vascHemosiderin === "yes" && vascBloomingGRE === "yes") {
-      return r(2, "Intravascular/vessel-related lesion that is calcified/ossified with hemosiderin staining and blooming on GRE. Consider synovial chondromatosis or synovial hemangioma.",
+  if (vascMorphology === "calcified_hypointense") {
+    const { vascHemosiderinBlooming } = caseData;
+    if (vascHemosiderinBlooming === "hemosiderin_with_blooming") {
+      return r(2,
+        "Calcified/ossified on XR or CT and/or predominantly hypointense foci on T2W, with hemosiderin staining and blooming on GRE. Consider synovial chondromatosis or synovial hemangioma.",
         ["Synovial chondromatosis", "Synovial hemangioma"]);
     }
-    // Hemosiderin WITHOUT blooming → RADS-2 (gout, amyloid, xanthoma)
-    if (vascHemosiderin === "yes" && vascBloomingGRE === "no") {
-      return r(2, "Intravascular/vessel-related lesion that is calcified with hemosiderin staining but no blooming on GRE. Consider gout, amyloid, or xanthoma.",
+    if (vascHemosiderinBlooming === "hemosiderin_without_blooming") {
+      return r(2,
+        "Calcified/ossified on XR or CT and/or predominantly hypointense foci on T2W, with hemosiderin staining without blooming on GRE. Consider gout, amyloid, or xanthoma.",
         ["Gout", "Amyloid", "Xanthoma"]);
     }
-    return r(2, "Intravascular/vessel-related lesion with calcification/ossification. Consider synovial chondromatosis or synovial hemangioma.",
-      ["Synovial chondromatosis", "Synovial hemangioma"]);
   }
 
-  // Not calcified/ossified, predominantly hyperintense foci on T2W
-  if (vascularT2 === "hyperintense_foci") {
-    const { vascEnhancement } = caseData;
-    // Hyperintense on T2W AND peripheral enhancement → RADS-3 (TSGCT, synovial chondromatosis)
-    if (vascEnhancement === "peripheral") {
-      return r(3, "Intravascular lesion hyperintense on T2W with no or peripheral enhancement. Consider TSGCT or synovial chondromatosis.",
+  if (vascMorphology === "not_calcified_hyperintense") {
+    const { vascT2Enhancement } = caseData;
+    if (vascT2Enhancement === "hyperintense_peripheral") {
+      return r(3,
+        "Not calcified/ossified, predominantly hyperintense foci on T2W with peripheral enhancement. Consider TSGCT or synovial chondromatosis.",
         ["TSGCT", "Synovial chondromatosis"]);
     }
-    // Hypointense on T2W and no peripheral enhancement → RADS-4 (TSGCT)
-    if (vascEnhancement === "none_hypointense") {
-      return r(4, "Intravascular lesion with predominantly hypointense T2W signal. Consider TSGCT.",
+    if (vascT2Enhancement === "hypointense_no_peripheral") {
+      return r(4,
+        "Not calcified/ossified, predominantly hypointense on T2W with no peripheral enhancement. Consider TSGCT.",
         ["TSGCT"]);
     }
-    return r(3, "Intravascular/vessel-related lesion with non-specific features. Further characterization recommended.",
-      ["TSGCT", "Synovial chondromatosis"]);
   }
 
-  return r(4, "Intravascular/vessel-related lesion requiring further characterization.");
+  return r(0, "Intravascular lesion — incomplete characterization.");
 }
 
 // ─── Figure 2D: Intraarticular ──────────────────────────────────
+// Flowchart (from PDF page 25):
+//
+// Calcified/ossified on XR or CT AND/OR predominantly hypointense foci on T2W
+//   ├── Hemosiderin staining with blooming on GRE → RADS-2
+//   │   (synovial chondromatosis, synovial hemangioma)
+//   └── Hemosiderin staining without blooming on GRE → RADS-2
+//       (gout, amyloid, xanthoma)
+//
+// Not calcified/ossified OR predominantly hyperintense foci on T2W
+//   ├── Hyperintense on T2W and peripheral enhancement → RADS-3
+//   │   (TSGCT, synovial chondromatosis)
+//   └── Hypointense on T2W and no peripheral enhancement → RADS-4
+//       (TSGCT)
 
 function scoreIntraarticular(caseData) {
-  const { iaHemosiderin, iaBloomingGRE } = caseData;
+  const { iaMorphology } = caseData;
 
-  // Hemosiderin staining WITH blooming on GRE → RADS-2
-  if (iaHemosiderin === "yes" && iaBloomingGRE === "yes") {
-    return r(2, "Intraarticular lesion with hemosiderin staining and blooming on GRE. Classic for TSGCT (pigmented villonodular synovitis).",
-      ["TSGCT / PVNS"]);
+  if (iaMorphology === "calcified_hypointense") {
+    const { iaHemosiderinBlooming } = caseData;
+    if (iaHemosiderinBlooming === "hemosiderin_with_blooming") {
+      return r(2,
+        "Intraarticular lesion calcified/ossified or predominantly hypointense on T2W, with hemosiderin staining and blooming on GRE. Consider synovial chondromatosis or synovial hemangioma.",
+        ["Synovial chondromatosis", "Synovial hemangioma"]);
+    }
+    if (iaHemosiderinBlooming === "hemosiderin_without_blooming") {
+      return r(2,
+        "Intraarticular lesion calcified/ossified or predominantly hypointense on T2W, with hemosiderin staining without blooming on GRE. Consider gout, amyloid, or xanthoma.",
+        ["Gout", "Amyloid", "Xanthoma"]);
+    }
   }
-  // Hemosiderin WITHOUT blooming → RADS-3
-  if (iaHemosiderin === "yes" && iaBloomingGRE === "no") {
-    return r(3, "Intraarticular lesion with hemosiderin staining but without blooming on GRE. Consider TSGCT.",
-      ["TSGCT"]);
+
+  if (iaMorphology === "not_calcified_hyperintense") {
+    const { iaT2Enhancement } = caseData;
+    if (iaT2Enhancement === "hyperintense_peripheral") {
+      return r(3,
+        "Intraarticular lesion not calcified, hyperintense on T2W with peripheral enhancement. Consider TSGCT or synovial chondromatosis.",
+        ["TSGCT", "Synovial chondromatosis"]);
+    }
+    if (iaT2Enhancement === "hypointense_no_peripheral") {
+      return r(4,
+        "Intraarticular lesion not calcified, hypointense on T2W with no peripheral enhancement. Consider TSGCT.",
+        ["TSGCT"]);
+    }
   }
-  // Hemosiderin staining WITHOUT blooming → RADS-4
-  if (iaHemosiderin === "no" && iaBloomingGRE === "yes") {
-    return r(4, "Intraarticular lesion without hemosiderin staining but with blooming on GRE. Further characterization needed.",
-      ["TSGCT", "Synovial sarcoma"]);
-  }
-  // No hemosiderin, no blooming → RADS-4/5
-  if (iaHemosiderin === "no" && iaBloomingGRE === "no") {
-    return r(4, "Intraarticular lesion without hemosiderin staining or blooming on GRE. Features favoring RADS-5 include solid enhancing nodules >2 cm, fascial tails, necrosis, hemorrhage, peritumoral edema, low ADC <1.1, rapid growth, or metastasis.",
-      ["TSGCT", "Synovial sarcoma"]);
-  }
-  return r(4, "Intraarticular lesion requiring further characterization.");
+
+  return r(0, "Intraarticular lesion — incomplete characterization.");
 }
 
 // ─── Figure 2D: Intraneural / Nerve-Related ─────────────────────
+// * Presence of tail sign and related to major named nerve
+//
+// Target sign present
+//   ├── ADC >1.1 mm²/s → RADS-2 (benign PNST)
+//   └── ADC ≤1.1 mm²/s → RADS-4 / RADS-5**
+//       (malignant PNST)
+//
+// No target sign → RADS-3
+//   (perineurioma, ancient schwannoma, neurofibroma with
+//    degenerative change, atypical neurofibroma)
+//
+// ** Features favoring RADS-5: size >4 cm, perilesional edema, necrosis,
+//    absence of target sign, rapid increase in size, growth along nerve, crossing compartments
 
 function scoreIntraneural(caseData) {
   const { nerveTargetSign, nerveADC } = caseData;
 
-  // Target sign present
   if (nerveTargetSign === "yes") {
     if (nerveADC === "above_1_1") {
-      return r(2, "Nerve-related lesion with target sign and ADC >1.1 × 10⁻³ mm²/s. Classic benign peripheral nerve sheath tumor.",
+      return r(2,
+        "Nerve-related lesion with target sign and ADC >1.1 × 10⁻³ mm²/s. Classic benign peripheral nerve sheath tumor.",
         ["Schwannoma", "Neurofibroma"]);
     }
     if (nerveADC === "at_or_below_1_1") {
-      return r(4, "Nerve-related lesion with target sign but ADC ≤1.1 × 10⁻³ mm²/s. Restricted diffusion raises concern for malignant PNST. Features favoring RADS-5 include size >4 cm, perilesional edema, necrosis, absence of target sign, rapid growth, growth along nerve, or crossing compartments.",
-        ["Malignant peripheral nerve sheath tumor"]);
+      return r(4,
+        "Nerve-related lesion with target sign but ADC ≤1.1 × 10⁻³ mm²/s. ST-RADS 4 or 5. Features favoring RADS-5: size >4 cm, perilesional edema, necrosis, absence of target sign, rapid growth, growth along nerve, or crossing compartments.",
+        ["Malignant peripheral nerve sheath tumor"],
+        true);
     }
-    // ADC not available but target sign present → RADS-2
-    return r(2, "Nerve-related lesion with target sign. Classic for benign peripheral nerve sheath tumor. Consider DWI/ADC for further risk stratification.",
-      ["Schwannoma", "Neurofibroma"]);
+    if (nerveADC === "not_available") {
+      return r(2,
+        "Nerve-related lesion with target sign. ADC not available. Classic for benign PNST; consider DWI/ADC for further risk stratification.",
+        ["Schwannoma", "Neurofibroma"]);
+    }
   }
 
-  // No target sign
   if (nerveTargetSign === "no") {
-    return r(3, "Nerve-related lesion without target sign. Consider perineurioma, ancient schwannoma, neurofibroma with degenerative change, or atypical neurofibroma. Features favoring RADS-4/5 include size >4 cm, perilesional edema, necrosis, rapid growth, growth along nerve, or crossing compartments.",
+    return r(3,
+      "Nerve-related lesion without target sign. Consider perineurioma, ancient schwannoma, neurofibroma with degenerative change, or atypical neurofibroma.",
       ["Perineurioma", "Ancient schwannoma", "Neurofibroma with degenerative change", "Atypical neurofibroma"]);
   }
 
-  return r(3, "Nerve-related lesion requiring further characterization.");
+  return r(0, "Nerve-related lesion — incomplete characterization.");
 }
 
 // ─── Figure 2D: Cutaneous / Subcutaneous ────────────────────────
+// Exophytic
+//   ├── Peripheral enhancement → RADS-2
+//   │   (sebaceous cyst, trichilemmal cyst, epidermoid cyst, retinacular cyst)
+//   └── Internal enhancement → RADS-4 / RADS-5**
+//       (wart, dermatofibrosarcoma protuberans, fibrosarcoma NOS)
+//
+// Endophytic → RADS-5**
+//   (T-cell lymphoma, Merkel cell tumor, melanoma, cutaneous metastasis)
 
-function scoreCutaneousSubcutaneous(caseData) {
+function scoreCutaneous(caseData) {
   const { cutGrowthPattern, cutEnhancement } = caseData;
 
   if (cutGrowthPattern === "exophytic") {
     if (cutEnhancement === "peripheral") {
-      return r(2, "Exophytic cutaneous/subcutaneous lesion with peripheral enhancement. Consistent with sebaceous cyst, trichilemmal cyst, epidermoid cyst, or retinacular cyst.",
+      return r(2,
+        "Exophytic cutaneous/subcutaneous lesion with peripheral enhancement. Consider sebaceous cyst, trichilemmal cyst, epidermoid cyst, or retinacular cyst.",
         ["Sebaceous cyst", "Trichilemmal cyst", "Epidermoid cyst", "Retinacular cyst"]);
     }
     if (cutEnhancement === "internal") {
-      return r(4, "Exophytic cutaneous/subcutaneous lesion with internal enhancement. Consider wart, dermatofibrosarcoma protuberans, or fibrosarcoma NOS. Features favoring RADS-5 include large size, rapid growth, necrosis, hemorrhage, peritumoral edema, low ADC <1.1, or metastasis.",
-        ["Wart", "Dermatofibrosarcoma protuberans", "Fibrosarcoma NOS"]);
+      return r(4,
+        "Exophytic cutaneous/subcutaneous lesion with internal enhancement. ST-RADS 4 or 5. Consider wart, dermatofibrosarcoma protuberans, or fibrosarcoma NOS. Features favoring RADS-5: large size, rapid growth, necrosis, hemorrhage, peritumoral edema, low ADC <1.1, or metastasis.",
+        ["Wart", "Dermatofibrosarcoma protuberans", "Fibrosarcoma NOS"],
+        true);
     }
   }
 
   if (cutGrowthPattern === "endophytic") {
-    return r(5, "Endophytic cutaneous/subcutaneous lesion with internal enhancement. Highly suspicious for T-cell lymphoma, Merkel cell tumor, melanoma, or cutaneous metastasis (lung, breast, renal).",
+    return r(5,
+      "Endophytic cutaneous/subcutaneous lesion. Highly suspicious for T-cell lymphoma, Merkel cell tumor, melanoma, or cutaneous metastasis (lung, breast, renal).",
       ["T-cell lymphoma", "Merkel cell tumor", "Melanoma", "Cutaneous metastasis"]);
   }
 
-  return r(4, "Cutaneous/subcutaneous lesion requiring further characterization.");
+  return r(0, "Cutaneous/subcutaneous lesion — incomplete characterization.");
 }
 
 // ─── Figure 2C: Deep (subfascial) / Intermuscular / Intramuscular ──
+//
+// Muscle signature present
+//   ├── History of prior injury WITH peritumoral edema AND mature peripheral mineralization
+//   │   → RADS-2
+//   │   (hypertrophied muscle, myositis, myopathy, myonecrosis, myositis ossificans)
+//   │
+//   └── No history of prior injury with peritumoral edema & mature peripheral mineralization
+//       → RADS-4 / RADS-5**
+//       (desmoid, fibromyxoid sarcoma, fibrosarcoma NOS,
+//        extraskeletal osteosarcoma, undifferentiated pleomorphic sarcoma)
+//
+// No muscle signature → RADS-4 / RADS-5**
+//   (same differentials as above)
 
-function scoreDeepIntramuscular(caseData) {
-  const { deepMuscleSignature, deepHistory, deepEdema, deepMineralization } = caseData;
+function scoreDeep(caseData) {
+  const { deepMuscleSignature, deepBenignTriad } = caseData;
 
-  // Muscle signature present
-  if (deepMuscleSignature === "muscle") {
-    if (deepHistory === "prior_injury" && deepEdema === "yes" && deepMineralization === "mature") {
-      return r(2, "Deep/intramuscular lesion with muscle signature, history of prior injury, peritumoral edema, and mature peripheral mineralization. Classic for hypertrophied muscle, myositis, myopathy, myonecrosis, or myositis ossificans.",
+  if (deepMuscleSignature === "yes") {
+    if (deepBenignTriad === "yes") {
+      return r(2,
+        "Deep/intramuscular lesion with muscle signature and history of prior injury with peritumoral edema and mature peripheral mineralization. Consider hypertrophied muscle, myositis, myopathy, myonecrosis, or myositis ossificans.",
         ["Hypertrophied muscle", "Myositis", "Myopathy", "Myonecrosis", "Myositis ossificans"]);
     }
-    // No history of prior injury, OR no mature mineralization → RADS-4/5
-    return r(4, "Deep/intramuscular lesion with muscle signature but without classic benign triad (prior injury + peritumoral edema + mature mineralization). Features favoring RADS-5: solid enhancing nodules >2 cm, fascial tails, extra-compartmental extension, necrosis, hemorrhage, peritumoral edema, low ADC <1.1, rapid growth, or metastasis.",
-      ["Desmoid", "Fibromyxoid sarcoma", "Fibrosarcoma NOS", "Extraskeletal osteosarcoma", "Undifferentiated pleomorphic sarcoma"]);
+    if (deepBenignTriad === "no") {
+      return r(4,
+        "Deep/intramuscular lesion with muscle signature but without the benign triad (history of prior injury + peritumoral edema + mature peripheral mineralization). ST-RADS 4 or 5. Features favoring RADS-5: solid enhancing nodules >2 cm for fascia-based lesions, fascial tails, extra-compartmental extension, necrosis, hemorrhage, peritumoral edema, low ADC <1.1, rapid growth, or metastasis.",
+        ["Desmoid", "Fibromyxoid sarcoma", "Fibrosarcoma NOS", "Extraskeletal osteosarcoma", "Undifferentiated pleomorphic sarcoma"],
+        true);
+    }
   }
 
-  // No muscle signature
-  if (deepMuscleSignature === "no_muscle") {
-    return r(4, "Deep/intramuscular lesion without muscle signature. Requires further characterization. Features favoring RADS-5: solid enhancing nodules >2 cm, fascial tails, extra-compartmental extension, necrosis, hemorrhage, peritumoral edema, low ADC <1.1, rapid growth, or metastasis.",
-      ["Desmoid", "Fibromyxoid sarcoma", "Fibrosarcoma NOS", "Extraskeletal osteosarcoma", "Undifferentiated pleomorphic sarcoma"]);
+  if (deepMuscleSignature === "no") {
+    return r(4,
+      "Deep/intramuscular lesion without muscle signature. ST-RADS 4 or 5. Features favoring RADS-5: solid enhancing nodules >2 cm, fascial tails, extra-compartmental extension, necrosis, hemorrhage, peritumoral edema, low ADC <1.1, rapid growth, or metastasis.",
+      ["Desmoid", "Fibromyxoid sarcoma", "Fibrosarcoma NOS", "Extraskeletal osteosarcoma", "Undifferentiated pleomorphic sarcoma"],
+      true);
   }
 
-  return r(4, "Deep intramuscular lesion requiring further characterization.");
+  return r(0, "Deep intramuscular lesion — incomplete characterization.");
 }
 
 // ─── Figure 2C: Intratendinous / Tendon-Related ─────────────────
+//
+// Enlarged tendon with calcifications, cystic change, fat,
+// or underlying history of amyloidosis or autoimmune disease
+//   → RADS-2 (gout, amyloid, xanthoma)
+//
+// Normal size tendon without calcifications, cystic change, fat,
+// or no underlying history of amyloidosis or autoimmune disease
+//   ├── Hemosiderin staining with blooming on GRE → RADS-3 (TSGCT)
+//   └── Hemosiderin staining without blooming on GRE → RADS-4 / RADS-5**
 
-function scoreIntratendinous(caseData) {
-  const { tendonSize, tendonAutoimmune, tendonHemosiderin, tendonBloomingGRE } = caseData;
+function scoreTendon(caseData) {
+  const { tendonMorphology, tendonHemosiderinBlooming } = caseData;
 
-  // Enlarged tendon with calcifications, cystic change, fat, or underlying amyloidosis/autoimmune
-  if (tendonSize === "enlarged") {
-    if (tendonAutoimmune === "yes") {
-      return r(2, "Enlarged tendon with calcifications, cystic change, fat, or underlying history of amyloidosis or autoimmune disease. Consider gout, amyloid, or xanthoma.",
-        ["Gout", "Amyloid", "Xanthoma"]);
-    }
-    return r(2, "Enlarged tendon with calcifications, cystic change, or fat. Consider gout, amyloid, or xanthoma.",
+  if (tendonMorphology === "enlarged") {
+    return r(2,
+      "Enlarged tendon with calcifications, cystic change, fat, or underlying history of amyloidosis or autoimmune disease. Consider gout, amyloid, or xanthoma.",
       ["Gout", "Amyloid", "Xanthoma"]);
   }
 
-  // Normal-size tendon without calcifications, fat, or no underlying history
-  if (tendonSize === "normal") {
-    // Check hemosiderin
-    if (tendonHemosiderin === "yes" && tendonBloomingGRE === "yes") {
-      return r(3, "Normal-size tendon-related lesion with hemosiderin staining and blooming on GRE. Consider TSGCT.",
+  if (tendonMorphology === "normal") {
+    if (tendonHemosiderinBlooming === "hemosiderin_with_blooming") {
+      return r(3,
+        "Normal-size tendon-related lesion with hemosiderin staining and blooming on GRE. Consider TSGCT.",
         ["TSGCT"]);
     }
-    if (tendonHemosiderin === "yes" && tendonBloomingGRE === "no") {
-      return r(4, "Normal-size tendon-related lesion with hemosiderin staining but no blooming on GRE. Consider TSGCT or other entity.",
-        ["TSGCT"]);
+    if (tendonHemosiderinBlooming === "hemosiderin_without_blooming") {
+      return r(4,
+        "Normal-size tendon-related lesion with hemosiderin staining without blooming on GRE. ST-RADS 4 or 5.",
+        ["TSGCT"],
+        true);
     }
-    // Per flowchart: normal tendon, hemosiderin staining with blooming → RADS-3 (TSGCT)
-    // hemosiderin without blooming → RADS-4/5
-    if (tendonHemosiderin === "no") {
-      return r(4, "Normal-size tendon-related lesion without hemosiderin staining. Further characterization needed.",
-        ["TSGCT"]);
-    }
-    return r(2, "Normal-size tendon-related lesion. Consider fibroma.",
-      ["Fibroma", "TSGCT"]);
   }
 
-  return r(3, "Intratendinous/tendon-related lesion requiring further assessment.");
+  return r(0, "Tendon-related lesion — incomplete characterization.");
 }
 
 // ─── Figure 2C: Plantar / Palmar Fascial ────────────────────────
+//
+// Fascial nodule <2 cm in length
+//   ├── Multifocal or conglomerate fascial nodules → RADS-2 (fibroma)
+//   └── No multifocal or conglomerate → RADS-3 (fibromatosis)
+//
+// Fascial nodule ≥2 cm in length
+//   ├── Multifocal or conglomerate fascial nodules → RADS-3 (fibromatosis)
+//   └── No multifocal or conglomerate → RADS-4 / RADS-5**
+//       (desmoid, synovial sarcoma, epithelioid sarcoma,
+//        myxoinflammatory fibroblastic sarcoma, clear cell sarcoma)
 
-function scorePalmarPlantar(caseData) {
+function scoreFascial(caseData) {
   const { fascialNoduleSize, fascialMultifocal } = caseData;
 
   if (fascialNoduleSize === "less_than_2cm") {
-    // <2 cm: multifocal/conglomerate → RADS-2 (Fibroma), not multifocal → RADS-3 (Fibromatosis)
     if (fascialMultifocal === "yes") {
-      return r(2, "Fascial nodule <2 cm with multifocal or conglomerate pattern. Classic for plantar/palmar fibroma.",
-        ["Fibroma"]);
+      return r(2, "Fascial nodule <2 cm with multifocal or conglomerate pattern. Classic for plantar/palmar fibroma.", ["Fibroma"]);
     }
-    return r(3, "Fascial nodule <2 cm, solitary. Consider fibromatosis.",
-      ["Fibromatosis"]);
+    if (fascialMultifocal === "no") {
+      return r(3, "Fascial nodule <2 cm, solitary. Consider fibromatosis.", ["Fibromatosis"]);
+    }
   }
 
   if (fascialNoduleSize === "2cm_or_more") {
-    // ≥2 cm: multifocal/conglomerate → RADS-3 (Fibromatosis), not multifocal → RADS-4/5
     if (fascialMultifocal === "yes") {
-      return r(3, "Fascial nodule ≥2 cm with multifocal/conglomerate pattern. Consider fibromatosis.",
-        ["Fibromatosis"]);
+      return r(3, "Fascial nodule ≥2 cm with multifocal/conglomerate pattern. Consider fibromatosis.", ["Fibromatosis"]);
     }
-    // No multifocal → RADS-4/5
-    return r(4, "Fascial nodule ≥2 cm, solitary (no multifocal/conglomerate pattern). Features favoring RADS-5: solid enhancing nodules >2 cm, fascial tails, extra-compartmental extension, necrosis, hemorrhage, peritumoral edema, low ADC <1.1, rapid growth, or metastasis.",
-      ["Desmoid", "Synovial sarcoma", "Epithelioid sarcoma", "Myxoinflammatory fibroblastic sarcoma", "Clear cell sarcoma"]);
+    if (fascialMultifocal === "no") {
+      return r(4,
+        "Fascial nodule ≥2 cm, solitary. ST-RADS 4 or 5. Features favoring RADS-5: solid enhancing nodules >2 cm, fascial tails, extra-compartmental extension, necrosis, hemorrhage, peritumoral edema, low ADC <1.1, rapid growth, or metastasis.",
+        ["Desmoid", "Synovial sarcoma", "Epithelioid sarcoma", "Myxoinflammatory fibroblastic sarcoma", "Clear cell sarcoma"],
+        true);
+    }
   }
 
-  return r(3, "Plantar/palmar fascial lesion requiring further assessment.");
+  return r(0, "Fascial lesion — incomplete characterization.");
 }
 
 // ─── Figure 2C: Subungual ───────────────────────────────────────
+// Hyperintense on T2W, diffuse enhancement on T1W + contrast
+//
+// Small (<1 cm) → RADS-3 / RADS-5** (glomus tumor NOS)
+// Large (≥1 cm) → RADS-3 / RADS-4 (glomus tumor—malignant)
 
 function scoreSubungual(caseData) {
-  const { subungualSignal, subungualSize } = caseData;
-
-  // Per flowchart: Hyperintense on T2W, diffuse enhancement on T1W+C
-  // Small (<1 cm) → RADS-3 (glomus tumor NOS) / RADS-5 if suspicious features
-  // Large (≥1 cm) → RADS-3 (glomus tumor NOS) / RADS-4 (glomus tumor—malignant)
+  const { subungualSize } = caseData;
 
   if (subungualSize === "less_than_1cm") {
-    return r(3, "Small subungual lesion (<1 cm), hyperintense on T2W with diffuse enhancement. Consider glomus tumor NOS.",
-      ["Glomus tumor NOS"]);
+    return r(3,
+      "Small subungual lesion (<1 cm), hyperintense on T2W with diffuse enhancement. ST-RADS 3 or 5. Consider glomus tumor NOS.",
+      ["Glomus tumor NOS"],
+      true);
   }
   if (subungualSize === "1cm_or_more") {
-    return r(4, "Larger subungual lesion (≥1 cm). Consider glomus tumor—potentially malignant variant.",
-      ["Glomus tumor—malignant"]);
+    return r(3,
+      "Larger subungual lesion (≥1 cm), hyperintense on T2W with diffuse enhancement. ST-RADS 3 or 4. Consider glomus tumor—potentially malignant variant.",
+      ["Glomus tumor NOS", "Glomus tumor—malignant"],
+      true);
   }
 
-  return r(3, "Subungual lesion requiring further characterization.");
+  return r(0, "Subungual lesion — incomplete characterization.");
 }
 
 // ─── ADC MODIFIER ───────────────────────────────────────────────
@@ -499,12 +630,6 @@ export function applyADCModifier(result, adcValue) {
 export function applyAncillaryModifier(result, ancillaryFeatures) {
   if (!ancillaryFeatures || ancillaryFeatures.length === 0) return result;
 
-  const cat5Features = [
-    "necrosis", "hemorrhage", "peritumoral_edema", "fascial_tail",
-    "crossing_compartments", "rapid_growth", "metastasis", "low_adc",
-    "solid_enhancing_nodules"
-  ];
-
   const featureLabels = {
     necrosis: "non-enhancing areas of necrosis",
     hemorrhage: "internal hemorrhage",
@@ -517,14 +642,14 @@ export function applyAncillaryModifier(result, ancillaryFeatures) {
     solid_enhancing_nodules: "solid enhancing nodules >2 cm for fascia-based lesions"
   };
 
-  const presentFeatures = ancillaryFeatures.filter(f => cat5Features.includes(f));
+  const presentFeatures = ancillaryFeatures.filter(f => featureLabels[f]);
   if (presentFeatures.length === 0) return result;
 
   const descriptions = presentFeatures.map(f => featureLabels[f]).join(", ");
   const ancillaryNote = `Ancillary features present: ${descriptions}. These findings may support upgrading to ST-RADS 5.`;
 
   const currentScore = result.category.score;
-  // Per manuscript: ancillary features favoring RADS-5 include the above. Upgrade if category 3 or 4 with sufficient features.
+  // Per manuscript: ancillary features favoring RADS-5. Upgrade from 3 or 4 if features are sufficient.
   if ((currentScore === 3 || currentScore === 4) && presentFeatures.length >= 2) {
     return {
       ...result,
@@ -540,6 +665,11 @@ export function applyAncillaryModifier(result, ancillaryFeatures) {
 
 // ─── Helper ─────────────────────────────────────────────────────
 
-function r(cat, reasoning, differentials) {
-  return { category: STRADS_CATEGORIES[cat], reasoning, differentials: differentials || [] };
+function r(cat, reasoning, differentials, radiologistChoice) {
+  return {
+    category: STRADS_CATEGORIES[cat],
+    reasoning,
+    differentials: differentials || [],
+    radiologistChoice: radiologistChoice || false
+  };
 }
