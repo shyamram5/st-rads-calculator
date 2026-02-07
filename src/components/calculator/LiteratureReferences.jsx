@@ -4,6 +4,33 @@ import { Badge } from "@/components/ui/badge";
 
 const REFERENCES = [
   {
+    title: "Soft Tissue-RADS: An ACR Work-in-Progress Framework for Standardized Reporting of Soft-Tissue Lesions on MRI",
+    authors: "Chhabra A, Garner HW, Boles CA, et al.",
+    journal: "American Journal of Roentgenology (AJR)",
+    year: 2025,
+    type: "Primary Guideline",
+    url: "https://doi.org/10.2214/AJR.25.34013",
+    description: "The official ACR Clinical Perspective presenting the Soft Tissue-RADS framework with six categories (0–6), diagnostic flowcharts, structured report templates, and numerous case examples for standardized MRI reporting."
+  },
+  {
+    title: "ST-RADS: MRI Reporting Guideline with Multi-Institutional Validation Study of Musculoskeletal Extremity Tumors",
+    authors: "Chhabra A, Ashikyan O, Ratakonda R, Bajaj G, Thakur U, Pezeshk P, Xi Y, Zaid M, Callan A, Murphy W, Kumar R, Amini B.",
+    journal: "Journal of Tumor Research",
+    year: 2022,
+    type: "Validation Study",
+    url: "https://www.longdom.org/open-access/softtissue-tumor-reporting-and-data-system-strads-mri-reporting-guideline-with-multiinstitutional-validation-study-of-musculoskele-97280.html",
+    description: "The original multi-institutional validation of ST-RADS across 200 soft-tissue masses with 8 readers, demonstrating good inter-reader agreement (ICC 0.69–0.72) and AUC of 0.79–0.89 for separating benign from malignant tumors."
+  },
+  {
+    title: "ST-RADS: Prospective Implementation and Diagnostic Accuracy",
+    authors: "Chhabra A, et al.",
+    journal: "Clinical Radiology",
+    year: 2025,
+    type: "Research Article",
+    url: "https://doi.org/10.1016/j.crad.2025.106930",
+    description: "Prospective implementation study of 236 consecutive patients showing ST-RADS achieved 99.15% diagnostic accuracy vs. 92.80% for traditional descriptive reporting (p<0.001), with 100% accuracy for benign tumors (ST-RADS I–III)."
+  },
+  {
     title: "ACR Soft Tissue-RADS (ST-RADS): A Framework for Risk Stratification of Soft-Tissue Tumors",
     authors: "Fields BKK, Demirjian NL, Cen SY, et al.",
     journal: "Journal of the American College of Radiology",
