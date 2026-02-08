@@ -193,7 +193,7 @@ export default function LandingPage() {
         <div className="max-w-lg mx-auto text-center space-y-4 px-4">
             <div className="flex items-center justify-center gap-2 text-slate-600 dark:text-slate-300">
                 <Heart className="w-4 h-4 text-rose-500" />
-                <span className="text-sm font-semibold">Built by a Student, for the Community</span>
+                <span className="text-sm font-semibold">Built by a Medical Student, for the Radiology Community</span>
             </div>
             <p className="text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
                 This project was bootstrapped entirely on student loans. Every Premium subscription directly supports keeping this tool free and funds future features.
