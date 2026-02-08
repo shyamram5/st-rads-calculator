@@ -30,15 +30,7 @@ const RADS_SYSTEMS = [
     color: "emerald",
     description: "Standardized reporting for liver observations in patients at risk for hepatocellular carcinoma. Coming soon.",
   },
-  {
-    id: "birads",
-    label: "BI-RADS",
-    fullName: "Breast Imaging RADS",
-    tagline: "ACR BI-RADS",
-    available: false,
-    color: "rose",
-    description: "Standardized breast imaging assessment categories for mammography, ultrasound, and MRI. Coming soon.",
-  },
+
 ];
 
 export default function LandingPage() {
