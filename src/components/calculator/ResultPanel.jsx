@@ -17,7 +17,7 @@ const scoreColors = {
   blue: { ring: "ring-blue-400", text: "text-blue-700 dark:text-blue-300", bg: "bg-blue-100 dark:bg-blue-950/50" },
 };
 
-export default function ResultPanel({ result, caseData, onReset }) {
+export default function ResultPanel({ result, caseData, onReset, isPremium }) {
   if (!result) return null;
   const { category, reasoning, differentials, upgraded, originalScore, adcNote, ancillaryNote } = result;
   const colors = scoreColors[category.color] || scoreColors.gray;
