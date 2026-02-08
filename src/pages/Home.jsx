@@ -128,15 +128,7 @@ export default function LandingPage() {
                                 Start ST-RADS Case <ArrowRight className="ml-2 h-5 w-5" />
                             </Button>
                         </Link>
-                        <Link to={createPageUrl("About")}>
-                            <Button
-                                variant="outline"
-                                size="lg"
-                                className="h-13 px-8 text-base font-semibold rounded-full transition-all gap-2 border-slate-300 dark:border-slate-700"
-                            >
-                                <BookOpen className="h-4 w-4" /> Learn ST-RADS
-                            </Button>
-                        </Link>
+
                     </div>
 
                     <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-slate-100/80 dark:bg-slate-800/50 text-slate-500 dark:text-slate-400 text-xs font-medium">
