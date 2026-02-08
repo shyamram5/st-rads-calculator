@@ -1,9 +1,11 @@
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { AlertTriangle, CheckCircle, Info, Stethoscope, ClipboardCopy, RotateCcw } from "lucide-react";
+import { AlertTriangle, CheckCircle, Info, Stethoscope, ClipboardCopy, RotateCcw, Crown, Heart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import { Link } from "react-router-dom";
+import { createPageUrl } from "@/utils";
 
 const scoreColors = {
   gray: { ring: "ring-gray-400", text: "text-gray-700 dark:text-gray-300", bg: "bg-gray-100 dark:bg-gray-900" },
