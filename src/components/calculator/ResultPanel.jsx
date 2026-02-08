@@ -141,6 +141,25 @@ export default function ResultPanel({ result, caseData, onReset, isPremium }) {
         </p>
       </div>
 
+      {!isPremium && (
+        <div className="bg-gradient-to-r from-amber-50 to-orange-50 dark:from-amber-950/30 dark:to-orange-950/30 border border-amber-200 dark:border-amber-800 rounded-xl p-5 text-center space-y-3">
+          <div className="flex items-center justify-center gap-2">
+            <Heart className="w-4 h-4 text-rose-500" />
+            <p className="text-sm font-semibold text-slate-800 dark:text-slate-200">
+              Enjoying RADS Calculator?
+            </p>
+          </div>
+          <p className="text-xs text-slate-600 dark:text-slate-400 max-w-md mx-auto">
+            Premium gives you unlimited analyses for $9.99/mo — and directly supports a medical student keeping this tool free for the radiology community.
+          </p>
+          <Link to={createPageUrl("Premium")}>
+            <Button className="rounded-full bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-semibold px-6 py-2 shadow-md hover:shadow-lg transition-all mt-1">
+              <Crown className="mr-2 h-4 w-4" /> Go Premium
+            </Button>
+          </Link>
+        </div>
+      )}
+
       <div className="text-center">
         <Button variant="outline" onClick={onReset} className="gap-2">
           <RotateCcw className="w-4 h-4" /> Start New Case
