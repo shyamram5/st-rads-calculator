@@ -1,15 +1,12 @@
-import { createClient } from 'npm:@base44/sdk@0.1.0';
+import { createClientFromRequest } from 'npm:@base44/sdk@0.8.6';
 import Stripe from 'npm:stripe@^15.0.0';
 
 const stripe = new Stripe(Deno.env.get("STRIPE_API_KEY"));
 
-// This is the admin client, it has full access to the data
-const base44 = createClient({
-    appId: Deno.env.get('BASE44_APP_ID'),
-    apiKey: Deno.env.get('BASE44_API_KEY'),
-});
-
 Deno.serve(async (req) => {
+    // Initialize base44 with service role for admin-level user updates
+    const base44 = createClientFromRequest(req);
+
     const signature = req.headers.get('stripe-signature');
     const body = await req.text();
 
@@ -29,37 +26,36 @@ Deno.serve(async (req) => {
                 return new Response('Webhook Error: Missing user ID', { status: 400 });
             }
 
-            // Update user to premium
-            await base44.entities.User.update(userId, {
+            await base44.asServiceRole.entities.User.update(userId, {
                 subscription_tier: 'premium',
                 subscription_date: new Date().toISOString(),
+                stripe_customer_id: session.customer,
             });
 
             console.log(`Successfully upgraded user ${userId} to premium.`);
         }
 
-        // Handle subscription cancellations
         if (event.type === 'customer.subscription.deleted') {
             const subscription = event.data.object;
-            const customer = await stripe.customers.retrieve(subscription.customer);
-            
-            if (customer.email) {
-                // Find user by email and downgrade
-                const users = await base44.entities.User.filter({ email: customer.email });
-                if (users.length > 0) {
-                    await base44.entities.User.update(users[0].id, {
-                        subscription_tier: 'free',
-                        subscription_date: null,
-                        analyses_used: 0
-                    });
-                    console.log(`Successfully downgraded user ${users[0].id} to free tier.`);
-                }
+            const customerId = subscription.customer;
+
+            // Find user by stored stripe_customer_id
+            const users = await base44.asServiceRole.entities.User.filter({ stripe_customer_id: customerId });
+            if (users.length > 0) {
+                await base44.asServiceRole.entities.User.update(users[0].id, {
+                    subscription_tier: 'free',
+                    subscription_date: null,
+                    analyses_used: 0,
+                });
+                console.log(`Successfully downgraded user ${users[0].id} to free tier.`);
+            } else {
+                console.error(`No user found with stripe_customer_id: ${customerId}`);
             }
         }
 
-        return new Response(JSON.stringify({ received: true }), { status: 200 });
+        return Response.json({ received: true });
     } catch (err) {
-        console.error(`Webhook signature verification failed: ${err.message}`);
+        console.error(`Webhook error: ${err.message}`);
         return new Response(`Webhook Error: ${err.message}`, { status: 400 });
     }
 });
