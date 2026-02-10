@@ -1,18 +1,17 @@
 import React, { useState, useEffect, useMemo, useCallback, useRef } from "react";
 import { User } from "@/components/User";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ArrowLeft, ArrowRight, RotateCcw, Sparkles, ChevronRight, Calculator, LogIn, BookOpen, ChevronDown, ChevronUp, Crown, Lock } from "lucide-react";
+import { Card, CardContent } from "@/components/ui/card";
+import { ArrowLeft, ArrowRight, RotateCcw, Sparkles, Calculator as CalcIcon, LogIn, BookOpen, ChevronDown, ChevronUp, Crown, Lock } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
-// UsageTracker removed
 
 import WizardStep from "../components/calculator/WizardStep";
 import ResultPanel from "../components/calculator/ResultPanel";
 import EducationSidebar from "../components/calculator/EducationSidebar";
 import { getWizardSteps } from "../components/calculator/wizardSteps";
-import { calculateSTRADS, applyADCModifier, applyAncillaryModifier } from "../components/calculator/stradsRuleEngine";
+import { calculateSTRADS, applyModifiers } from "../components/calculator/stradsRuleEngine";
 
 export default function CalculatorPage() {
   const [user, setUser] = useState(null);
@@ -39,6 +38,79 @@ export default function CalculatorPage() {
 
   const steps = useMemo(() => getWizardSteps(caseData), [caseData]);
 
+  // ─── DEPENDENCY MANAGEMENT ─────────────────────────────────────────
+  // This ensures that if a user changes a parent question (e.g., changes 
+  // "Tissue Type" from Lipomatous to Cystic), all the lipomatous-specific 
+  // answers are cleared from the state.
+
+  const ALL_DETAIL_KEYS = [
+    // Lipomatous
+    "lipFatContent", "lipSeptations", "lipVessels", "lipNoduleFeatures",
+    // Cyst-like
+    "cystLocation", "cystFlow", "cystHematoma", "cystSeptationNodules",
+    // Solid General
+    "compartment",
+    // Deep
+    "muscleSignature", "myositisTriad", "deepT2",
+    // Intravascular
+    "vascMorphology", "vascBlooming",
+    // Intraarticular
+    "iaSignal", "iaBlooming", "iaEnhancement",
+    // Intraneural
+    "targetSign", "nerveADC",
+    // Cutaneous
+    "growthPattern", "cutEnhancement",
+    // Tendon
+    "tendonMorph", "tendonBlooming",
+    // Fascial
+    "fascialSize", "fascialMulti",
+    // Subungual
+    "subungualSize",
+    // Ancillary
+    "adcValue", "ancillaryFlags"
+  ];
+
+  const getDependentKeys = (changedKey) => {
+    const deps = {
+      // Top Level
+      examAdequacy: ["knownTumor", "knownTumorStatus", "lesionPresent", "tissueType", ...ALL_DETAIL_KEYS],
+      knownTumor: ["knownTumorStatus", "lesionPresent", "tissueType", ...ALL_DETAIL_KEYS],
+      lesionPresent: ["tissueType", ...ALL_DETAIL_KEYS],
+      tissueType: ALL_DETAIL_KEYS, // Reset everything if tissue type changes
+
+      // Lipomatous Branch
+      lipFatContent: ["lipSeptations", "lipVessels", "lipNoduleFeatures"],
+      lipSeptations: ["lipVessels"],
+
+      // Cyst Branch
+      cystLocation: ["cystFlow", "cystHematoma", "cystSeptationNodules"],
+      cystFlow: ["cystHematoma", "cystSeptationNodules"],
+      cystHematoma: ["cystSeptationNodules"],
+
+      // Solid Compartments (Parent)
+      compartment: [
+        "muscleSignature", "myositisTriad", "deepT2",
+        "vascMorphology", "vascBlooming",
+        "iaSignal", "iaBlooming", "iaEnhancement",
+        "targetSign", "nerveADC",
+        "growthPattern", "cutEnhancement",
+        "tendonMorph", "tendonBlooming",
+        "fascialSize", "fascialMulti",
+        "subungualSize"
+      ],
+
+      // Solid Sub-branches
+      muscleSignature: ["myositisTriad", "deepT2"],
+      vascMorphology: ["vascBlooming"],
+      iaSignal: ["iaBlooming", "iaEnhancement"],
+      targetSign: ["nerveADC"],
+      growthPattern: ["cutEnhancement"],
+      tendonMorph: ["tendonBlooming"],
+      fascialSize: ["fascialMulti"]
+    };
+    return deps[changedKey] || [];
+  };
+
   const handleChange = useCallback((questionId, value) => {
     setCaseData(prev => {
       const next = { ...prev, [questionId]: value };
@@ -49,85 +121,15 @@ export default function CalculatorPage() {
     setShowResult(false);
   }, []);
 
-  const ALL_DETAIL_KEYS = [
-    "knownTumorStatus", "lesionPresent", "tissueType",
-    // Lipomatous
-    "lipFatContent", "lipSeptationEnhancement", "lipVessels", "lipNonFatFeatures",
-    // Cyst-like
-    "cystLocationComm", "cystFlowVoids", "cystHematoma", "cystSeptations",
-    // Solid compartments
-    "solidCompartment",
-    // Intravascular
-    "vascMorphology", "vascHemosiderinBlooming", "vascT2Enhancement",
-    // Intraarticular
-    "iaMorphology", "iaHemosiderinBlooming", "iaT2Enhancement",
-    // Intraneural
-    "nerveTargetSign", "nerveADC",
-    // Cutaneous
-    "cutGrowthPattern", "cutEnhancement",
-    // Deep
-    "deepMuscleSignature", "deepBenignTriad",
-    // Tendon
-    "tendonMorphology", "tendonHemosiderinBlooming",
-    // Fascial
-    "fascialNoduleSize", "fascialMultifocal",
-    // Subungual
-    "subungualSize",
-    // Optional
-    "adcValue", "ancillaryFeatures"
-  ];
+  // ─── CALCULATION ──────────────────────────────────────────────────
 
-  const getDependentKeys = (changedKey) => {
-    const deps = {
-      examAdequacy: ["knownTumor", ...ALL_DETAIL_KEYS],
-      knownTumor: ALL_DETAIL_KEYS,
-      lesionPresent: ALL_DETAIL_KEYS.filter(k => !["knownTumorStatus", "lesionPresent"].includes(k)),
-      tissueType: ALL_DETAIL_KEYS.filter(k => !["knownTumorStatus", "lesionPresent", "tissueType"].includes(k)),
-      // Lipomatous
-      lipFatContent: ["lipSeptationEnhancement", "lipVessels", "lipNonFatFeatures"],
-      lipSeptationEnhancement: ["lipVessels"],
-      // Cyst-like
-      cystLocationComm: ["cystFlowVoids", "cystHematoma", "cystSeptations"],
-      cystFlowVoids: ["cystHematoma", "cystSeptations"],
-      cystHematoma: ["cystSeptations"],
-      // Solid compartment
-      solidCompartment: [
-        "vascMorphology", "vascHemosiderinBlooming", "vascT2Enhancement",
-        "iaMorphology", "iaHemosiderinBlooming", "iaT2Enhancement",
-        "nerveTargetSign", "nerveADC",
-        "cutGrowthPattern", "cutEnhancement",
-        "deepMuscleSignature", "deepBenignTriad",
-        "tendonMorphology", "tendonHemosiderinBlooming",
-        "fascialNoduleSize", "fascialMultifocal",
-        "subungualSize"
-      ],
-      // Intravascular
-      vascMorphology: ["vascHemosiderinBlooming", "vascT2Enhancement"],
-      // Intraarticular
-      iaMorphology: ["iaHemosiderinBlooming", "iaT2Enhancement"],
-      // Intraneural
-      nerveTargetSign: ["nerveADC"],
-      // Cutaneous
-      cutGrowthPattern: ["cutEnhancement"],
-      // Deep
-      deepMuscleSignature: ["deepBenignTriad"],
-      // Tendon
-      tendonMorphology: ["tendonHemosiderinBlooming"],
-    };
-    return deps[changedKey] || [];
-  };
-
-  const handleCalculate = () => {
-    let result = calculateSTRADS(caseData);
-    if (caseData.adcValue) {
-      result = applyADCModifier(result, caseData.adcValue);
-    }
-    if (caseData.ancillaryFeatures?.length > 0) {
-      result = applyAncillaryModifier(result, caseData.ancillaryFeatures);
-    }
-    setShowResult(true);
-    return result;
-  };
+  const result = useMemo(() => {
+    if (!showResult) return null;
+    let r = calculateSTRADS(caseData);
+    // Apply modifiers using the new helper function in rule engine
+    r = applyModifiers(r, caseData); 
+    return r;
+  }, [showResult, caseData]);
 
   const handleReset = () => {
     setCaseData({});
@@ -136,6 +138,8 @@ export default function CalculatorPage() {
     hasTrackedRef.current = false;
   };
 
+  // ─── NAVIGATION LOGIC ─────────────────────────────────────────────
+
   const canGoNext = currentStepIndex < steps.length - 1;
   const canGoBack = currentStepIndex > 0;
   const isLastStep = currentStepIndex === steps.length - 1;
@@ -143,27 +147,19 @@ export default function CalculatorPage() {
   // Check if current step has minimum required answers
   const currentStep = steps[currentStepIndex];
   const hasRequiredAnswers = currentStep?.questions?.every(q => {
-    if (q.type === "checkbox" || q.type === "number") return true; // optional
+    if (q.type === "checkbox" || q.type === "number") return true; // Optional fields
     return caseData[q.id] !== undefined && caseData[q.id] !== "";
   });
 
-  // Can we show the calculate button?
-  // Early termination: if exam is incomplete, lesion absent, or known tumor answered
+  // Early termination conditions
   const canCalculateEarly = (
     caseData.examAdequacy === "incomplete" ||
     caseData.lesionPresent === "no" ||
     (caseData.knownTumor === "yes" && caseData.knownTumorStatus)
   );
 
-  const result = useMemo(() => {
-    if (!showResult) return null;
-    let r = calculateSTRADS(caseData);
-    if (caseData.adcValue) r = applyADCModifier(r, caseData.adcValue);
-    if (caseData.ancillaryFeatures?.length > 0) r = applyAncillaryModifier(r, caseData.ancillaryFeatures);
-    return r;
-  }, [showResult, caseData]);
+  // ─── USAGE TRACKING ───────────────────────────────────────────────
 
-  // Track usage when result is shown
   useEffect(() => {
     if (showResult && result && user && !hasTrackedRef.current) {
       hasTrackedRef.current = true;
@@ -179,7 +175,9 @@ export default function CalculatorPage() {
   const isPremium = user?.subscription_tier === "premium";
   const analysesUsed = user?.analyses_used || 0;
   const freeUsesLeft = Math.max(0, 5 - analysesUsed);
-  const isLimitReached = !isPremium && freeUsesLeft <= 0;
+  const isLimitReached = !isPremium && freeUsesLeft <= 0 && !showResult;
+
+  // ─── RENDER ───────────────────────────────────────────────────────
 
   if (authLoading) {
     return (
@@ -194,7 +192,7 @@ export default function CalculatorPage() {
       <div className="min-h-[70vh] flex items-center justify-center p-4">
         <Card className="shadow-2xl border-0 bg-white dark:bg-slate-900 max-w-md w-full text-center">
           <CardContent className="p-8 space-y-6">
-            <Calculator className="w-16 h-16 text-blue-500 mx-auto" />
+            <CalcIcon className="w-16 h-16 text-blue-500 mx-auto" />
             <h2 className="text-2xl font-bold text-slate-900 dark:text-slate-100">Sign Up to Use the Calculator</h2>
             <p className="text-slate-600 dark:text-slate-400">Create a free account to access the ST-RADS Calculator and get your first 5 analyses free.</p>
             <Button
