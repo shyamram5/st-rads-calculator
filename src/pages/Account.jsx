@@ -14,6 +14,7 @@ import {
     Mail,
     Loader2
 } from "lucide-react";
+import { cancelSubscription } from "@/functions/cancelSubscription";
 import { Input } from "@/components/ui/input";
 import { Link } from 'react-router-dom'; // Added Link import
 import {
@@ -82,13 +83,9 @@ export default function AccountPage() {
     const handleCancelSubscription = async () => {
         setIsCancelling(true);
         try {
-            const response = await fetch("/api/functions/cancelSubscription", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" }
-            });
-            const result = await response.json();
-            if (!response.ok || result.error) {
-                console.error("Failed to cancel subscription:", result.error);
+            const { data, error } = await cancelSubscription();
+            if (error) {
+                console.error("Failed to cancel subscription:", error);
                 alert("Failed to cancel subscription. Please try again or contact support.");
             } else {
                 setCancelSuccess(true);
