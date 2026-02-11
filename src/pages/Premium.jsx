@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Crown, Check, Zap, Star, CreditCard, Shield, Users, Clock, Loader2 } from "lucide-react";
-import { createCheckoutSession } from "@/functions/createCheckoutSession";
 import { Link } from "react-router-dom"; // Added import for Link
 import { createPageUrl } from "@/utils"; // Added import for createPageUrl (assuming its path)
 
@@ -30,12 +29,16 @@ export default function PremiumPage() {
     const handleStripeCheckout = async () => {
         setIsRedirecting(true);
         try {
-            const { data, error } = await createCheckoutSession();
-            if (error) {
-                console.error("Failed to create checkout session:", error);
+            const response = await fetch("/api/functions/createCheckoutSession", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" }
+            });
+            const result = await response.json();
+            if (!response.ok || result.error) {
+                console.error("Failed to create checkout session:", result.error);
                 // You could show an error message to the user here
-            } else if (data && data.url) {
-                window.location.href = data.url;
+            } else if (result.url) {
+                window.location.href = result.url;
             }
         } catch (err) {
             console.error("Error redirecting to Stripe:", err);

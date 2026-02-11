@@ -21,6 +21,42 @@ export const AuthProvider = ({ children }) => {
     try {
       setIsLoadingPublicSettings(true);
       setAuthError(null);
+
+      // If running on localhost (or typical local network addresses) treat this
+      // as development and skip authentication checks so developers are not
+      // redirected to external login pages while working locally.
+      if (typeof window !== 'undefined') {
+        const host = window.location.hostname;
+        const isLocalHost = host === 'localhost' || host === '127.0.0.1' || /^192\.168\./.test(host) || /^10\./.test(host);
+        if (isLocalHost || import.meta.env.MODE === 'development') {
+          console.warn('Running on localhost/development — skipping Base44 auth checks');
+          setAppPublicSettings({ id: 'dev', public_settings: {} });
+          // Provide a lightweight mock user so the app behaves as "logged in"
+          // during local development and avoids redirect/login flows.
+          const mockUser = {
+            id: 'dev-user',
+            email: 'dev@local',
+            full_name: 'Developer',
+            subscription_tier: 'free',
+            analyses_used: 0
+          };
+          setUser(mockUser);
+          setIsAuthenticated(true);
+          setIsLoadingPublicSettings(false);
+          setIsLoadingAuth(false);
+          return;
+        }
+      }
+
+      // In development mode, skip the app public settings check if no serverUrl
+      if (!appParams.serverUrl) {
+        console.warn('VITE_BASE44_BACKEND_URL not set - running in development mode without auth');
+        setAppPublicSettings({ id: 'dev', public_settings: {} });
+        setIsLoadingPublicSettings(false);
+        setIsLoadingAuth(false);
+        setIsAuthenticated(false);
+        return;
+      }
       
       // First, check app public settings (with token if available)
       // This will tell us if auth is required, user not registered, etc.
@@ -124,8 +160,50 @@ export const AuthProvider = ({ children }) => {
   };
 
   const navigateToLogin = () => {
-    // Use the SDK's redirectToLogin method
-    base44.auth.redirectToLogin(window.location.href);
+    // Redirect to an external Base44 login only when the configured server URL
+    // points to a different origin than the current app. Otherwise prefer the
+    // SDK redirect (if available) or fall back to the app root to avoid
+    // redirecting to a missing local `/login` route.
+    try {
+      const from = encodeURIComponent(window.location.href);
+      const serverUrl = appParams.serverUrl || '';
+
+      // If no external server URL is configured, avoid calling the SDK
+      // redirect which can point to a local `/login` route that doesn't exist
+      // in the SPA. Instead, redirect to the app root.
+      if (!serverUrl) {
+        console.warn('navigateToLogin: no serverUrl configured, redirecting to app root');
+        window.location.href = '/';
+        return;
+      }
+
+      if (serverUrl) {
+        try {
+          const parsed = new URL(serverUrl, window.location.href);
+          // If serverUrl origin differs from current origin, send user there
+          if (parsed.origin !== window.location.origin) {
+            const basePath = `${parsed.origin.replace(/\/$/, '')}${parsed.pathname.replace(/\/$/, '')}`;
+            window.location.href = `${basePath}/login?from_url=${from}`;
+            return;
+          }
+        } catch (e) {
+          // parsing failed — fall through to SDK or root fallback
+          console.warn('navigateToLogin: failed to parse serverUrl, falling back', e);
+        }
+      }
+
+      // Prefer the SDK's redirect if available (handles tokens and return URL)
+      if (base44 && base44.auth && typeof base44.auth.redirectToLogin === 'function') {
+        base44.auth.redirectToLogin(window.location.href);
+        return;
+      }
+
+      // Final fallback: go to app root (safe, no /login 404)
+      window.location.href = '/';
+    } catch (e) {
+      console.error('navigateToLogin error:', e);
+      window.location.href = '/';
+    }
   };
 
   return (

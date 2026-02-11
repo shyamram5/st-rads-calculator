@@ -1,166 +1,182 @@
 // Wizard step definitions for the ST-RADS Calculator
 // Faithfully follows Figures 1, 2A, 2B, 2C, 2D from Chhabra et al., AJR 2025
 
+// Derive algorithm pathway from Figure 1's two sequential decisions (used below for branching).
+function getTissueType(caseData) {
+  if (caseData.macroscopicFatT1W === "yes") return "lipomatous";
+  if (caseData.macroscopicFatT1W === "no" && caseData.t2EnhancementPath === "cystlike") return "cystlike";
+  if (caseData.macroscopicFatT1W === "no" && caseData.t2EnhancementPath === "indeterminate_solid") return "indeterminate_solid";
+  return null;
+}
+
 export function getWizardSteps(caseData) {
   const steps = [];
+  const tissueType = getTissueType(caseData);
 
   // ══════════════════════════════════════════════════════════════
-  // STEP 1: Exam Adequacy & Known Tumor (Figure 1 top)
+  // FIGURE 1: Suspected Soft Tissue Lesion (exact flowchart order)
+  // 1) Incomplete imaging → RADS-0 | Complete imaging → 2
+  // 2) No soft tissue lesion → RADS-1 | Soft tissue lesion → 3
+  // 3) Macroscopic fat on T1W → Lipomatous algorithm | No macroscopic fat → 4
+  // 4) No variable high T2 OR >20% enh → Indeterminate solid | Markedly high T2 AND <20% enh → Cyst-like
   // ══════════════════════════════════════════════════════════════
   steps.push({
     id: "initial",
-    title: "Step 1: Exam Adequacy & Known Tumor",
-    description: "Determine if the MRI exam is complete and whether this is a known treated lesion.",
+    title: "Step 1: Imaging Completion",
+    description: "Figure 1 — First decision.",
     questions: [
       {
         id: "examAdequacy",
         label: "Is the MRI examination complete?",
-        tooltip: "Minimum protocol: axial T1W, fluid-sensitive T2W (conventional T2W / in-phase Dixon / STIR), and pre/post contrast fat-suppressed T1W sequences.",
+        tooltip: "Minimum: Axial T1W, fluid-sensitive T2W (conventional T2W / in-phase Dixon / STIR), and pre/post contrast fat-suppressed T1W sequences. Incomplete → Soft tissue RADS-0.",
         type: "radio",
         options: [
-          { value: "complete", label: "Yes — Complete imaging" },
-          { value: "incomplete", label: "No — Incomplete imaging (missing required sequences)" }
+          { value: "incomplete", label: "No — Incomplete imaging (→ Soft tissue RADS-0)" },
+          { value: "complete", label: "Yes — Complete imaging" }
         ]
-      },
-      ...(caseData.examAdequacy === "complete" ? [{
-        id: "knownTumor",
-        label: "Is this a known, previously treated soft-tissue tumor or tumor-like lesion?",
-        tooltip: "Category 6 is assigned directly based on clinical context, without using the flowcharts.",
-        type: "radio",
-        options: [
-          { value: "no", label: "No — New or untreated lesion" },
-          { value: "yes", label: "Yes — Previously treated lesion" }
-        ]
-      }] : [])
+      }
     ]
   });
 
-  // ── Category 6 substep ──
-  if (caseData.knownTumor === "yes") {
+  // ── Step 2: Lesion Identification (Figure 1, second decision) ──
+  // No soft tissue lesion → RADS-1* | Soft tissue lesion → Step 3
+  if (caseData.examAdequacy === "complete") {
     steps.push({
-      id: "known_tumor",
-      title: "Step 2: Treatment Response (Category 6)",
-      description: "Classify the known treated lesion based on treatment response.",
-      questions: [{
-        id: "knownTumorStatus",
-        label: "Current status of the treated lesion?",
-        type: "radio",
-        options: [
-          { value: "no_residual", label: "6A — No residual tumor (expected posttreatment changes, no focal mass or substantial diffusion restriction)" },
-          { value: "residual", label: "6B — Residual tumor (≤20% increase in largest dimension; similar or increased ADC)" },
-          { value: "progressive", label: "6C — Progressive/recurrent (>20% increase in largest dimension; increased diffusion restriction)" }
-        ]
-      }]
-    });
-    return steps;
-  }
-
-  // ══════════════════════════════════════════════════════════════
-  // STEP 2: Lesion Identification (Figure 1 middle)
-  // ══════════════════════════════════════════════════════════════
-  if (caseData.examAdequacy === "complete" && caseData.knownTumor === "no") {
-    steps.push({
-      id: "lesion",
+      id: "lesion_ident",
       title: "Step 2: Lesion Identification",
-      description: "Is a soft-tissue lesion identified on MRI?",
+      description: "Figure 1 — Is a soft-tissue lesion identified on MRI?",
       questions: [{
         id: "lesionPresent",
-        label: "Is a soft-tissue lesion present?",
-        tooltip: "Category 1 applies to findings that mimic lesions but are not true lesions (e.g., asymmetric fatty or osseous prominence).",
+        label: "Is a soft-tissue lesion identified on MRI?",
+        tooltip: "Category 1 (RADS-1) is appropriate for examinations showing imaging findings that may mimic soft-tissue lesions but are not true lesions (e.g., asymmetric fatty or osseous prominence, anatomic osseous variant).",
         type: "radio",
         options: [
-          { value: "yes", label: "Yes — Soft-tissue lesion identified" },
-          { value: "no", label: "No — No soft-tissue lesion (or mimic only)" }
+          { value: "no", label: "No — No soft tissue lesion (→ Soft tissue RADS-1)" },
+          { value: "yes", label: "Yes — Soft tissue lesion present" }
         ]
       }]
     });
   }
 
-  // ══════════════════════════════════════════════════════════════
-  // STEP 3: Tissue Type (Figure 1 bottom branching)
-  // ══════════════════════════════════════════════════════════════
+  // ── Step 3: Macroscopic fat on T1W (Figure 1, third decision) ──
+  // Yes → Lipomatous algorithm | No → Step 4
   if (caseData.lesionPresent === "yes") {
     steps.push({
-      id: "tissue_type",
-      title: "Step 3: Predominant Tissue Type",
-      description: "Select the algorithm pathway based on the lesion's signal characteristics.",
+      id: "macroscopic_fat",
+      title: "Step 3: Macroscopic Fat on T1W",
+      description: "Figure 1 — Third decision. Presence of internal fat on T1W that suppresses on fat-suppression sequence.",
       questions: [{
-        id: "tissueType",
-        label: "What is the predominant tissue type?",
-        tooltip: "Macroscopic fat = T1 hyperintense that suppresses on fat-sat. Cyst-like = markedly high T2 AND <20% enhancement. Indeterminate solid = no variable high T2 OR >20% enhancement.",
+        id: "macroscopicFatT1W",
+        label: "Macroscopic fat on T1W?",
+        tooltip: "** Presence of internal fat on T1W that suppresses on fat-suppression sequence. Yes → Determine Soft Tissue-RADS Score by following 'Lipomatous' Soft Tissue Lesion Algorithm.",
         type: "radio",
         options: [
-          { value: "lipomatous", label: "Lipomatous — Macroscopic fat on T1W (suppresses on fat-saturation)" },
-          { value: "cystlike", label: "Cyst-like / High Water Content — Markedly high T2 AND <20% enhancement" },
-          { value: "indeterminate_solid", label: "Indeterminate Solid — No variable high T2 OR >20% enhancement" }
+          { value: "yes", label: "Yes — Macroscopic fat on T1W (→ Follow Lipomatous algorithm)" },
+          { value: "no", label: "No — No macroscopic fat on T1W" }
+        ]
+      }]
+    });
+  }
+
+  // ── Step 4: T2 signal and enhancement (Figure 1, fourth decision) ──
+  // Only when no macroscopic fat: No variable high T2 OR >20% enh → Indeterminate solid | Markedly high T2 AND <20% enh → Cyst-like
+  if (caseData.macroscopicFatT1W === "no") {
+    steps.push({
+      id: "t2_enhancement",
+      title: "Step 4: T2 Signal and Enhancement",
+      description: "Figure 1 — Fourth decision. Determines Cyst-like vs Indeterminate solid algorithm.",
+      questions: [{
+        id: "t2EnhancementPath",
+        label: "Which describes the lesion?",
+        tooltip: "No variable high signal on T2W OR >20% enhancement on T1W+C → Indeterminate solid. Markedly high signal on T2W AND <20% enhancement on T1W+C → Cyst-like or high water content.",
+        type: "radio",
+        options: [
+          { value: "indeterminate_solid", label: "No variable high signal on T2W OR >20% enhancement on T1W+C (→ Follow Indeterminate solid algorithm)" },
+          { value: "cystlike", label: "Markedly high signal on T2W AND <20% enhancement on T1W+C (→ Follow Cyst-like or high water content algorithm)" }
         ]
       }]
     });
   }
 
   // ══════════════════════════════════════════════════════════════
-  // Figure 2A: LIPOMATOUS
+  // FIGURE 2A: LIPOMATOUS LESIONS (exact flowchart match)
   // ══════════════════════════════════════════════════════════════
-  if (caseData.tissueType === "lipomatous") {
+  if (tissueType === "lipomatous") {
     steps.push({
-      id: "lip_fat",
-      title: "Step 4A: Lipomatous — Fat Composition (Fig 2A)",
-      description: "First exclude common benign lesions containing macroscopic fat (elastofibroma dorsi, hemangioma, xanthoma, heterotopic ossification, lipomatosis of nerve, chondroid lipoma, hibernoma).",
+      id: "lip_comp",
+      title: "Step 4: Lipomatous Composition",
+      description: "Figure 2A: Predominantly lipomatous (>90%) vs not.",
       questions: [{
         id: "lipFatContent",
-        label: "Fat composition",
-        tooltip: "Predominantly lipomatous = >90% of the lesion shows fat signal intensity on all sequences.",
+        label: "Is the lesion predominantly lipomatous (>90%)?",
+        tooltip: "Identify and exclude common benign lesions containing macroscopic fat (elastofibroma dorsi, hemangioma, xanthoma, heterotopic ossification, lipomatosis of nerve, chondroid lipoma, hibernoma).",
         type: "radio",
         options: [
-          { value: "predominantly", label: "Predominantly lipomatous (>90%)" },
-          { value: "not_predominantly", label: "Not predominantly lipomatous (≤90%)" }
+          { value: "predominantly", label: "Yes — Predominantly lipomatous (>90%)" },
+          { value: "not_predominantly", label: "No — Not predominantly lipomatous (≤90%)" }
         ]
       }]
     });
 
-    // Predominantly lipomatous → septation/enhancement decision
+    // Predominantly: first split per flowchart
     if (caseData.lipFatContent === "predominantly") {
       steps.push({
-        id: "lip_sept_enh",
-        title: "Step 4B: Septation & Enhancement",
-        description: "Per the flowchart: thin septations (<2 mm) OR enhancement <10% leads to RADS-2/3; thick septations (≥2 mm) OR enhancement >10% leads to RADS-4.",
-        questions: [
-          {
-            id: "lipSeptationEnhancement",
-            label: "Septation and enhancement assessment",
-            type: "radio",
-            options: [
-              { value: "thin_or_low_enhancement", label: "Thin septations (<2 mm) OR <10% enhancement increase" },
-              { value: "thick_or_high_enhancement", label: "Thick septations (≥2 mm) OR >10% enhancement increase" }
-            ]
-          },
-          ...(caseData.lipSeptationEnhancement === "thin_or_low_enhancement" ? [{
-            id: "lipVessels",
-            label: "Prominent vessels?",
-            tooltip: "Many prominent vessels → RADS-2 (lipoma variants). Few prominent vessels → RADS-3 (angiolipoma).",
-            type: "radio",
-            options: [
-              { value: "many", label: "Many prominent vessels" },
-              { value: "few", label: "Few or no prominent vessels" }
-            ]
-          }] : [])
-        ]
-      });
-    }
-
-    // Not predominantly lipomatous → nodule assessment
-    if (caseData.lipFatContent === "not_predominantly") {
-      steps.push({
-        id: "lip_nonfat",
-        title: "Step 4B: Non-Fat Component Features",
-        description: "Assess the enhancing nodules and relative proportions of lipomatous vs soft-tissue components.",
+        id: "lip_first_branch",
+        title: "Step 5: Septations & Nodules (Fig 2A)",
+        description: "Thin septations/absence of nodules → RADS-2. Septations and presence of nodules → next question.",
         questions: [{
-          id: "lipNonFatFeatures",
-          label: "Non-fat component",
+          id: "lipNoduleSeptation",
+          label: "Which describes the lesion?",
           type: "radio",
           options: [
-            { value: "no_enhancing_nodules", label: "No enhancing nodule(s) OR proportionately larger lipomatous component" },
-            { value: "enhancing_nodules", label: "Enhancing nodule(s) OR proportionately smaller lipomatous component" }
+            { value: "thin_absence", label: "Thin septations (<2 mm) OR absence of nodules and like subcutaneous fat intensity on all sequences (→ RADS-2)" },
+            { value: "septations_presence", label: "Septations and presence of nodules and like subcutaneous fat intensity on all sequences" }
+          ]
+        }]
+      });
+      // Only when "septations and presence of nodules" do we ask thin/thick and vessels
+      if (caseData.lipNoduleSeptation === "septations_presence") {
+        steps.push({
+          id: "lip_sept",
+          title: "Step 6: Septation Thickness & Enhancement",
+          description: "Thick septations ≥2 mm OR enhancement >10% → RADS-4. Thin <2 mm OR enhancement <10% → vessel question → RADS-3 (Angiolipoma).",
+          questions: [
+            {
+              id: "lipSeptations",
+              label: "Septation thickness and enhancement",
+              type: "radio",
+              options: [
+                { value: "thin_low_enh", label: "Thin septations <2 mm OR Enhancement <10%" },
+                { value: "thick_high_enh", label: "Thick septations ≥2 mm OR Enhancement >10% (→ RADS-4: ALT/WDL)" }
+              ]
+            },
+            ...(caseData.lipSeptations === "thin_low_enh" ? [{
+              id: "lipVessels",
+              label: "Prominent vessels?",
+              tooltip: "Many or few prominent vessels both → RADS-3 (Angiolipoma) per flowchart.",
+              type: "radio",
+              options: [
+                { value: "many", label: "Many prominent vessels (→ RADS-3: Angiolipoma)" },
+                { value: "few", label: "Few prominent vessels (→ RADS-3: Angiolipoma)" }
+              ]
+            }] : [])
+          ]
+        });
+      }
+    }
+
+    if (caseData.lipFatContent === "not_predominantly") {
+      steps.push({
+        id: "lip_nodules",
+        title: "Step 5: Non-Fat Component",
+        description: "No enhancing nodules or proportionately larger lipomatous → RADS-4. Enhancing nodules or proportionately smaller lipomatous → RADS-5.",
+        questions: [{
+          id: "lipNoduleFeatures",
+          label: "Non-fat component features",
+          type: "radio",
+          options: [
+            { value: "no_nodules", label: "No enhancing nodule(s) OR proportionately larger lipomatous component than soft tissue (→ RADS-4: ALT/WDL)" },
+            { value: "nodules_present", label: "Enhancing nodule(s) OR proportionately smaller lipomatous component than soft tissue (→ RADS-5)" }
           ]
         }]
       });
@@ -168,56 +184,58 @@ export function getWizardSteps(caseData) {
   }
 
   // ══════════════════════════════════════════════════════════════
-  // Figure 2B: CYST-LIKE / HIGH WATER CONTENT
+  // FIGURE 2B: CYST-LIKE / HIGH WATER CONTENT
   // ══════════════════════════════════════════════════════════════
-  if (caseData.tissueType === "cystlike") {
+  if (tissueType === "cystlike") {
     steps.push({
-      id: "cyst_location",
-      title: "Step 4A: Cyst-like — Location & Communication (Fig 2B)",
-      description: "Determine whether the lesion communicates with a joint/tendon sheath/bursa, or its location.",
+      id: "cyst_loc",
+      title: "Step 4: Location & Communication",
+      description: "Figure 2B: Determine anatomical location[cite: 312].",
       questions: [{
-        id: "cystLocationComm",
+        id: "cystLocation",
         label: "Location and communication",
         type: "radio",
         options: [
-          { value: "communicates_or_superficial_or_intraneural", label: "Communicates with joint/tendon sheath/bursa — OR — Cutaneous/subcutaneous — OR — Intraneural" },
-          { value: "no_communication_deeper", label: "No communication with joint/tendon sheath/bursa — deeper (subfascial) location" }
+          { value: "superficial_communicating", label: "Communicates with joint/tendon/bursa OR Cutaneous/Subcutaneous OR Intraneural (RADS-2)" },
+          { value: "deep_non_communicating", label: "Deep (subfascial) location AND No communication" }
         ]
       }]
     });
 
-    if (caseData.cystLocationComm === "no_communication_deeper") {
+    if (caseData.cystLocation === "deep_non_communicating") {
       steps.push({
-        id: "cyst_deep",
-        title: "Step 4B: Deep Cyst-like Features",
-        description: "Characterize the deep cyst-like lesion.",
+        id: "cyst_features",
+        title: "Step 5: Deep Cyst-like Features",
+        description: "Subfascial (deeper) location. Flowchart: flow voids → then hematoma; no flow voids → hematoma → septations.",
         questions: [
           {
-            id: "cystFlowVoids",
+            id: "cystFlow",
             label: "Predominantly comprised of flow voids or fluid-fluid levels?",
             type: "radio",
             options: [
-              { value: "predominantly", label: "Yes — Predominantly flow voids or fluid-fluid levels" },
-              { value: "not_predominantly", label: "No" }
+              { value: "yes", label: "Yes" },
+              { value: "no", label: "No" }
             ]
           },
-          ...(caseData.cystFlowVoids === "not_predominantly" ? [{
+          // When flow = yes: ask hematoma (yes → RADS-3, no → RADS-2). When flow = no: ask hematoma then septations.
+          ...(caseData.cystFlow !== undefined ? [{
             id: "cystHematoma",
             label: "Features suggesting hematoma?",
+            tooltip: "If flow voids/fluid-fluid: hematoma yes → RADS-3, no → RADS-2. If no flow voids: hematoma yes → RADS-3.",
             type: "radio",
             options: [
-              { value: "yes", label: "Yes — Features suggesting hematoma" },
-              { value: "no", label: "No hematoma features" }
+              { value: "yes", label: "Yes (RADS-3: Hematoma / Chronic expanding hematoma)" },
+              { value: "no", label: "No" }
             ]
           }] : []),
-          ...(caseData.cystFlowVoids === "not_predominantly" && caseData.cystHematoma === "no" ? [{
-            id: "cystSeptations",
+          ...(caseData.cystFlow === "no" && caseData.cystHematoma === "no" ? [{
+            id: "cystSeptationNodules",
             label: "Thick enhancing septations and/or mural nodules",
-            tooltip: "Per flowchart: absence of thick enhancing septations and small nodules <1 cm → RADS-3/4. Presence of thick septations and/or nodules ≥1 cm or larger soft tissue component → RADS-5.",
+            tooltip: "Absence of thick septations and small nodules <1 cm → RADS-3/4. Presence of thick septations and/or nodules ≥1 cm or larger soft tissue component → RADS-5.",
             type: "radio",
             options: [
-              { value: "absent_small", label: "Absence of thick enhancing septations; small mural nodule(s) <1 cm" },
-              { value: "thick_or_large_nodules", label: "Presence of thick enhancing septations AND/OR mural nodule(s) ≥1 cm or larger soft tissue component" }
+              { value: "absent", label: "Absence of thick enhancing septations and small mural nodule(s) <1 cm (RADS-3 or 4)" },
+              { value: "present", label: "Presence of thick enhancing septations AND/OR mural nodule(s) ≥1 cm or larger soft tissue component (RADS-5)" }
             ]
           }] : [])
         ]
@@ -226,265 +244,278 @@ export function getWizardSteps(caseData) {
   }
 
   // ══════════════════════════════════════════════════════════════
-  // Figures 2C & 2D: INDETERMINATE SOLID
+  // FIGURE 2C & 2D: INDETERMINATE SOLID LESIONS
   // ══════════════════════════════════════════════════════════════
-  if (caseData.tissueType === "indeterminate_solid") {
+  if (tissueType === "indeterminate_solid") {
     steps.push({
       id: "solid_compartment",
-      title: "Step 4: Anatomic Compartment (Figs 2C & 2D)",
-      description: "Determine the anatomic compartment of the epicenter.",
+      title: "Step 4: Anatomic Compartment",
+      description: "Select the compartment of the epicenter[cite: 307].",
       questions: [{
-        id: "solidCompartment",
-        label: "Anatomic compartment of the epicenter",
+        id: "compartment",
+        label: "Anatomic Compartment",
         type: "radio",
         options: [
-          { value: "intravascular", label: "Intravascular or vessel-related" },
+          { value: "deep_muscle", label: "Deep (subfascial) / Intramuscular" },
+          { value: "intravascular", label: "Intravascular / Vessel-related" },
           { value: "intraarticular", label: "Intraarticular" },
-          { value: "intraneural", label: "Intraneural or nerve-related" },
-          { value: "cutaneous_subcutaneous", label: "Cutaneous or subcutaneous" },
-          { value: "deep_intramuscular", label: "Deep (subfascial) / intermuscular / intramuscular" },
-          { value: "intratendinous", label: "Intratendinous or tendon-related" },
-          { value: "plantar_palmar", label: "Plantar or palmar fascial" },
+          { value: "intraneural", label: "Intraneural / Nerve-related" },
+          { value: "cutaneous", label: "Cutaneous / Subcutaneous" },
+          { value: "intratendinous", label: "Intratendinous" },
+          { value: "fascial", label: "Plantar / Palmar Fascial" },
           { value: "subungual", label: "Subungual" }
         ]
       }]
     });
 
-    // ── Fig 2D: Intravascular ──
-    if (caseData.solidCompartment === "intravascular") {
+    // ── Deep / Intramuscular (Fig 2C) ──
+    // Muscle signature present → RADS-2 (no further question). No muscle signature → Benign triad? Yes→RADS-2, No→RADS-4/5.
+    if (caseData.compartment === "deep_muscle") {
       steps.push({
-        id: "vasc_detail",
-        title: "Step 5: Intravascular/Vessel-Related (Fig 2D)",
-        description: "Excludes venous thrombosis, thrombophlebitis, (pseudo)aneurysm, and vascular malformation.",
+        id: "deep_logic",
+        title: "Step 5: Deep (subfascial) / Inter or Intra-muscular",
+        questions: [
+          {
+            id: "muscleSignature",
+            label: "Muscle signature present?",
+            tooltip: "Does the lesion show muscle-like signal characteristics? If yes → RADS-2.",
+            type: "radio",
+            options: [
+              { value: "yes", label: "Yes — Muscle signature present (→ RADS-2)" },
+              { value: "no", label: "No — No muscle signature" }
+            ]
+          },
+          ...(caseData.muscleSignature === "no" ? [{
+            id: "myositisTriad",
+            label: "History of prior injury WITH peritumoral edema AND mature peripheral mineralization?",
+            tooltip: "All three present → RADS-2 (e.g. myositis ossificans). One or more absent → RADS-4/5.",
+            type: "radio",
+            options: [
+              { value: "yes", label: "Yes — All three present (→ RADS-2)" },
+              { value: "no", label: "No — One or more absent (→ RADS-4/5)" }
+            ]
+          }] : [])
+        ]
+      });
+    }
+
+    // ── Intravascular (Fig 2D) ──
+    // Excludes venous thrombosis, thrombophlebitis, (pseudo)aneurysm, vascular malformation.
+    if (caseData.compartment === "intravascular") {
+      steps.push({
+        id: "vasc_logic",
+        title: "Step 5: Intra-vascular or Vessel-related",
         questions: [
           {
             id: "vascMorphology",
-            label: "T2 signal, phleboliths, and mineralization",
+            label: "Morphology and signal (T2W, phleboliths, fluid-fluid levels)",
             type: "radio",
             options: [
-              { value: "hyperintense_with_phleboliths_and_fluid", label: "Hyperintense lobules/tubules on T2W WITH hypointense phleboliths WITH fluid-fluid levels" },
-              { value: "hyperintense_without_phleboliths", label: "Hyperintense lobules/tubules on T2W WITHOUT hypointense phleboliths, WITHOUT fluid-fluid levels" },
-              { value: "calcified_hypointense", label: "Calcified/ossified on XR or CT AND/OR predominantly hypointense foci on T2W" },
-              { value: "not_calcified_hyperintense", label: "Not calcified/ossified on XR or CT OR predominantly hyperintense foci on T2W" }
+              { value: "phleboliths", label: "Hyperintense lobules or tubules on T2W WITH hypointense phleboliths WITH fluid-fluid levels (→ RADS-2: Venous/venolymphatic malformation)" },
+              { value: "hyper_no_phleb", label: "Hyperintense lobules or tubules on T2W WITHOUT hypointense phleboliths WITHOUT fluid-fluid levels (→ RADS-4/5)" },
+              { value: "calc_hypo", label: "Calcified/ossified on XR or CT AND/OR predominantly hypointense foci on T2W" }
             ]
           },
-          ...(caseData.vascMorphology === "calcified_hypointense" ? [{
-            id: "vascHemosiderinBlooming",
-            label: "Hemosiderin staining and GRE blooming?",
-            type: "radio",
-            options: [
-              { value: "hemosiderin_with_blooming", label: "Hemosiderin staining with blooming on GRE" },
-              { value: "hemosiderin_without_blooming", label: "Hemosiderin staining without blooming on GRE" }
-            ]
-          }] : []),
-          ...(caseData.vascMorphology === "not_calcified_hyperintense" ? [{
+          ...(caseData.vascMorphology === "hyper_no_phleb" ? [{
             id: "vascT2Enhancement",
             label: "T2 signal and enhancement pattern",
             type: "radio",
             options: [
-              { value: "hyperintense_peripheral", label: "Hyperintense on T2W and peripheral enhancement" },
-              { value: "hypointense_no_peripheral", label: "Hypointense on T2W and no peripheral enhancement" }
+              { value: "hyperintense_peripheral", label: "Hyperintense on T2W and peripheral enhancement (→ RADS-4)" },
+              { value: "hypointense_no_peripheral", label: "Hypointense on T2W and no peripheral enhancement (→ RADS-5)" }
+            ]
+          }] : []),
+          ...(caseData.vascMorphology === "calc_hypo" ? [{
+            id: "vascBlooming",
+            label: "Hemosiderin staining and blooming on GRE?",
+            type: "radio",
+            options: [
+              { value: "blooming", label: "Hemosiderin staining with blooming on GRE (→ RADS-2: Synovial chondromatosis, synovial hemangioma)" },
+              { value: "no_blooming", label: "Hemosiderin staining without blooming on GRE (→ RADS-2: Gout, amyloid, xanthoma)" }
             ]
           }] : [])
         ]
       });
     }
 
-    // ── Fig 2D: Intraarticular ──
-    if (caseData.solidCompartment === "intraarticular") {
+    // ── Intraarticular (Fig 2D) ──
+    if (caseData.compartment === "intraarticular") {
       steps.push({
-        id: "ia_detail",
-        title: "Step 5: Intraarticular (Fig 2D)",
+        id: "ia_logic",
+        title: "Step 5: Intraarticular",
         questions: [
           {
-            id: "iaMorphology",
-            label: "T2 signal and mineralization",
+            id: "iaSignal",
+            label: "Calcified/ossified on XR or CT and/or predominantly hypointense foci on T2W?",
             type: "radio",
             options: [
-              { value: "calcified_hypointense", label: "Calcified/ossified on XR or CT AND/OR predominantly hypointense foci on T2W" },
-              { value: "not_calcified_hyperintense", label: "Not calcified/ossified OR predominantly hyperintense foci on T2W" }
+              { value: "calcified_hypo", label: "Yes — Calcified/ossified and/or predominantly hypointense on T2W" },
+              { value: "not_calcified_hyper", label: "No — Not calcified/ossified OR predominantly hyperintense foci on T2W" }
             ]
           },
-          ...(caseData.iaMorphology === "calcified_hypointense" ? [{
-            id: "iaHemosiderinBlooming",
-            label: "Hemosiderin staining and GRE blooming?",
+          ...(caseData.iaSignal === "calcified_hypo" ? [{
+            id: "iaBlooming",
+            label: "Hemosiderin staining and blooming on GRE?",
             type: "radio",
             options: [
-              { value: "hemosiderin_with_blooming", label: "Hemosiderin staining with blooming on GRE" },
-              { value: "hemosiderin_without_blooming", label: "Hemosiderin staining without blooming on GRE" }
+              { value: "blooming", label: "Hemosiderin with blooming on GRE (→ RADS-2: Synovial chondromatosis, synovial hemangioma)" },
+              { value: "no_blooming", label: "Hemosiderin without blooming on GRE (→ RADS-2: Gout, amyloid, xanthoma)" }
             ]
           }] : []),
-          ...(caseData.iaMorphology === "not_calcified_hyperintense" ? [{
-            id: "iaT2Enhancement",
+          ...(caseData.iaSignal === "not_calcified_hyper" ? [{
+            id: "iaEnhancement",
             label: "T2 signal and enhancement pattern",
             type: "radio",
             options: [
-              { value: "hyperintense_peripheral", label: "Hyperintense on T2W and peripheral enhancement" },
-              { value: "hypointense_no_peripheral", label: "Hypointense on T2W and no peripheral enhancement" }
+              { value: "peripheral", label: "Hyperintense on T2W and peripheral enhancement (→ RADS-3: TSGCT, synovial chondromatosis)" },
+              { value: "no_peripheral", label: "Hypointense on T2W and no peripheral enhancement (→ RADS-4: TSGCT)" }
             ]
           }] : [])
         ]
       });
     }
 
-    // ── Fig 2D: Intraneural ──
-    if (caseData.solidCompartment === "intraneural") {
+    // ── Intraneural (Fig 2D) ──
+    // Presence of tail sign and related to major named nerve. Target sign present → RADS-2 (no ADC). No target sign → ADC >1.1 → RADS-3, ADC ≤1.1 → T2/enhancement → RADS-4 or RADS-5.
+    if (caseData.compartment === "intraneural") {
       steps.push({
-        id: "nerve_detail",
-        title: "Step 5: Intraneural/Nerve-Related (Fig 2D)",
-        description: "Presence of target/tail sign and relation to a major named nerve.",
+        id: "nerve_logic",
+        title: "Step 5: Intra-neural or Nerve-related",
         questions: [
           {
-            id: "nerveTargetSign",
+            id: "targetSign",
             label: "Target sign present?",
-            tooltip: "Concentric rings on T2W — classic for benign PNST.",
+            tooltip: "Central T2 hypointensity with peripheral hyperintensity. If yes → RADS-2 (Benign PNST).",
             type: "radio",
             options: [
-              { value: "yes", label: "Yes — Target sign present" },
-              { value: "no", label: "No — Absent" }
+              { value: "yes", label: "Yes — Target sign present (→ RADS-2: Benign peripheral nerve sheath tumor)" },
+              { value: "no", label: "No — Target sign absent" }
             ]
           },
-          ...(caseData.nerveTargetSign === "yes" ? [{
+          ...(caseData.targetSign === "no" ? [{
             id: "nerveADC",
-            label: "ADC value",
+            label: "ADC value (× 10⁻³ mm²/s)",
+            tooltip: "ADC >1.1 → RADS-3. ADC ≤1.1 → next question for RADS-4 or RADS-5.",
             type: "radio",
             options: [
-              { value: "above_1_1", label: "ADC >1.1 × 10⁻³ mm²/s" },
-              { value: "at_or_below_1_1", label: "ADC ≤1.1 × 10⁻³ mm²/s" },
-              { value: "not_available", label: "Not available" }
+              { value: "high", label: "ADC > 1.1 mm²/s (→ RADS-3: Perineurioma, ancient schwannoma, etc.)" },
+              { value: "low", label: "ADC ≤ 1.1 mm²/s (→ RADS-4 or RADS-5: Malignant PNST)" }
+            ]
+          }] : []),
+          ...(caseData.targetSign === "no" && caseData.nerveADC === "low" ? [{
+            id: "nerveT2Enhancement",
+            label: "T2 signal and enhancement pattern",
+            type: "radio",
+            options: [
+              { value: "hyperintense_peripheral", label: "Hyperintense on T2W and peripheral enhancement (→ RADS-4)" },
+              { value: "hypointense_no_peripheral", label: "Hypointense on T2W and no peripheral enhancement (→ RADS-5)" }
             ]
           }] : [])
         ]
       });
     }
 
-    // ── Fig 2D: Cutaneous / Subcutaneous ──
-    if (caseData.solidCompartment === "cutaneous_subcutaneous") {
+    // ── Cutaneous / Subcutaneous (Fig 2D) ──
+    // Exophytic → peripheral enhancement → RADS-2, internal enhancement → RADS-4. Endophytic → RADS-5 (no enhancement question).
+    if (caseData.compartment === "cutaneous") {
       steps.push({
-        id: "cut_detail",
-        title: "Step 5: Cutaneous/Subcutaneous (Fig 2D)",
+        id: "cut_logic",
+        title: "Step 5: Cutaneous or Subcutaneous",
         questions: [
           {
-            id: "cutGrowthPattern",
+            id: "growthPattern",
             label: "Growth pattern",
             type: "radio",
             options: [
               { value: "exophytic", label: "Exophytic (outward growth)" },
-              { value: "endophytic", label: "Endophytic (inward/infiltrative growth)" }
+              { value: "endophytic", label: "Endophytic (inward/infiltrative growth) (→ RADS-5)" }
             ]
           },
-          ...(caseData.cutGrowthPattern === "exophytic" ? [{
+          ...(caseData.growthPattern === "exophytic" ? [{
             id: "cutEnhancement",
             label: "Enhancement pattern",
             type: "radio",
             options: [
-              { value: "peripheral", label: "Peripheral enhancement" },
-              { value: "internal", label: "Internal enhancement" }
+              { value: "peripheral", label: "Peripheral enhancement (→ RADS-2: Sebaceous cyst, trichilemmal cyst, epidermoid cyst, retinacular cyst)" },
+              { value: "internal", label: "Internal enhancement (→ RADS-4: Wart, dermatofibrosarcoma protuberans, fibrosarcoma NOS)" }
             ]
           }] : [])
         ]
       });
     }
 
-    // ── Fig 2C: Deep / Intramuscular ──
-    if (caseData.solidCompartment === "deep_intramuscular") {
+    // ── Intratendinous (Fig 2C) ──
+    // Enlarged tendon → hemosiderin with blooming → RADS-2, without blooming → RADS-3. Normal tendon → with blooming → RADS-4, without blooming → RADS-5.
+    if (caseData.compartment === "intratendinous") {
       steps.push({
-        id: "deep_detail",
-        title: "Step 5: Deep/Intramuscular (Fig 2C)",
+        id: "tendon_logic",
+        title: "Step 5: Intra-tendinous or Tendon-related",
         questions: [
           {
-            id: "deepMuscleSignature",
-            label: "Muscle signature present?",
-            tooltip: "Does the lesion show signal characteristics consistent with muscle tissue?",
-            type: "radio",
-            options: [
-              { value: "yes", label: "Yes — Muscle signature present" },
-              { value: "no", label: "No — No muscle signature" }
-            ]
-          },
-          ...(caseData.deepMuscleSignature === "yes" ? [{
-            id: "deepBenignTriad",
-            label: "History of prior injury WITH peritumoral edema AND mature peripheral mineralization?",
-            tooltip: "All three must be present for RADS-2: (1) history of prior injury, (2) peritumoral edema, AND (3) mature peripheral mineralization.",
-            type: "radio",
-            options: [
-              { value: "yes", label: "Yes — All three present" },
-              { value: "no", label: "No — One or more absent" }
-            ]
-          }] : [])
-        ]
-      });
-    }
-
-    // ── Fig 2C: Intratendinous ──
-    if (caseData.solidCompartment === "intratendinous") {
-      steps.push({
-        id: "tendon_detail",
-        title: "Step 5: Intratendinous/Tendon-Related (Fig 2C)",
-        questions: [
-          {
-            id: "tendonMorphology",
+            id: "tendonMorph",
             label: "Tendon morphology",
             type: "radio",
             options: [
-              { value: "enlarged", label: "Enlarged tendon with calcifications, cystic change, fat, or underlying amyloidosis/autoimmune disease" },
-              { value: "normal", label: "Normal size tendon without calcifications, cystic change, fat, or no underlying amyloidosis/autoimmune" }
+              { value: "enlarged", label: "Enlarged tendon with calcifications, cystic change, fat, or underlying history of amyloidosis or autoimmune disease" },
+              { value: "normal", label: "Normal size tendon without calcifications, cystic change, fat, or no underlying history of amyloidosis or autoimmune disease" }
             ]
           },
-          ...(caseData.tendonMorphology === "normal" ? [{
-            id: "tendonHemosiderinBlooming",
-            label: "Hemosiderin staining and GRE blooming?",
+          ...(caseData.tendonMorph !== undefined ? [{
+            id: "tendonBlooming",
+            label: "Hemosiderin staining and blooming on GRE?",
+            tooltip: "Enlarged: with blooming → RADS-2 (Gout, Amyloid, Xanthoma), without → RADS-3 (TSGCT). Normal: with blooming → RADS-4, without → RADS-5.",
             type: "radio",
             options: [
-              { value: "hemosiderin_with_blooming", label: "Hemosiderin staining with blooming on GRE" },
-              { value: "hemosiderin_without_blooming", label: "Hemosiderin staining without blooming on GRE" }
+              { value: "blooming", label: "Hemosiderin staining with blooming on GRE" },
+              { value: "no_blooming", label: "Hemosiderin staining without blooming on GRE" }
             ]
           }] : [])
         ]
       });
     }
 
-    // ── Fig 2C: Plantar / Palmar Fascial ──
-    if (caseData.solidCompartment === "plantar_palmar") {
+    // ── Plantar / Palmar Fascial (Fig 2C) ──
+    // Fascial nodule <2 cm → RADS-2 (Fibroma) only. Fascial nodule ≥2 cm → Multifocal/conglomerate → RADS-3, No multifocal → RADS-4/5.
+    if (caseData.compartment === "fascial") {
       steps.push({
-        id: "fascial_detail",
-        title: "Step 5: Plantar/Palmar Fascial (Fig 2C)",
+        id: "fascial_logic",
+        title: "Step 5: Plantar or Palmar Fascial",
         questions: [
           {
-            id: "fascialNoduleSize",
+            id: "fascialSize",
             label: "Fascial nodule size",
             type: "radio",
             options: [
-              { value: "less_than_2cm", label: "<2 cm in length" },
-              { value: "2cm_or_more", label: "≥2 cm in length" }
+              { value: "small", label: "< 2 cm in length (→ RADS-2: Fibroma)" },
+              { value: "large", label: "≥ 2 cm in length" }
             ]
           },
-          {
-            id: "fascialMultifocal",
+          ...(caseData.fascialSize === "large" ? [{
+            id: "fascialMulti",
             label: "Multifocal or conglomerate fascial nodules?",
             type: "radio",
             options: [
-              { value: "yes", label: "Yes — Multifocal/conglomerate" },
-              { value: "no", label: "No — Solitary" }
+              { value: "yes", label: "Yes — Multifocal or conglomerate (→ RADS-3: Fibromatosis)" },
+              { value: "no", label: "No — Solitary (→ RADS-4/5)" }
             ]
-          }
+          }] : [])
         ]
       });
     }
 
-    // ── Fig 2C: Subungual ──
-    if (caseData.solidCompartment === "subungual") {
+    // ── Subungual (Fig 2C) ──
+    if (caseData.compartment === "subungual") {
       steps.push({
-        id: "subungual_detail",
-        title: "Step 5: Subungual (Fig 2C)",
-        description: "Hyperintense on T2W, diffuse enhancement on T1W+C.",
+        id: "subungual_logic",
+        title: "Step 5: Subungual Assessment",
         questions: [{
           id: "subungualSize",
-          label: "Lesion size",
+          label: "Lesion Size",
+          tooltip: "Assumes T2 Hyperintense + Diffuse Enhancement.",
           type: "radio",
           options: [
-            { value: "less_than_1cm", label: "Small (<1 cm)" },
-            { value: "1cm_or_more", label: "Large (≥1 cm)" }
+            { value: "small", label: "Small (<1 cm) (RADS-3: Glomus)" },
+            { value: "large", label: "Large (≥1 cm) (RADS-4)" }
           ]
         }]
       });
@@ -492,37 +523,30 @@ export function getWizardSteps(caseData) {
   }
 
   // ══════════════════════════════════════════════════════════════
-  // OPTIONAL: ADC & Ancillary Features
+  // OPTIONAL: ADC & ANCILLARY FEATURES
   // ══════════════════════════════════════════════════════════════
-  if (caseData.tissueType) {
+  if (tissueType) {
     steps.push({
-      id: "adc_ancillary",
-      title: "Optional: ADC & Ancillary Features",
-      description: "Per the manuscript, ancillary features may support upgrading to ST-RADS 5.",
+      id: "ancillary",
+      title: "Step 6: ADC & Ancillary Features",
+      description: "Additional features that may upgrade the score[cite: 270].",
       questions: [
         {
           id: "adcValue",
-          label: "Mean ADC value (optional)",
-          tooltip: "Mean ADC in × 10⁻³ mm²/s. >1.5 supports RADS-2; 1.1–1.5 supports RADS-3; <1.1 suggests RADS-5.",
+          label: "Mean ADC Value (optional)",
           type: "number",
-          placeholder: "e.g., 1.2",
+          placeholder: "× 10⁻³ mm²/s",
           unit: "× 10⁻³ mm²/s"
         },
         {
-          id: "ancillaryFeatures",
-          label: "Ancillary features favoring ST-RADS 5 (select all that apply)",
-          tooltip: "Per Table 3 and flowchart footnotes.",
+          id: "ancillaryFlags",
+          label: "High Risk Features (RADS-5 Triggers)",
           type: "checkbox",
           options: [
-            { value: "necrosis", label: "Non-enhancing areas of necrosis" },
-            { value: "hemorrhage", label: "Internal hemorrhage" },
-            { value: "peritumoral_edema", label: "Peritumoral edema" },
-            { value: "fascial_tail", label: "Fascial tail sign" },
-            { value: "crossing_compartments", label: "Extra-compartmental extension / crossing fascial compartments" },
-            { value: "rapid_growth", label: "Rapid increase in size or symptoms" },
-            { value: "metastasis", label: "Regional or distant metastatic lesions" },
-            { value: "low_adc", label: "Low ADC <1.1 × 10⁻³ mm²/s" },
-            { value: "solid_enhancing_nodules", label: "Solid enhancing nodules >2 cm (for fascia-based lesions)" }
+            { value: "necrosis", label: "Internal Necrosis / Hemorrhage" },
+            { value: "fascial_tail", label: "Fascial Tail Sign" },
+            { value: "rapid_growth", label: "Rapid Growth" },
+            { value: "metastasis", label: "Metastasis" }
           ]
         }
       ]
