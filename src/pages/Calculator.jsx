@@ -50,14 +50,16 @@ export default function CalculatorPage() {
     "cystLocation", "cystFlow", "cystHematoma", "cystSeptationNodules",
     // Solid General
     "compartment",
+    // Lipomatous (Fig 2A)
+    "lipNoduleSeptation",
     // Deep
-    "muscleSignature", "myositisTriad", "deepT2",
+    "muscleSignature", "myositisTriad",
     // Intravascular
-    "vascMorphology", "vascBlooming",
+    "vascMorphology", "vascBlooming", "vascT2Enhancement",
     // Intraarticular
     "iaSignal", "iaBlooming", "iaEnhancement",
     // Intraneural
-    "targetSign", "nerveADC",
+    "targetSign", "nerveADC", "nerveT2Enhancement",
     // Cutaneous
     "growthPattern", "cutEnhancement",
     // Tendon
@@ -72,14 +74,15 @@ export default function CalculatorPage() {
 
   const getDependentKeys = (changedKey) => {
     const deps = {
-      // Top Level
-      examAdequacy: ["knownTumor", "knownTumorStatus", "lesionPresent", "tissueType", ...ALL_DETAIL_KEYS],
-      knownTumor: ["knownTumorStatus", "lesionPresent", "tissueType", ...ALL_DETAIL_KEYS],
-      lesionPresent: ["tissueType", ...ALL_DETAIL_KEYS],
-      tissueType: ALL_DETAIL_KEYS, // Reset everything if tissue type changes
+      // Figure 1 order: exam adequacy → lesion identification → macroscopic fat → T2/enhancement path
+      examAdequacy: ["lesionPresent", "macroscopicFatT1W", "t2EnhancementPath", ...ALL_DETAIL_KEYS],
+      lesionPresent: ["macroscopicFatT1W", "t2EnhancementPath", ...ALL_DETAIL_KEYS],
+      macroscopicFatT1W: ["t2EnhancementPath", ...ALL_DETAIL_KEYS],
+      t2EnhancementPath: ALL_DETAIL_KEYS,
 
       // Lipomatous Branch
-      lipFatContent: ["lipSeptations", "lipVessels", "lipNoduleFeatures"],
+      lipFatContent: ["lipNoduleSeptation", "lipSeptations", "lipVessels", "lipNoduleFeatures"],
+      lipNoduleSeptation: ["lipSeptations", "lipVessels"],
       lipSeptations: ["lipVessels"],
 
       // Cyst Branch
@@ -89,10 +92,10 @@ export default function CalculatorPage() {
 
       // Solid Compartments (Parent)
       compartment: [
-        "muscleSignature", "myositisTriad", "deepT2",
-        "vascMorphology", "vascBlooming",
+        "muscleSignature", "myositisTriad",
+        "vascMorphology", "vascBlooming", "vascT2Enhancement",
         "iaSignal", "iaBlooming", "iaEnhancement",
-        "targetSign", "nerveADC",
+        "targetSign", "nerveADC", "nerveT2Enhancement",
         "growthPattern", "cutEnhancement",
         "tendonMorph", "tendonBlooming",
         "fascialSize", "fascialMulti",
@@ -100,10 +103,11 @@ export default function CalculatorPage() {
       ],
 
       // Solid Sub-branches
-      muscleSignature: ["myositisTriad", "deepT2"],
-      vascMorphology: ["vascBlooming"],
+      muscleSignature: ["myositisTriad"],
+      vascMorphology: ["vascBlooming", "vascT2Enhancement"],
       iaSignal: ["iaBlooming", "iaEnhancement"],
-      targetSign: ["nerveADC"],
+      targetSign: ["nerveADC", "nerveT2Enhancement"],
+      nerveADC: ["nerveT2Enhancement"],
       growthPattern: ["cutEnhancement"],
       tendonMorph: ["tendonBlooming"],
       fascialSize: ["fascialMulti"]
@@ -151,11 +155,10 @@ export default function CalculatorPage() {
     return caseData[q.id] !== undefined && caseData[q.id] !== "";
   });
 
-  // Early termination conditions
+  // Early termination per Figure 1: incomplete exam → RADS-0; no soft tissue lesion → RADS-1
   const canCalculateEarly = (
     caseData.examAdequacy === "incomplete" ||
-    caseData.lesionPresent === "no" ||
-    (caseData.knownTumor === "yes" && caseData.knownTumorStatus)
+    caseData.lesionPresent === "no"
   );
 
   // ─── USAGE TRACKING ───────────────────────────────────────────────
