@@ -8,6 +8,8 @@ import {
     Crown, Calendar, CreditCard, AlertTriangle, CheckCircle,
     Loader2, Receipt, ArrowRight
 } from "lucide-react";
+import cancelSubscription from "@/functions/cancelSubscription";
+import { createCheckoutSession } from "@/functions/createCheckoutSession";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 
@@ -36,12 +38,8 @@ export default function BillingPage() {
     const handleCancelSubscription = async () => {
         setIsCancelling(true);
         try {
-            const response = await fetch("/api/functions/cancelSubscription", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" }
-            });
-            const result = await response.json();
-            if (!response.ok || result.error) {
+            const { data, error } = await cancelSubscription();
+            if (error) {
                 alert("Failed to cancel subscription. Please try again or contact support.");
             } else {
                 setCancelSuccess(true);
