@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight, ClipboardCheck, Shield, FileSearch, Stethoscope, Heart, Crown } from "lucide-react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
-import { Badge } from "@/components/ui/badge";
+
 
 const STRADS_SYSTEM = {
   id: "strads",
