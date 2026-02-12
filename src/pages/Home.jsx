@@ -49,113 +49,46 @@ export default function LandingPage() {
             </p>
         </div>
 
-        {/* System Tabs */}
+        {/* System Content */}
         <div className="w-full max-w-3xl mx-auto px-4">
-            <div className="flex items-center justify-center gap-2 sm:gap-3 mb-2">
-                {RADS_SYSTEMS.map(sys => (
-                    <button
-                        key={sys.id}
-                        onClick={() => setActiveSystem(sys.id)}
-                        className={`relative flex items-center gap-2 px-5 sm:px-6 py-3 rounded-xl text-sm font-semibold transition-all duration-200 ${
-                            activeSystem === sys.id
-                                ? sys.color === "blue"
-                                    ? "bg-blue-600 text-white shadow-lg shadow-blue-500/25"
-                                    : sys.color === "emerald"
-                                    ? "bg-emerald-600 text-white shadow-lg shadow-emerald-500/25"
-                                    : "bg-rose-600 text-white shadow-lg shadow-rose-500/25"
-                                : "bg-white dark:bg-slate-800/60 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600 hover:bg-slate-50 dark:hover:bg-slate-800"
-                        }`}
-                    >
-                        {sys.label}
-                        {sys.available && (
-                            <span className="relative flex h-2 w-2">
-                                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-                                <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
-                            </span>
-                        )}
-                        {!sys.available && (
-                            <Badge variant="secondary" className="text-[10px] px-1.5 py-0 font-medium bg-white/20 text-white border-0 dark:bg-white/10" style={{
-                                ...(activeSystem !== sys.id && { background: "rgb(241 245 249)", color: "rgb(100 116 139)" })
-                            }}>
-                                Soon
-                            </Badge>
-                        )}
-                    </button>
-                ))}
-            </div>
-            <p className="text-center text-xs text-slate-400 dark:text-slate-500 mb-8">
-                <span className="inline-flex items-center gap-1.5"><span className="inline-block h-1.5 w-1.5 rounded-full bg-green-500"></span> ST-RADS is live now</span> · LI-RADS & BI-RADS coming soon
-            </p>
-
-            {/* Active System Content */}
-            {current.available ? (
-                <div className="text-center space-y-8">
-                    <div className="space-y-4">
-                        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-50 dark:bg-blue-950/40 border border-blue-200/60 dark:border-blue-800/40 text-blue-700 dark:text-blue-300 text-xs font-semibold tracking-wide uppercase">
-                            {current.tagline}
-                        </div>
-                        <p className="text-base text-slate-500 dark:text-slate-400 max-w-xl mx-auto leading-relaxed">
-                            {current.description}
-                        </p>
+            <div className="text-center space-y-8">
+                <div className="space-y-4">
+                    <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-50 dark:bg-blue-950/40 border border-blue-200/60 dark:border-blue-800/40 text-blue-700 dark:text-blue-300 text-xs font-semibold tracking-wide uppercase">
+                        {current.tagline}
                     </div>
-
-                    <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-                        <Link to={createPageUrl("Calculator")}>
-                            <Button size="lg" className="h-13 px-10 text-base rounded-full bg-blue-600 hover:bg-blue-700 text-white shadow-lg shadow-blue-500/20 hover:shadow-blue-500/30 transition-all duration-300 hover:scale-[1.03] font-semibold">
-                                Start ST-RADS Case <ArrowRight className="ml-2 h-5 w-5" />
-                            </Button>
-                        </Link>
-
-                    </div>
-
-                    <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-slate-100/80 dark:bg-slate-800/50 text-slate-500 dark:text-slate-400 text-xs font-medium">
-                        <Shield className="w-3.5 h-3.5" />
-                        No patient data stored · Fully deterministic · Rule-based
-                    </div>
-
-                    {/* 3-Step Process */}
-                    <div className="grid md:grid-cols-3 gap-6 md:gap-10 max-w-4xl mx-auto w-full pt-4">
-                        {current.steps.map((step, i) => (
-                            <div key={i} className="flex flex-col items-center text-center space-y-3 group">
-                                <div className={`w-12 h-12 flex items-center justify-center rounded-xl ${step.bg} ${step.color} transition-transform duration-300 group-hover:scale-110`}>
-                                    <step.icon className="w-6 h-6" />
-                                </div>
-                                <div>
-                                    <h3 className="font-semibold text-base text-slate-900 dark:text-slate-100 mb-0.5">{step.title}</h3>
-                                    <p className="text-sm text-slate-500 dark:text-slate-400">{step.desc}</p>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-            ) : (
-                <div className="text-center space-y-6 py-8">
-                    <div className={`inline-flex items-center justify-center w-16 h-16 rounded-2xl ${
-                        current.color === "emerald" 
-                            ? "bg-emerald-50 dark:bg-emerald-950/30 text-emerald-600 dark:text-emerald-400" 
-                            : "bg-rose-50 dark:bg-rose-950/30 text-rose-600 dark:text-rose-400"
-                    }`}>
-                        <Clock className="w-8 h-8" />
-                    </div>
-                    <div className="space-y-3">
-                        <h2 className="text-2xl font-bold text-slate-900 dark:text-white">{current.fullName}</h2>
-                        <p className="text-base text-slate-500 dark:text-slate-400 max-w-md mx-auto leading-relaxed">
-                            {current.description}
-                        </p>
-                    </div>
-                    <div className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold ${
-                        current.color === "emerald"
-                            ? "bg-emerald-50 dark:bg-emerald-950/30 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800"
-                            : "bg-rose-50 dark:bg-rose-950/30 text-rose-700 dark:text-rose-300 border border-rose-200 dark:border-rose-800"
-                    }`}>
-                        <Clock className="w-4 h-4" />
-                        Coming Soon
-                    </div>
-                    <p className="text-xs text-slate-400 dark:text-slate-500">
-                        We're actively developing this module. Stay tuned!
+                    <p className="text-base text-slate-500 dark:text-slate-400 max-w-xl mx-auto leading-relaxed">
+                        {current.description}
                     </p>
                 </div>
-            )}
+
+                <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+                    <Link to={createPageUrl("Calculator")}>
+                        <Button size="lg" className="h-13 px-10 text-base rounded-full bg-blue-600 hover:bg-blue-700 text-white shadow-lg shadow-blue-500/20 hover:shadow-blue-500/30 transition-all duration-300 hover:scale-[1.03] font-semibold">
+                            Start ST-RADS Case <ArrowRight className="ml-2 h-5 w-5" />
+                        </Button>
+                    </Link>
+                </div>
+
+                <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-slate-100/80 dark:bg-slate-800/50 text-slate-500 dark:text-slate-400 text-xs font-medium">
+                    <Shield className="w-3.5 h-3.5" />
+                    No patient data stored · Fully deterministic · Rule-based
+                </div>
+
+                {/* 3-Step Process */}
+                <div className="grid md:grid-cols-3 gap-6 md:gap-10 max-w-4xl mx-auto w-full pt-4">
+                    {current.steps.map((step, i) => (
+                        <div key={i} className="flex flex-col items-center text-center space-y-3 group">
+                            <div className={`w-12 h-12 flex items-center justify-center rounded-xl ${step.bg} ${step.color} transition-transform duration-300 group-hover:scale-110`}>
+                                <step.icon className="w-6 h-6" />
+                            </div>
+                            <div>
+                                <h3 className="font-semibold text-base text-slate-900 dark:text-slate-100 mb-0.5">{step.title}</h3>
+                                <p className="text-sm text-slate-500 dark:text-slate-400">{step.desc}</p>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            </div>
         </div>
 
         {/* Support Section */}
