@@ -21,7 +21,6 @@ const STRADS_SYSTEM = {
 
 export default function LandingPage() {
   const [user, setUser] = useState(null);
-  const [activeSystem, setActiveSystem] = useState("strads");
 
   useEffect(() => {
     const checkUser = async () => {
@@ -35,7 +34,7 @@ export default function LandingPage() {
     checkUser();
   }, []);
 
-  const current = RADS_SYSTEMS.find(s => s.id === activeSystem);
+  const current = STRADS_SYSTEM;
 
   return (
     <div className="min-h-[80vh] flex flex-col justify-center items-center py-16 space-y-16">
