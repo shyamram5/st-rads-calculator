@@ -6,32 +6,18 @@ import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { Badge } from "@/components/ui/badge";
 
-const RADS_SYSTEMS = [
-  {
-    id: "strads",
-    label: "ST-RADS",
-    fullName: "Soft Tissue RADS",
-    tagline: "ACR ST-RADS v2025",
-    available: true,
-    color: "blue",
-    description: "Evidence-based MRI risk stratification for soft-tissue tumors, guided step-by-step through the official flowcharts.",
-    steps: [
-      { icon: FileSearch, color: "text-indigo-600 dark:text-indigo-400", bg: "bg-indigo-50 dark:bg-indigo-950/30", title: "Answer Questions", desc: "Step-by-step wizard following official flowcharts" },
-      { icon: Stethoscope, color: "text-blue-600 dark:text-blue-400", bg: "bg-blue-50 dark:bg-blue-950/30", title: "Get Classification", desc: "ST-RADS 0–6 with risk level & differentials" },
-      { icon: ClipboardCheck, color: "text-emerald-600 dark:text-emerald-400", bg: "bg-emerald-50 dark:bg-emerald-950/30", title: "Copy Report", desc: "Structured report with one-click copy" },
-    ],
-  },
-  {
-    id: "lirads",
-    label: "LI-RADS",
-    fullName: "Liver Imaging RADS",
-    tagline: "ACR LI-RADS",
-    available: false,
-    color: "emerald",
-    description: "Standardized reporting for liver observations in patients at risk for hepatocellular carcinoma. Coming soon.",
-  },
-
-];
+const STRADS_SYSTEM = {
+  id: "strads",
+  label: "ST-RADS",
+  fullName: "Soft Tissue RADS",
+  tagline: "ACR ST-RADS v2025",
+  description: "Evidence-based MRI risk stratification for soft-tissue tumors, guided step-by-step through the official flowcharts.",
+  steps: [
+    { icon: FileSearch, color: "text-indigo-600 dark:text-indigo-400", bg: "bg-indigo-50 dark:bg-indigo-950/30", title: "Answer Questions", desc: "Step-by-step wizard following official flowcharts" },
+    { icon: Stethoscope, color: "text-blue-600 dark:text-blue-400", bg: "bg-blue-50 dark:bg-blue-950/30", title: "Get Classification", desc: "ST-RADS 0–6 with risk level & differentials" },
+    { icon: ClipboardCheck, color: "text-emerald-600 dark:text-emerald-400", bg: "bg-emerald-50 dark:bg-emerald-950/30", title: "Copy Report", desc: "Structured report with one-click copy" },
+  ],
+};
 
 export default function LandingPage() {
   const [user, setUser] = useState(null);
