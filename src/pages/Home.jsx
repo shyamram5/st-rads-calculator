@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { User } from "@/components/User";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, ClipboardCheck, Shield, FileSearch, Stethoscope, Heart, Crown } from "lucide-react";
+import { ArrowRight, ClipboardCheck, Shield, FileSearch, Stethoscope, Heart, Crown, Building2 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 
@@ -92,6 +92,24 @@ export default function LandingPage() {
                     ))}
                 </div>
             </div>
+        </div>
+
+        {/* Institutional CTA */}
+        <div className="max-w-2xl mx-auto px-4">
+            <Link to={createPageUrl("InstitutionalPlan")}>
+                <div className="flex items-center justify-between gap-4 px-6 py-4 rounded-2xl bg-blue-50/80 dark:bg-blue-950/30 border border-blue-200/60 dark:border-blue-800/40 hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 cursor-pointer group">
+                    <div className="flex items-center gap-4">
+                        <div className="w-10 h-10 rounded-xl bg-blue-100 dark:bg-blue-900/50 flex items-center justify-center text-blue-600 dark:text-blue-400 shrink-0">
+                            <Building2 className="w-5 h-5" />
+                        </div>
+                        <div className="text-left">
+                            <p className="font-semibold text-slate-900 dark:text-slate-100 text-sm">Institutional Plan Available</p>
+                            <p className="text-xs text-slate-500 dark:text-slate-400">Unlimited analyses for your entire department — $200/year</p>
+                        </div>
+                    </div>
+                    <ArrowRight className="w-4 h-4 text-blue-500 group-hover:translate-x-1 transition-transform shrink-0" />
+                </div>
+            </Link>
         </div>
 
         {/* Support Section */}
