@@ -26,30 +26,75 @@ Deno.serve(async (req) => {
                 return new Response('Webhook Error: Missing user ID', { status: 400 });
             }
 
-            await base44.asServiceRole.entities.User.update(userId, {
-                subscription_tier: 'premium',
-                subscription_date: new Date().toISOString(),
-                stripe_customer_id: session.customer,
-            });
+            // Check if this is an institutional subscription
+            if (session.metadata?.type === 'institutional') {
+                const institutionName = session.metadata.institution_name;
+                const userEmail = session.customer_email || session.customer_details?.email;
 
-            console.log(`Successfully upgraded user ${userId} to premium.`);
+                // Create institution record
+                await base44.asServiceRole.entities.Institution.create({
+                    name: institutionName,
+                    admin_email: userEmail,
+                    stripe_customer_id: session.customer,
+                    stripe_subscription_id: session.subscription,
+                    status: 'active',
+                    subscription_date: new Date().toISOString(),
+                    member_emails: [userEmail],
+                });
+
+                // Update admin user
+                await base44.asServiceRole.entities.User.update(userId, {
+                    subscription_tier: 'institutional',
+                    subscription_date: new Date().toISOString(),
+                    stripe_customer_id: session.customer,
+                });
+
+                console.log(`Successfully created institution "${institutionName}" for user ${userId}.`);
+            } else {
+                await base44.asServiceRole.entities.User.update(userId, {
+                    subscription_tier: 'premium',
+                    subscription_date: new Date().toISOString(),
+                    stripe_customer_id: session.customer,
+                });
+
+                console.log(`Successfully upgraded user ${userId} to premium.`);
+            }
         }
 
         if (event.type === 'customer.subscription.deleted') {
             const subscription = event.data.object;
             const customerId = subscription.customer;
 
-            // Find user by stored stripe_customer_id
-            const users = await base44.asServiceRole.entities.User.filter({ stripe_customer_id: customerId });
-            if (users.length > 0) {
-                await base44.asServiceRole.entities.User.update(users[0].id, {
-                    subscription_tier: 'free',
-                    subscription_date: null,
-                    analyses_used: 0,
-                });
-                console.log(`Successfully downgraded user ${users[0].id} to free tier.`);
+            // Check if this is an institutional subscription
+            const institutions = await base44.asServiceRole.entities.Institution.filter({ stripe_customer_id: customerId });
+            if (institutions.length > 0) {
+                const institution = institutions[0];
+                // Downgrade all members
+                const memberEmails = institution.member_emails || [];
+                for (const email of memberEmails) {
+                    const members = await base44.asServiceRole.entities.User.filter({ email });
+                    if (members.length > 0) {
+                        await base44.asServiceRole.entities.User.update(members[0].id, {
+                            subscription_tier: 'free',
+                            institution_id: null,
+                        });
+                    }
+                }
+                await base44.asServiceRole.entities.Institution.update(institution.id, { status: 'cancelled' });
+                console.log(`Successfully cancelled institution "${institution.name}".`);
             } else {
-                console.error(`No user found with stripe_customer_id: ${customerId}`);
+                // Individual subscription
+                const users = await base44.asServiceRole.entities.User.filter({ stripe_customer_id: customerId });
+                if (users.length > 0) {
+                    await base44.asServiceRole.entities.User.update(users[0].id, {
+                        subscription_tier: 'free',
+                        subscription_date: null,
+                        analyses_used: 0,
+                    });
+                    console.log(`Successfully downgraded user ${users[0].id} to free tier.`);
+                } else {
+                    console.error(`No user found with stripe_customer_id: ${customerId}`);
+                }
             }
         }
 
