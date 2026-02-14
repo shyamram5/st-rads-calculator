@@ -5,8 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Crown, Check, Zap, Star, CreditCard, Shield, Users, Clock, Loader2 } from "lucide-react";
 import { createCheckoutSession } from "@/functions/createCheckoutSession";
-import { Link } from "react-router-dom"; // Added import for Link
-import { createPageUrl } from "@/utils"; // Added import for createPageUrl (assuming its path)
+
 
 export default function PremiumPage() {
     const [user, setUser] = useState(null);
@@ -67,19 +66,12 @@ export default function PremiumPage() {
                         <Crown className="w-16 h-16 text-amber-500 mx-auto mb-4" />
                         <h2 className="text-2xl font-bold text-slate-900 dark:text-slate-100 mb-4">Login Required</h2>
                         <p className="text-slate-600 dark:text-slate-400 mb-6">Please log in to upgrade to Premium</p>
-                        <div className="space-y-3">
-                            <Button 
-                                onClick={() => User.login()}
-                                className="w-full bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white font-bold py-3"
-                            >
-                                Log In
-                            </Button>
-                            <Link to={createPageUrl("About")}>
-                                <Button variant="outline" className="w-full">
-                                    About the Creator
-                                </Button>
-                            </Link>
-                        </div>
+                        <Button 
+                            onClick={() => User.login()}
+                            className="w-full bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white font-bold py-3"
+                        >
+                            Log In
+                        </Button>
                     </CardContent>
                 </Card>
             </div>
