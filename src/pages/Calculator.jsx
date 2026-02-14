@@ -175,7 +175,7 @@ export default function CalculatorPage() {
     }
   }, [showResult, result]);
 
-  const isPremium = user?.subscription_tier === "premium";
+  const isPremium = user?.subscription_tier === "premium" || user?.subscription_tier === "institutional";
   const analysesUsed = user?.analyses_used || 0;
   const freeUsesLeft = Math.max(0, 5 - analysesUsed);
   const isLimitReached = !isPremium && freeUsesLeft <= 0 && !showResult;
