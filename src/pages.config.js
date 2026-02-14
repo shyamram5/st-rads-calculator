@@ -53,11 +53,12 @@ import Calculator from './pages/Calculator';
 import CaseExamples from './pages/CaseExamples';
 import CaseReview from './pages/CaseReview';
 import Home from './pages/Home';
+import InstitutionalPlan from './pages/InstitutionalPlan';
 import PaymentCancel from './pages/PaymentCancel';
 import PaymentSuccess from './pages/PaymentSuccess';
 import Premium from './pages/Premium';
 import Support from './pages/Support';
-import InstitutionalPlan from './pages/InstitutionalPlan';
+import StudyAssistant from './pages/StudyAssistant';
 import __Layout from './Layout.jsx';
 
 
@@ -68,11 +69,12 @@ export const PAGES = {
     "CaseExamples": CaseExamples,
     "CaseReview": CaseReview,
     "Home": Home,
+    "InstitutionalPlan": InstitutionalPlan,
     "PaymentCancel": PaymentCancel,
     "PaymentSuccess": PaymentSuccess,
     "Premium": Premium,
     "Support": Support,
-    "InstitutionalPlan": InstitutionalPlan,
+    "StudyAssistant": StudyAssistant,
 }
 
 export const pagesConfig = {
