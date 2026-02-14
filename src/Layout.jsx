@@ -308,7 +308,7 @@ export default function Layout({ children, currentPageName }) {
                          <div>
                              <h4 className="font-semibold text-slate-900 dark:text-slate-100 mb-4 text-sm uppercase tracking-wider">Resources</h4>
                              <ul className="space-y-3 text-sm text-slate-500 dark:text-slate-400">
-                                 <li><Link to={createPageUrl("About")} className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">About</Link></li>
+
                                  <li><Link to={createPageUrl("Calculator")} className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Calculator</Link></li>
                                  <li><Link to={createPageUrl("Premium")} className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Premium</Link></li>
                                  <li><Link to={createPageUrl("Support")} className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Support</Link></li>
