@@ -166,8 +166,8 @@ export default function CalculatorPage() {
   useEffect(() => {
     if (showResult && result && user && !hasTrackedRef.current) {
       hasTrackedRef.current = true;
-      const isPremium = user.subscription_tier === "premium";
-      if (!isPremium) {
+      const isPaidUser = user.subscription_tier === "premium" || user.subscription_tier === "institutional";
+      if (!isPaidUser) {
         const newCount = (user.analyses_used || 0) + 1;
         User.updateMyUserData({ analyses_used: newCount });
         setUser(prev => ({ ...prev, analyses_used: newCount }));
