@@ -99,7 +99,7 @@ export default function BillingPage() {
         );
     }
 
-    const isPremium = user.subscription_tier === "premium";
+    const isPremium = user.subscription_tier === "premium" || user.subscription_tier === "institutional";
     const subscriptionDate = user.subscription_date ? new Date(user.subscription_date).toLocaleDateString() : "N/A";
     const analysesUsed = user.analyses_used || 0;
 
@@ -132,7 +132,7 @@ export default function BillingPage() {
                         <div className="space-y-3">
                             <div className="flex items-center gap-3">
                                 <Badge className={isPremium ? "bg-amber-500 text-white text-sm px-3 py-1" : "bg-slate-500 text-white text-sm px-3 py-1"}>
-                                    {isPremium ? "Premium" : "Free"}
+                                    {user.subscription_tier === "institutional" ? "Institutional" : isPremium ? "Premium" : "Free"}
                                 </Badge>
                                 {isPremium && <Crown className="w-5 h-5 text-amber-500" />}
                             </div>
