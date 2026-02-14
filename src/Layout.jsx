@@ -179,11 +179,14 @@ export default function Layout({ children, currentPageName }) {
                                 <Button variant={currentPageName === 'Calculator' ? 'secondary' : 'ghost'} className="font-semibold">Calculator</Button>
                             </Link>
                             <Link to={createPageUrl("CaseExamples")}>
-                                <Button variant={currentPageName === 'CaseExamples' ? 'secondary' : 'ghost'} className="font-semibold">Cases</Button>
-                            </Link>
-                             <Link to={createPageUrl("Billing")}>
-                                <Button variant={currentPageName === 'Billing' ? 'secondary' : 'ghost'} className="font-semibold">Billing</Button>
-                             </Link>
+                                                  <Button variant={currentPageName === 'CaseExamples' ? 'secondary' : 'ghost'} className="font-semibold">Cases</Button>
+                                              </Link>
+                                              <Link to={createPageUrl("StudyAssistant")}>
+                                                  <Button variant={currentPageName === 'StudyAssistant' ? 'secondary' : 'ghost'} className="font-semibold">Study</Button>
+                                              </Link>
+                                               <Link to={createPageUrl("Billing")}>
+                                                  <Button variant={currentPageName === 'Billing' ? 'secondary' : 'ghost'} className="font-semibold">Billing</Button>
+                                               </Link>
                         </nav>
                         
                         <div className="flex items-center gap-2">
@@ -311,8 +314,9 @@ export default function Layout({ children, currentPageName }) {
 
                                  <li><Link to={createPageUrl("Calculator")} className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Calculator</Link></li>
                                  <li><Link to={createPageUrl("Premium")} className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Premium</Link></li>
-                                 <li><Link to={createPageUrl("Support")} className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Support</Link></li>
-                                 <li><Link to={createPageUrl("Billing")} className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Billing</Link></li>
+                                 <li><Link to={createPageUrl("StudyAssistant")} className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Study Assistant</Link></li>
+                                      <li><Link to={createPageUrl("Support")} className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Support</Link></li>
+                                      <li><Link to={createPageUrl("Billing")} className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Billing</Link></li>
                              </ul>
                          </div>
                          <div>
