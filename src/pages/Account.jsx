@@ -136,27 +136,19 @@ export default function AccountPage() {
                         <UserIcon className="w-16 h-16 text-slate-400 mx-auto mb-4" />
                         <h2 className="text-2xl font-bold text-slate-900 dark:text-slate-100 mb-4">Login Required</h2>
                         <p className="text-slate-600 dark:text-slate-400 mb-6">Please log in to manage your account</p>
-                        <div className="space-y-3">
-                            <Button 
-                                onClick={() => User.login()}
-                                className="w-full bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white font-bold py-3"
-                            >
-                                Log In
-                            </Button>
-                            {/* Assuming '/about' is the correct path for "About the Creator" */}
-                            <Link to={"/about"}> 
-                                <Button variant="outline" className="w-full">
-                                    About the Creator
-                                </Button>
-                            </Link>
-                        </div>
+                        <Button 
+                            onClick={() => User.login()}
+                            className="w-full bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white font-bold py-3"
+                        >
+                            Log In
+                        </Button>
                     </CardContent>
                 </Card>
             </div>
         );
     }
 
-    const isPremium = user.subscription_tier === "premium";
+    const isPremium = user.subscription_tier === "premium" || user.subscription_tier === "institutional";
     const subscriptionDate = user.subscription_date ? new Date(user.subscription_date).toLocaleDateString() : "N/A";
     const analysesUsed = user.analyses_used || 0;
 
@@ -235,7 +227,7 @@ export default function AccountPage() {
                                     <p className="text-sm text-slate-500 dark:text-slate-400">Subscription</p>
                                     <div className="flex items-center gap-2">
                                         <Badge className={isPremium ? "bg-amber-500 text-white" : "bg-slate-500 text-white"}>
-                                            {isPremium ? "Premium" : "Free"}
+                                            {user.subscription_tier === "institutional" ? "Institutional" : isPremium ? "Premium" : "Free"}
                                         </Badge>
                                         {isPremium && <Crown className="w-4 h-4 text-amber-500" />}
                                     </div>
