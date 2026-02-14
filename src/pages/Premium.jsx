@@ -3,8 +3,10 @@ import { User } from "@/components/User";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Crown, Check, Zap, Star, CreditCard, Shield, Users, Clock, Loader2 } from "lucide-react";
+import { Crown, Check, Zap, Star, CreditCard, Shield, Users, Clock, Loader2, Building2 } from "lucide-react";
 import { createCheckoutSession } from "@/functions/createCheckoutSession";
+import { Link } from "react-router-dom";
+import { createPageUrl } from "@/utils";
 
 
 export default function PremiumPage() {
@@ -43,7 +45,7 @@ export default function PremiumPage() {
         }
     };
 
-    const isPremium = user?.subscription_tier === "premium";
+    const isPremium = user?.subscription_tier === "premium" || user?.subscription_tier === "institutional";
     const analysesUsed = user?.analyses_used || 0;
     const remainingFree = Math.max(0, 5 - analysesUsed);
 
@@ -229,6 +231,25 @@ export default function PremiumPage() {
                                 </>
                             )}
                         </Button>
+                    </CardContent>
+                </Card>
+            </div>
+
+            {/* Institutional Plan CTA */}
+            <div className="max-w-4xl mx-auto text-center">
+                <Card className="glass-panel border-0 shadow-lg bg-gradient-to-br from-blue-50/80 to-indigo-50/80 dark:from-blue-950/30 dark:to-indigo-950/30">
+                    <CardContent className="p-8 space-y-4">
+                        <Building2 className="w-10 h-10 text-blue-500 mx-auto" />
+                        <h3 className="text-2xl font-bold text-slate-900 dark:text-slate-100">Need a plan for your institution?</h3>
+                        <p className="text-slate-600 dark:text-slate-400 max-w-lg mx-auto">
+                            Get unlimited analyses for your entire radiology department, hospital group, or academic program — just $200/year.
+                        </p>
+                        <Link to={createPageUrl("InstitutionalPlan")}>
+                            <Button size="lg" className="rounded-full bg-blue-600 hover:bg-blue-700 text-white font-semibold px-8 mt-2">
+                                <Building2 className="mr-2 h-5 w-5" />
+                                Institutional Plan — $200/year
+                            </Button>
+                        </Link>
                     </CardContent>
                 </Card>
             </div>
