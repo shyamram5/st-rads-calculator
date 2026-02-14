@@ -94,24 +94,6 @@ export default function LandingPage() {
             </div>
         </div>
 
-        {/* Institutional CTA */}
-        <div className="max-w-2xl mx-auto px-4">
-            <Link to={createPageUrl("InstitutionalPlan")}>
-                <div className="flex items-center justify-between gap-4 px-6 py-4 rounded-2xl bg-blue-50/80 dark:bg-blue-950/30 border border-blue-200/60 dark:border-blue-800/40 hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 cursor-pointer group">
-                    <div className="flex items-center gap-4">
-                        <div className="w-10 h-10 rounded-xl bg-blue-100 dark:bg-blue-900/50 flex items-center justify-center text-blue-600 dark:text-blue-400 shrink-0">
-                            <Building2 className="w-5 h-5" />
-                        </div>
-                        <div className="text-left">
-                            <p className="font-semibold text-slate-900 dark:text-slate-100 text-sm">Institutional Plan Available</p>
-                            <p className="text-xs text-slate-500 dark:text-slate-400">Unlimited analyses for your entire department — $200/year</p>
-                        </div>
-                    </div>
-                    <ArrowRight className="w-4 h-4 text-blue-500 group-hover:translate-x-1 transition-transform shrink-0" />
-                </div>
-            </Link>
-        </div>
-
         {/* Support Section */}
         <div className="max-w-lg mx-auto text-center space-y-4 px-4">
             <div className="flex items-center justify-center gap-2 text-slate-600 dark:text-slate-300">
@@ -123,10 +105,17 @@ export default function LandingPage() {
             </p>
             <Link to={createPageUrl("Premium")}>
                 <Button className="rounded-full bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-semibold px-6 py-2.5 shadow-md hover:shadow-lg transition-all mt-2">
-                    <Crown className="mr-2 h-4 w-4" /> Support & Go Premium — $9.99/mo
+                    <Crown className="mr-2 h-4 w-4" /> Support & Go Premium
                 </Button>
             </Link>
-        </div>
+
+            <Link to={createPageUrl("InstitutionalPlan")} className="block mt-3">
+                <div className="inline-flex items-center gap-2 text-sm text-blue-600 dark:text-blue-400 hover:underline font-medium">
+                    <Building2 className="w-4 h-4" />
+                    Institutional plans available — unlimited analyses for all members
+                </div>
+            </Link>
+            </div>
     </div>
   );
 }
