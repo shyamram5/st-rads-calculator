@@ -57,6 +57,7 @@ import PaymentCancel from './pages/PaymentCancel';
 import PaymentSuccess from './pages/PaymentSuccess';
 import Premium from './pages/Premium';
 import Support from './pages/Support';
+import InstitutionalPlan from './pages/InstitutionalPlan';
 import __Layout from './Layout.jsx';
 
 
@@ -71,6 +72,7 @@ export const PAGES = {
     "PaymentSuccess": PaymentSuccess,
     "Premium": Premium,
     "Support": Support,
+    "InstitutionalPlan": InstitutionalPlan,
 }
 
 export const pagesConfig = {
