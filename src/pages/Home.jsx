@@ -75,15 +75,18 @@ export default function LandingPage() {
                 </div>
 
                 {/* 3-Step Process */}
-                <div className="grid md:grid-cols-3 gap-6 md:gap-10 max-w-4xl mx-auto w-full pt-4">
+                <div className="grid md:grid-cols-3 gap-6 md:gap-8 max-w-5xl mx-auto w-full pt-8">
                     {current.steps.map((step, i) => (
-                        <div key={i} className="flex flex-col items-center text-center space-y-3 group">
-                            <div className={`w-12 h-12 flex items-center justify-center rounded-xl ${step.bg} ${step.color} transition-transform duration-300 group-hover:scale-110`}>
-                                <step.icon className="w-6 h-6" />
+                        <div key={i} className="flex flex-col items-center text-center space-y-4 group p-6 rounded-2xl bg-white/60 dark:bg-slate-800/40 border border-slate-200/60 dark:border-slate-700/40 shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1">
+                            <div className="relative">
+                                <div className={`absolute inset-0 rounded-2xl ${step.bg} blur-lg opacity-50 group-hover:opacity-80 transition-opacity`}></div>
+                                <div className={`relative w-16 h-16 flex items-center justify-center rounded-2xl ${step.bg} ${step.color} transition-transform duration-300 group-hover:scale-110`}>
+                                    <step.icon className="w-8 h-8" />
+                                </div>
                             </div>
-                            <div>
-                                <h3 className="font-semibold text-base text-slate-900 dark:text-slate-100 mb-0.5">{step.title}</h3>
-                                <p className="text-sm text-slate-500 dark:text-slate-400">{step.desc}</p>
+                            <div className="space-y-1.5">
+                                <h3 className="font-bold text-lg text-slate-900 dark:text-slate-100">{step.title}</h3>
+                                <p className="text-sm text-slate-500 dark:text-slate-400 leading-relaxed">{step.desc}</p>
                             </div>
                         </div>
                     ))}
