@@ -59,15 +59,14 @@ export default function LandingPage() {
 
 
                     {/* Founding Papers */}
-                    <div className="flex flex-col sm:flex-row items-center justify-center gap-x-6 gap-y-3 pt-2">
-                        <a href="https://www.ajronline.org/doi/10.2214/AJR.25.34013" target="_blank" rel="noopener noreferrer" className="group inline-flex items-center gap-1.5 text-sm text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
-                            <ExternalLink className="w-3.5 h-3.5 flex-shrink-0 opacity-60 group-hover:opacity-100" />
-                            <span><span className="font-semibold text-slate-700 dark:text-slate-300 group-hover:text-blue-600 dark:group-hover:text-blue-400">Chhabra, Garner, Rehman et al.</span> — AJR 2025</span>
+                    <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
+                        <a href="https://www.ajronline.org/doi/10.2214/AJR.25.34013" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-blue-50 dark:bg-blue-950/40 border border-blue-200/60 dark:border-blue-800/40 text-blue-700 dark:text-blue-300 text-xs font-semibold tracking-wide hover:bg-blue-100 dark:hover:bg-blue-900/40 transition-colors">
+                            <ExternalLink className="w-3 h-3" />
+                            Chhabra, Garner, Rehman et al. — AJR 2025
                         </a>
-                        <span className="hidden sm:inline text-slate-300 dark:text-slate-600">·</span>
-                        <a href="https://link.springer.com/article/10.1007/s00256-026-05155-w" target="_blank" rel="noopener noreferrer" className="group inline-flex items-center gap-1.5 text-sm text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
-                            <ExternalLink className="w-3.5 h-3.5 flex-shrink-0 opacity-60 group-hover:opacity-100" />
-                            <span><span className="font-semibold text-slate-700 dark:text-slate-300 group-hover:text-blue-600 dark:group-hover:text-blue-400">Wahid, Sharma, Rehman et al.</span> — Skeletal Radiology 2026</span>
+                        <a href="https://link.springer.com/article/10.1007/s00256-026-05155-w" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-blue-50 dark:bg-blue-950/40 border border-blue-200/60 dark:border-blue-800/40 text-blue-700 dark:text-blue-300 text-xs font-semibold tracking-wide hover:bg-blue-100 dark:hover:bg-blue-900/40 transition-colors">
+                            <ExternalLink className="w-3 h-3" />
+                            Wahid, Sharma, Rehman et al. — Skeletal Radiology 2026
                         </a>
                     </div>
                 </div>
