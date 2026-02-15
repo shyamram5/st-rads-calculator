@@ -56,9 +56,7 @@ export default function LandingPage() {
                     <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-50 dark:bg-blue-950/40 border border-blue-200/60 dark:border-blue-800/40 text-blue-700 dark:text-blue-300 text-xs font-semibold tracking-wide uppercase">
                         {current.tagline}
                     </div>
-                    <p className="text-base text-slate-500 dark:text-slate-400 max-w-xl mx-auto leading-relaxed">
-                        {current.description}
-                    </p>
+
 
                     {/* Founding Papers */}
                     <div className="flex flex-col sm:flex-row items-center justify-center gap-x-6 gap-y-3 pt-2">
