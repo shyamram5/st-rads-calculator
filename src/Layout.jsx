@@ -190,14 +190,7 @@ export default function Layout({ children, currentPageName }) {
                         </nav>
                         
                         <div className="flex items-center gap-2">
-                            {user && user.subscription_tier !== "premium" &&
-                                <Link to={createPageUrl("Premium")}>
-                                    <Button variant="ghost" className="text-amber-600 hover:bg-amber-50 dark:hover:bg-amber-900/20 hover:text-amber-700 dark:hover:text-amber-400 px-4 py-2 flex items-center gap-2 transition-colors rounded-full font-semibold border border-amber-200 dark:border-amber-800">
-                                        <Crown className="w-4 h-4" />
-                                        Upgrade
-                                    </Button>
-                                </Link>
-                            }
+
                              <Button onClick={toggleTheme} variant="ghost" size="icon" className="text-slate-500 hover:bg-slate-500/10 hover:text-slate-700 dark:text-slate-400 dark:hover:text-white transition-colors">
                                 <Sun className="h-5 w-5 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
                                 <Moon className="absolute h-5 w-5 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
