@@ -154,6 +154,38 @@ export default function StudyAssistantPage() {
     );
   }
 
+  const isPremium = user.subscription_tier === "premium" || user.subscription_tier === "institutional";
+
+  if (!isPremium) {
+    return (
+      <div className="max-w-xl mx-auto mt-8 space-y-6">
+        <Card className="border-amber-200 dark:border-amber-800 bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-950/30 dark:to-orange-950/30">
+          <CardHeader className="text-center pb-2">
+            <div className="mx-auto w-14 h-14 rounded-2xl bg-amber-100 dark:bg-amber-900/50 flex items-center justify-center mb-3">
+              <Lock className="w-7 h-7 text-amber-600 dark:text-amber-400" />
+            </div>
+            <CardTitle className="text-xl text-slate-900 dark:text-white">Premium Feature</CardTitle>
+            <CardDescription className="text-slate-600 dark:text-slate-400">
+              The Study Assistant is available exclusively to Premium and Institutional subscribers.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4 text-center">
+            <ul className="text-sm text-slate-600 dark:text-slate-400 space-y-2 text-left max-w-xs mx-auto">
+              <li className="flex items-center gap-2"><Crown className="w-4 h-4 text-amber-500 flex-shrink-0" /> 100+ CORE-style practice questions</li>
+              <li className="flex items-center gap-2"><Crown className="w-4 h-4 text-amber-500 flex-shrink-0" /> AI-powered radiology tutor</li>
+              <li className="flex items-center gap-2"><Crown className="w-4 h-4 text-amber-500 flex-shrink-0" /> Progress tracking & statistics</li>
+            </ul>
+            <Link to={createPageUrl("Premium")}>
+              <Button className="bg-amber-600 hover:bg-amber-700 text-white mt-2">
+                <Crown className="w-4 h-4 mr-2" /> Upgrade Now
+              </Button>
+            </Link>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
   return (
     <div className="max-w-4xl mx-auto space-y-6">
       {/* Header */}
