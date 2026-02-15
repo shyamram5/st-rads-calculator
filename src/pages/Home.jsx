@@ -101,9 +101,18 @@ export default function LandingPage() {
                 <span className="text-sm font-semibold">Built by a Medical Student, for the Radiology Community</span>
             </div>
             <p className="text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
-                100% free for all users. Sign up and get unlimited access to all features.
-            </p>
-            </div>
+                      100% free for all users. Sign up and get unlimited access to all features.
+                  </p>
+                  <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
+                      <a href="https://www.ajronline.org/doi/10.2214/AJR.25.34013" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 text-sm text-blue-600 dark:text-blue-400 hover:underline font-medium">
+                          <ExternalLink className="w-3.5 h-3.5" /> Chhabra et al., AJR 2025
+                      </a>
+                      <span className="hidden sm:inline text-slate-300 dark:text-slate-600">·</span>
+                      <a href="https://link.springer.com/article/10.1007/s00256-026-05155-w" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 text-sm text-blue-600 dark:text-blue-400 hover:underline font-medium">
+                          <ExternalLink className="w-3.5 h-3.5" /> Skeletal Radiology 2026
+                      </a>
+                  </div>
+                  </div>
     </div>
   );
 }
