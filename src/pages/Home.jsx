@@ -101,20 +101,8 @@ export default function LandingPage() {
                 <span className="text-sm font-semibold">Built by a Medical Student, for the Radiology Community</span>
             </div>
             <p className="text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
-                This project was bootstrapped entirely on student loans. Every Premium subscription directly supports keeping this tool free and funds future features.
+                100% free for all users. Sign up and get unlimited access to all features.
             </p>
-            <Link to={createPageUrl("Premium")}>
-                <Button className="rounded-full bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-semibold px-6 py-2.5 shadow-md hover:shadow-lg transition-all mt-2">
-                    <Crown className="mr-2 h-4 w-4" /> Support & Go Premium
-                </Button>
-            </Link>
-
-            <Link to={createPageUrl("InstitutionalPlan")} className="block mt-3">
-                <div className="inline-flex items-center gap-2 text-sm text-blue-600 dark:text-blue-400 hover:underline font-medium">
-                    <Building2 className="w-4 h-4" />
-                    Institutional plans available — unlimited analyses for all members
-                </div>
-            </Link>
             </div>
     </div>
   );
