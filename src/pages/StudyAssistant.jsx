@@ -5,8 +5,10 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import MessageBubble from '../components/MessageBubble';
-import { Send, Loader2, GraduationCap, BookOpen, Sparkles, BrainCircuit, MessageSquare } from 'lucide-react';
+import { Send, Loader2, GraduationCap, BookOpen, Sparkles, BrainCircuit, MessageSquare, Crown, Lock } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Link } from "react-router-dom";
+import { createPageUrl } from "@/utils";
 import PullToRefresh from '../components/PullToRefresh';
 import QuizMode from '../components/study/QuizMode';
 
