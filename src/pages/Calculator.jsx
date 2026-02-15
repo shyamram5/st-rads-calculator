@@ -198,7 +198,7 @@ export default function CalculatorPage() {
           <h1 className="text-3xl font-bold text-slate-900 dark:text-slate-100 mb-2">ST-RADS Classification Result</h1>
           <p className="text-slate-600 dark:text-slate-400">Deterministic classification based on the official ST-RADS v2025 flowcharts</p>
         </div>
-        <ResultPanel result={result} caseData={caseData} onReset={handleReset} isPremium={isPremium} />
+        <ResultPanel result={result} caseData={caseData} onReset={handleReset} isPremium={true} />
 
         {/* Education Panel on Results Page */}
         <div className="border-t border-slate-200 dark:border-slate-700 pt-8">
