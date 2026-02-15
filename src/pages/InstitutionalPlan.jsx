@@ -189,7 +189,7 @@ export default function InstitutionalPlanPage() {
                         <CardTitle className="text-2xl text-slate-900 dark:text-slate-100">Institutional</CardTitle>
                     </div>
                     <div className="text-4xl font-bold text-slate-900 dark:text-slate-100">
-                        $200<span className="text-lg font-normal text-slate-600 dark:text-slate-400">/year</span>
+                        $500<span className="text-lg font-normal text-slate-600 dark:text-slate-400">/year</span>
                     </div>
                     <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">Unlimited members · Unlimited analyses</p>
                 </CardHeader>
@@ -240,7 +240,7 @@ export default function InstitutionalPlanPage() {
                         ) : (
                             <>
                                 <CreditCard className="mr-3 h-6 w-6" />
-                                Subscribe — $200/year
+                                Subscribe — $500/year
                             </>
                         )}
                     </Button>

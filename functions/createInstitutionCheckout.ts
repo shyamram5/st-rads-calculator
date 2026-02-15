@@ -32,7 +32,7 @@ Deno.serve(async (req) => {
                         name: `RADS Calculator - Institutional Subscription`,
                         description: `Unlimited analyses for ${institution_name.trim()}`,
                     },
-                    unit_amount: 20000, // $200.00
+                    unit_amount: 50000, // $500.00
                     recurring: {
                         interval: 'year',
                     },
