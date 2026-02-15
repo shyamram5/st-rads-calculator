@@ -2,10 +2,8 @@ import React, { useState, useEffect, useMemo, useCallback, useRef } from "react"
 import { User } from "@/components/User";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { ArrowLeft, ArrowRight, RotateCcw, Sparkles, Calculator as CalcIcon, LogIn, BookOpen, ChevronDown, ChevronUp, Crown, Lock } from "lucide-react";
+import { ArrowLeft, ArrowRight, RotateCcw, Sparkles, Calculator as CalcIcon, LogIn, BookOpen, ChevronDown, ChevronUp } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Link } from "react-router-dom";
-import { createPageUrl } from "@/utils";
 
 import WizardStep from "../components/calculator/WizardStep";
 import ResultPanel from "../components/calculator/ResultPanel";
