@@ -53,11 +53,6 @@ export default function LandingPage() {
         <div className="w-full max-w-3xl mx-auto px-4">
             <div className="text-center space-y-8">
                 <div className="space-y-4">
-                    <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-50 dark:bg-blue-950/40 border border-blue-200/60 dark:border-blue-800/40 text-blue-700 dark:text-blue-300 text-xs font-semibold tracking-wide uppercase">
-                        {current.tagline}
-                    </div>
-
-
                     {/* Founding Papers */}
                     <div className="flex flex-col items-center justify-center gap-3 pt-3">
                         <a href="https://www.ajronline.org/doi/10.2214/AJR.25.34013" target="_blank" rel="noopener noreferrer" className="flex flex-col items-center px-5 py-2.5 rounded-2xl bg-blue-50 dark:bg-blue-950/40 border border-blue-200/60 dark:border-blue-800/40 hover:bg-blue-100 dark:hover:bg-blue-900/40 transition-colors max-w-lg">
