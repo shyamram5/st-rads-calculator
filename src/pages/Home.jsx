@@ -37,7 +37,7 @@ export default function LandingPage() {
   const current = STRADS_SYSTEM;
 
   return (
-    <div className="min-h-[80vh] flex flex-col justify-center items-center py-16 space-y-16">
+    <div className="min-h-[80vh] flex flex-col justify-center items-center py-16 space-y-10">
         
         {/* Hero Title */}
         <div className="text-center space-y-5 max-w-4xl mx-auto z-10 px-4 animate-in fade-in slide-in-from-bottom-4 duration-1000">
