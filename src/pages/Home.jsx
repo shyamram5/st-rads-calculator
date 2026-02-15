@@ -47,30 +47,21 @@ export default function LandingPage() {
             <p className="text-lg md:text-xl text-slate-500 dark:text-slate-400 font-normal max-w-2xl mx-auto leading-relaxed">
                 Evidence-based radiology risk stratification tools — all in one place.
             </p>
+
+            {/* Founding Papers */}
+            <div className="flex flex-col items-center gap-1.5 pt-2">
+                <a href="https://www.ajronline.org/doi/10.2214/AJR.25.34013" target="_blank" rel="noopener noreferrer" className="text-slate-400 dark:text-slate-500 text-[11px] hover:text-blue-600 dark:hover:text-blue-400 transition-colors text-center leading-snug">
+                    Soft Tissue-RADS: An ACR Work-in-Progress Framework… — <span className="font-medium">Chhabra, Garner, Rehman et al.</span> AJR 2025
+                </a>
+                <a href="https://link.springer.com/article/10.1007/s00256-026-05155-w" target="_blank" rel="noopener noreferrer" className="text-slate-400 dark:text-slate-500 text-[11px] hover:text-blue-600 dark:hover:text-blue-400 transition-colors text-center leading-snug">
+                    MRI Findings for Differentiating Benign & Malignant Soft Tissue Tumors… — <span className="font-medium">Wahid, Sharma, Rehman et al.</span> Skeletal Radiol 2026
+                </a>
+            </div>
         </div>
 
         {/* System Content */}
         <div className="w-full max-w-3xl mx-auto px-4">
             <div className="text-center space-y-8">
-                <div className="space-y-4">
-                    {/* Founding Papers */}
-                    <div className="flex flex-col items-center justify-center gap-3 pt-3">
-                        <a href="https://www.ajronline.org/doi/10.2214/AJR.25.34013" target="_blank" rel="noopener noreferrer" className="flex flex-col items-center px-5 py-2.5 rounded-2xl bg-blue-50 dark:bg-blue-950/40 border border-blue-200/60 dark:border-blue-800/40 hover:bg-blue-100 dark:hover:bg-blue-900/40 transition-colors max-w-lg">
-                            <span className="text-blue-700 dark:text-blue-300 text-xs font-semibold text-center leading-snug flex items-center gap-1.5">
-                                <ExternalLink className="w-3 h-3 flex-shrink-0" />
-                                Soft Tissue-RADS: An ACR Work-in-Progress Framework for Standardized Reporting of Soft-Tissue Lesions on MRI
-                            </span>
-                            <span className="text-blue-600/70 dark:text-blue-400/70 text-[10px] font-medium mt-0.5">Chhabra, Garner, Rehman et al. — AJR 2025</span>
-                        </a>
-                        <a href="https://link.springer.com/article/10.1007/s00256-026-05155-w" target="_blank" rel="noopener noreferrer" className="flex flex-col items-center px-5 py-2.5 rounded-2xl bg-blue-50 dark:bg-blue-950/40 border border-blue-200/60 dark:border-blue-800/40 hover:bg-blue-100 dark:hover:bg-blue-900/40 transition-colors max-w-lg">
-                            <span className="text-blue-700 dark:text-blue-300 text-xs font-semibold text-center leading-snug flex items-center gap-1.5">
-                                <ExternalLink className="w-3 h-3 flex-shrink-0" />
-                                MRI Findings for Differentiating Benign and Malignant Soft Tissue Tumors: A Systematic Review — Part 2
-                            </span>
-                            <span className="text-blue-600/70 dark:text-blue-400/70 text-[10px] font-medium mt-0.5">Wahid, Sharma, Rehman et al. — Skeletal Radiology 2026</span>
-                        </a>
-                    </div>
-                </div>
 
                 <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
                     <Link to={createPageUrl("Calculator")}>
