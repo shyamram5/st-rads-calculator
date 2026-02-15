@@ -60,8 +60,8 @@ export default function LandingPage() {
         </div>
 
         {/* System Content */}
-        <div className="w-full max-w-3xl mx-auto px-4">
-            <div className="text-center space-y-8">
+            <div className="w-full max-w-3xl mx-auto px-4 -mt-6">
+                <div className="text-center space-y-6">
 
                 <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
                     <Link to={createPageUrl("Calculator")}>
