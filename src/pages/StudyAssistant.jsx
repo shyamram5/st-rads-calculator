@@ -5,17 +5,13 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import MessageBubble from '../components/MessageBubble';
-import { Send, Loader2, GraduationCap, BookOpen, Sparkles, BrainCircuit, Layers, PenLine, MessageSquare } from 'lucide-react';
+import { Send, Loader2, GraduationCap, BookOpen, Sparkles, BrainCircuit, MessageSquare } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import PullToRefresh from '../components/PullToRefresh';
 import QuizMode from '../components/study/QuizMode';
-import FlashcardMode from '../components/study/FlashcardMode';
-import FillBlankMode from '../components/study/FillBlankMode';
 
 const MODES = [
-  { id: "quiz", label: "Quiz", icon: BrainCircuit, description: "Multiple choice questions" },
-  { id: "flashcards", label: "Flashcards", icon: Layers, description: "Flip to learn key concepts" },
-  { id: "fillblank", label: "Fill in the Blank", icon: PenLine, description: "Test recall with blanks" },
+  { id: "quiz", label: "Question Bank", icon: BrainCircuit, description: "100 clinical vignette questions" },
   { id: "chat", label: "AI Tutor", icon: MessageSquare, description: "Ask anything" },
 ];
 
@@ -165,12 +161,12 @@ export default function StudyAssistantPage() {
         </div>
         <div>
           <h1 className="text-2xl font-bold text-slate-900 dark:text-white">Study Assistant</h1>
-          <p className="text-sm text-slate-500 dark:text-slate-400">Learn ST-RADS with quizzes, flashcards, and an AI tutor</p>
+          <p className="text-sm text-slate-500 dark:text-slate-400">CORE-style ST-RADS question bank & AI tutor</p>
         </div>
       </div>
 
       {/* Mode Tabs */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+      <div className="grid grid-cols-2 gap-2">
         {MODES.map(mode => {
           const Icon = mode.icon;
           const isActive = activeMode === mode.id;
@@ -197,9 +193,7 @@ export default function StudyAssistantPage() {
       ) : (
         <Card className="shadow-xl border-slate-200 dark:border-slate-800">
           <CardContent className="p-4 sm:p-6">
-            {activeMode === "quiz" && <QuizMode />}
-            {activeMode === "flashcards" && <FlashcardMode />}
-            {activeMode === "fillblank" && <FillBlankMode />}
+            <QuizMode />
           </CardContent>
         </Card>
       )}
