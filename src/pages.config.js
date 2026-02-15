@@ -57,8 +57,8 @@ import InstitutionalPlan from './pages/InstitutionalPlan';
 import PaymentCancel from './pages/PaymentCancel';
 import PaymentSuccess from './pages/PaymentSuccess';
 import Premium from './pages/Premium';
-import Support from './pages/Support';
 import StudyAssistant from './pages/StudyAssistant';
+import Support from './pages/Support';
 import __Layout from './Layout.jsx';
 
 
@@ -73,8 +73,8 @@ export const PAGES = {
     "PaymentCancel": PaymentCancel,
     "PaymentSuccess": PaymentSuccess,
     "Premium": Premium,
-    "Support": Support,
     "StudyAssistant": StudyAssistant,
+    "Support": Support,
 }
 
 export const pagesConfig = {

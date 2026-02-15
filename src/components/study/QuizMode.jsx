@@ -71,7 +71,7 @@ export default function QuizMode() {
           {pct >= 90 ? "Outstanding! You're mastering ST-RADS." : 
            pct >= 70 ? "Great work! Keep studying to reach expert level." : 
            pct >= 50 ? "Good effort. Review the explanations to strengthen weak areas." : 
-           "Keep studying! Review the flashcards and try again."}
+           "Keep studying! Review the questions and try again."}
         </div>
         <Button onClick={handleRestart} className="bg-purple-600 hover:bg-purple-700">
           <RotateCcw className="w-4 h-4 mr-2" /> Retake Quiz
