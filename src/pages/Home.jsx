@@ -65,7 +65,7 @@ export default function LandingPage() {
 
                 <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
                     <Link to={createPageUrl("Calculator")}>
-                        <Button size="lg" className="h-13 px-10 text-base rounded-full bg-blue-600 hover:bg-blue-700 text-white shadow-lg shadow-blue-500/20 hover:shadow-blue-500/30 transition-all duration-300 hover:scale-[1.03] font-semibold">
+                        <Button size="lg" className="h-14 px-14 text-lg rounded-full bg-blue-600 hover:bg-blue-700 text-white shadow-lg shadow-blue-500/20 hover:shadow-blue-500/30 transition-all duration-300 hover:scale-[1.03] font-semibold">
                             Start ST-RADS Case <ArrowRight className="ml-2 h-5 w-5" />
                         </Button>
                     </Link>
