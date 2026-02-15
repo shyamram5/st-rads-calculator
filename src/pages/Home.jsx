@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { User } from "@/components/User";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, ClipboardCheck, Shield, FileSearch, Stethoscope, Heart } from "lucide-react";
+import { ArrowRight, ClipboardCheck, Shield, FileSearch, Stethoscope, Heart, ExternalLink } from "lucide-react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 
