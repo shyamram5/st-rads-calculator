@@ -128,10 +128,19 @@ export default function CalculatorPage() {
   const result = useMemo(() => {
     if (!showResult) return null;
     let r = calculateSTRADS(caseData);
-    // Apply modifiers using the new helper function in rule engine
     r = applyModifiers(r, caseData); 
     return r;
   }, [showResult, caseData]);
+
+  // Track analysis count (analytics only, no limits)
+  useEffect(() => {
+    if (showResult && result && user && !hasTrackedRef.current) {
+      hasTrackedRef.current = true;
+      const newCount = (user.analyses_used || 0) + 1;
+      User.updateMyUserData({ analyses_used: newCount });
+      setUser(prev => ({ ...prev, analyses_used: newCount }));
+    }
+  }, [showResult, result]);
 
   const handleReset = () => {
     setCaseData({});
