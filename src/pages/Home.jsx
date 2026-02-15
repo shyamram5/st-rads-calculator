@@ -59,6 +59,19 @@ export default function LandingPage() {
                     <p className="text-base text-slate-500 dark:text-slate-400 max-w-xl mx-auto leading-relaxed">
                         {current.description}
                     </p>
+
+                    {/* Founding Papers */}
+                    <div className="flex flex-col sm:flex-row items-center justify-center gap-x-6 gap-y-3 pt-2">
+                        <a href="https://www.ajronline.org/doi/10.2214/AJR.25.34013" target="_blank" rel="noopener noreferrer" className="group inline-flex items-center gap-1.5 text-sm text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+                            <ExternalLink className="w-3.5 h-3.5 flex-shrink-0 opacity-60 group-hover:opacity-100" />
+                            <span><span className="font-semibold text-slate-700 dark:text-slate-300 group-hover:text-blue-600 dark:group-hover:text-blue-400">Chhabra, Garner, Rehman et al.</span> — AJR 2025</span>
+                        </a>
+                        <span className="hidden sm:inline text-slate-300 dark:text-slate-600">·</span>
+                        <a href="https://link.springer.com/article/10.1007/s00256-026-05155-w" target="_blank" rel="noopener noreferrer" className="group inline-flex items-center gap-1.5 text-sm text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+                            <ExternalLink className="w-3.5 h-3.5 flex-shrink-0 opacity-60 group-hover:opacity-100" />
+                            <span><span className="font-semibold text-slate-700 dark:text-slate-300 group-hover:text-blue-600 dark:group-hover:text-blue-400">Wahid, Sharma, Rehman et al.</span> — Skeletal Radiology 2026</span>
+                        </a>
+                    </div>
                 </div>
 
                 <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
