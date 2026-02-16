@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
+import DecisionPathTrace from "./DecisionPathTrace";
 
 const scoreColors = {
   gray: { ring: "ring-gray-400", text: "text-gray-700 dark:text-gray-300", bg: "bg-gray-100 dark:bg-gray-900" },
