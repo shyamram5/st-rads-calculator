@@ -114,6 +114,9 @@ export default function ResultPanel({ result, caseData, onReset, isPremium }) {
         </CardContent>
       </Card>
 
+      {/* Decision Path Trace */}
+      <DecisionPathTrace caseData={caseData} result={result} />
+
       {/* Structured Report */}
       <Card className="border border-slate-200 dark:border-slate-700">
         <CardHeader className="pb-3">
