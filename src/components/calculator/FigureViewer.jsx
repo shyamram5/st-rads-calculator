@@ -96,7 +96,7 @@ export default function FigureViewer({ caseData, result }) {
           Flowchart Figures
         </CardTitle>
         <p className="text-xs text-slate-500 dark:text-slate-400">
-          Interactive flowcharts showing the decision path. The active branch is highlighted; the final score node pulses blue.
+          Interactive flowcharts tracing the decision path. The taken branch is highlighted and the final ST-RADS score glows brightly.
         </p>
       </CardHeader>
       <CardContent className="space-y-3">
