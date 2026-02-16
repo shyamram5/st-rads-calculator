@@ -50,6 +50,7 @@ export default function LandingPage() {
 
             {/* Founding Papers */}
             <div className="flex flex-col items-center gap-1.5 pt-2">
+                <p className="text-[11px] text-slate-400 dark:text-slate-500 uppercase tracking-widest font-semibold">Built from the foundational research</p>
                 <a href="https://www.ajronline.org/doi/10.2214/AJR.25.34013" target="_blank" rel="noopener noreferrer" className="text-blue-400 dark:text-blue-400 text-[11px] hover:text-blue-600 dark:hover:text-blue-300 transition-colors text-center leading-snug">
                     Soft Tissue-RADS: An ACR Work-in-Progress Framework… — <span className="font-medium">Chhabra, Garner, Rehman et al.</span> AJR 2025
                 </a>
