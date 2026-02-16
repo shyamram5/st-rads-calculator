@@ -1,12 +1,12 @@
 import React from "react";
-import FlowchartNode from "./FlowchartNode";
-import FlowchartConnector from "./FlowchartConnector";
+import N from "./FlowchartNode";
+import { TreeFork, Stem } from "./TreeLayout";
 
 export default function Figure1Chart({ caseData, finalScore }) {
   const { examAdequacy, lesionPresent, macroscopicFatT1W, t2EnhancementPath } = caseData;
 
-  const isComplete = examAdequacy === "complete";
-  const isIncomplete = examAdequacy === "incomplete";
+  const complete = examAdequacy === "complete";
+  const incomplete = examAdequacy === "incomplete";
   const hasLesion = lesionPresent === "yes";
   const noLesion = lesionPresent === "no";
   const hasFat = macroscopicFatT1W === "yes";
@@ -15,74 +15,57 @@ export default function Figure1Chart({ caseData, finalScore }) {
   const isSolid = t2EnhancementPath === "indeterminate_solid";
 
   return (
-    <div className="flex flex-col items-center gap-0">
-      {/* Title */}
-      <FlowchartNode label="Suspected Soft Tissue Lesion" isHighlighted={true} className="font-bold text-xs px-5 py-2.5" />
-      <FlowchartConnector isHighlighted={true} />
+    <div className="flex flex-col items-center">
+      <N label="Suspected Soft Tissue Lesion on MRI" isHighlighted={true} className="font-bold px-4 py-2.5" />
 
-      {/* Incomplete vs Complete */}
-      <div className="flex items-start gap-6 md:gap-12">
-        {/* Incomplete branch */}
-        <div className="flex flex-col items-center gap-0">
-          <FlowchartNode label="Incomplete imaging" isHighlighted={isIncomplete} />
-          <FlowchartConnector isHighlighted={isIncomplete} />
-          <FlowchartNode type="score" score={0} isHighlighted={isIncomplete} isActive={isIncomplete && finalScore === 0} />
+      <TreeFork parentHighlighted={true}>
+        {/* Branch: Incomplete */}
+        <div className="flex flex-col items-center">
+          <N label="Incomplete imaging" isHighlighted={incomplete} />
+          <Stem h={incomplete} />
+          <N type="score" score={0} isHighlighted={incomplete} isActive={incomplete && finalScore === 0} />
         </div>
 
-        {/* Complete branch */}
-        <div className="flex flex-col items-center gap-0">
-          <FlowchartNode label="Complete imaging" isHighlighted={isComplete} />
-          <FlowchartConnector isHighlighted={isComplete} />
+        {/* Branch: Complete */}
+        <div className="flex flex-col items-center">
+          <N label="Complete imaging" isHighlighted={complete} />
 
-          {/* No lesion vs lesion */}
-          <div className="flex items-start gap-6 md:gap-10">
-            <div className="flex flex-col items-center gap-0">
-              <FlowchartNode label="No soft tissue lesion" isHighlighted={noLesion} />
-              <FlowchartConnector isHighlighted={noLesion} />
-              <FlowchartNode type="score" score={1} isHighlighted={noLesion} isActive={noLesion && finalScore === 1} />
+          <TreeFork parentHighlighted={complete}>
+            {/* No lesion */}
+            <div className="flex flex-col items-center">
+              <N label="No soft tissue lesion" isHighlighted={noLesion} className="max-w-[110px]" />
+              <Stem h={noLesion} />
+              <N type="score" score={1} isHighlighted={noLesion} isActive={noLesion && finalScore === 1} />
             </div>
 
-            <div className="flex flex-col items-center gap-0">
-              <FlowchartNode label="Soft tissue lesion" isHighlighted={hasLesion} />
-              <FlowchartConnector isHighlighted={hasLesion} />
+            {/* Lesion present */}
+            <div className="flex flex-col items-center">
+              <N label="Soft tissue lesion present" isHighlighted={hasLesion} className="max-w-[120px]" />
 
-              {/* Fat vs no fat */}
-              <div className="flex items-start gap-4 md:gap-8">
-                <div className="flex flex-col items-center gap-0">
-                  <FlowchartNode label="No macroscopic fat on T1W" isHighlighted={noFat} />
-                  <FlowchartConnector isHighlighted={noFat} />
-
-                  {/* T2/Enhancement split */}
-                  <div className="flex items-start gap-3 md:gap-6">
-                    <div className="flex flex-col items-center gap-0">
-                      <FlowchartNode
-                        type="pathway"
-                        label={'Variable T2 OR >20% enh → "Indeterminate solid"'}
-                        isHighlighted={isSolid}
-                      />
-                    </div>
-                    <div className="flex flex-col items-center gap-0">
-                      <FlowchartNode
-                        type="pathway"
-                        label={'Markedly high T2 AND <20% enh → "Cyst-like"'}
-                        isHighlighted={isCyst}
-                      />
-                    </div>
-                  </div>
+              <TreeFork parentHighlighted={hasLesion}>
+                {/* Macroscopic fat */}
+                <div className="flex flex-col items-center">
+                  <N type="pathway" label="Macroscopic fat on T1W → Lipomatous (Fig 2A)" isHighlighted={hasFat} className="max-w-[150px]" />
                 </div>
 
-                <div className="flex flex-col items-center gap-0">
-                  <FlowchartNode
-                    type="pathway"
-                    label={'Macroscopic fat on T1W → "Lipomatous"'}
-                    isHighlighted={hasFat}
-                  />
+                {/* No macroscopic fat */}
+                <div className="flex flex-col items-center">
+                  <N label="No macroscopic fat on T1W" isHighlighted={noFat} className="max-w-[130px]" />
+
+                  <TreeFork parentHighlighted={noFat}>
+                    <div className="flex flex-col items-center">
+                      <N type="pathway" label="Markedly high T2 AND <20% enh → Cyst-like (Fig 2B)" isHighlighted={isCyst} className="max-w-[140px]" />
+                    </div>
+                    <div className="flex flex-col items-center">
+                      <N type="pathway" label="Variable T2 OR >20% enh → Indeterminate solid (Fig 2C/2D)" isHighlighted={isSolid} className="max-w-[140px]" />
+                    </div>
+                  </TreeFork>
                 </div>
-              </div>
+              </TreeFork>
             </div>
-          </div>
+          </TreeFork>
         </div>
-      </div>
+      </TreeFork>
     </div>
   );
 }
