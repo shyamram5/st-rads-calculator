@@ -119,7 +119,7 @@ export default function ResultPanel({ result, caseData, onReset, isPremium }) {
       <DecisionPathTrace caseData={caseData} result={result} />
 
       {/* Flowchart Figures */}
-      <FigureViewer caseData={caseData} />
+      <FigureViewer caseData={caseData} result={result} />
 
       {/* Structured Report */}
       <Card className="border border-slate-200 dark:border-slate-700">
