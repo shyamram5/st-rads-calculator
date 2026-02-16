@@ -157,7 +157,7 @@ export function getWizardSteps(caseData) {
               type: "radio",
               options: [
                 { value: "many", label: "Many prominent vessels (→ RADS-3: Angiolipoma)" },
-                { value: "few", label: "Few prominent vessels (→ RADS-3: Angiolipoma)" }
+                { value: "few", label: "Few prominent vessels (→ RADS-4: ALT/WDL)" }
               ]
             }] : [])
           ]
@@ -218,7 +218,7 @@ export function getWizardSteps(caseData) {
             ]
           },
           // When flow = yes: ask hematoma (yes → RADS-3, no → RADS-2). When flow = no: ask hematoma then septations.
-          ...(caseData.cystFlow !== undefined ? [{
+          ...(caseData.cystFlow === "yes" ? [{
             id: "cystHematoma",
             label: "Features suggesting hematoma?",
             tooltip: "If flow voids/fluid-fluid: hematoma yes → RADS-3, no → RADS-2. If no flow voids: hematoma yes → RADS-3.",
@@ -228,7 +228,7 @@ export function getWizardSteps(caseData) {
               { value: "no", label: "No" }
             ]
           }] : []),
-          ...(caseData.cystFlow === "no" && caseData.cystHematoma === "no" ? [{
+          ...(caseData.cystFlow === "no" ? [{
             id: "cystSeptationNodules",
             label: "Thick enhancing septations and/or mural nodules",
             tooltip: "Absence of thick septations and small nodules <1 cm → RADS-3/4. Presence of thick septations and/or nodules ≥1 cm or larger soft tissue component → RADS-5.",
@@ -257,11 +257,11 @@ export function getWizardSteps(caseData) {
         type: "radio",
         options: [
           { value: "deep_muscle", label: "Deep (subfascial) / Intramuscular" },
-          { value: "intravascular", label: "Intravascular / Vessel-related" },
-          { value: "intraarticular", label: "Intraarticular" },
-          { value: "intraneural", label: "Intraneural / Nerve-related" },
+          { value: "intravascular", label: "Intra-vascular / Vessel-related" },
+          { value: "intraarticular", label: "Intra-articular" },
+          { value: "intraneural", label: "Intra-neural / Nerve-related" },
           { value: "cutaneous", label: "Cutaneous / Subcutaneous" },
-          { value: "intratendinous", label: "Intratendinous" },
+          { value: "intratendinous", label: "Intra-tendinous" },
           { value: "fascial", label: "Plantar / Palmar Fascial" },
           { value: "subungual", label: "Subungual" }
         ]
@@ -312,28 +312,9 @@ export function getWizardSteps(caseData) {
             type: "radio",
             options: [
               { value: "phleboliths", label: "Hyperintense lobules or tubules on T2W WITH hypointense phleboliths WITH fluid-fluid levels (→ RADS-2: Venous/venolymphatic malformation)" },
-              { value: "hyper_no_phleb", label: "Hyperintense lobules or tubules on T2W WITHOUT hypointense phleboliths WITHOUT fluid-fluid levels (→ RADS-4/5)" },
-              { value: "calc_hypo", label: "Calcified/ossified on XR or CT AND/OR predominantly hypointense foci on T2W" }
+              { value: "hyper_no_phleb", label: "Hyperintense lobules or tubules on T2W WITHOUT hypointense phleboliths WITHOUT fluid-fluid levels (→ RADS-4 or RADS-5)" }
             ]
-          },
-          ...(caseData.vascMorphology === "hyper_no_phleb" ? [{
-            id: "vascT2Enhancement",
-            label: "T2 signal and enhancement pattern",
-            type: "radio",
-            options: [
-              { value: "hyperintense_peripheral", label: "Hyperintense on T2W and peripheral enhancement (→ RADS-4)" },
-              { value: "hypointense_no_peripheral", label: "Hypointense on T2W and no peripheral enhancement (→ RADS-5)" }
-            ]
-          }] : []),
-          ...(caseData.vascMorphology === "calc_hypo" ? [{
-            id: "vascBlooming",
-            label: "Hemosiderin staining and blooming on GRE?",
-            type: "radio",
-            options: [
-              { value: "blooming", label: "Hemosiderin staining with blooming on GRE (→ RADS-2: Synovial chondromatosis, synovial hemangioma)" },
-              { value: "no_blooming", label: "Hemosiderin staining without blooming on GRE (→ RADS-2: Gout, amyloid, xanthoma)" }
-            ]
-          }] : [])
+          }
         ]
       });
     }
@@ -349,19 +330,10 @@ export function getWizardSteps(caseData) {
             label: "Calcified/ossified on XR or CT and/or predominantly hypointense foci on T2W?",
             type: "radio",
             options: [
-              { value: "calcified_hypo", label: "Yes — Calcified/ossified and/or predominantly hypointense on T2W" },
+              { value: "calcified_hypo", label: "Yes — Calcified/ossified and/or predominantly hypointense on T2W (→ RADS-2)" },
               { value: "not_calcified_hyper", label: "No — Not calcified/ossified OR predominantly hyperintense foci on T2W" }
             ]
           },
-          ...(caseData.iaSignal === "calcified_hypo" ? [{
-            id: "iaBlooming",
-            label: "Hemosiderin staining and blooming on GRE?",
-            type: "radio",
-            options: [
-              { value: "blooming", label: "Hemosiderin with blooming on GRE (→ RADS-2: Synovial chondromatosis, synovial hemangioma)" },
-              { value: "no_blooming", label: "Hemosiderin without blooming on GRE (→ RADS-2: Gout, amyloid, xanthoma)" }
-            ]
-          }] : []),
           ...(caseData.iaSignal === "not_calcified_hyper" ? [{
             id: "iaEnhancement",
             label: "T2 signal and enhancement pattern",
@@ -395,20 +367,11 @@ export function getWizardSteps(caseData) {
           ...(caseData.targetSign === "no" ? [{
             id: "nerveADC",
             label: "ADC value (× 10⁻³ mm²/s)",
-            tooltip: "ADC >1.1 → RADS-3. ADC ≤1.1 → next question for RADS-4 or RADS-5.",
+            tooltip: "ADC >1.1 → RADS-3. ADC ≤1.1 → RADS-4 or RADS-5.",
             type: "radio",
             options: [
               { value: "high", label: "ADC > 1.1 mm²/s (→ RADS-3: Perineurioma, ancient schwannoma, etc.)" },
               { value: "low", label: "ADC ≤ 1.1 mm²/s (→ RADS-4 or RADS-5: Malignant PNST)" }
-            ]
-          }] : []),
-          ...(caseData.targetSign === "no" && caseData.nerveADC === "low" ? [{
-            id: "nerveT2Enhancement",
-            label: "T2 signal and enhancement pattern",
-            type: "radio",
-            options: [
-              { value: "hyperintense_peripheral", label: "Hyperintense on T2W and peripheral enhancement (→ RADS-4)" },
-              { value: "hypointense_no_peripheral", label: "Hypointense on T2W and no peripheral enhancement (→ RADS-5)" }
             ]
           }] : [])
         ]
@@ -445,7 +408,7 @@ export function getWizardSteps(caseData) {
     }
 
     // ── Intratendinous (Fig 2C) ──
-    // Enlarged tendon → hemosiderin with blooming → RADS-2, without blooming → RADS-3. Normal tendon → with blooming → RADS-4, without blooming → RADS-5.
+    // Enlarged tendon with calcifications/cystic change/fat/amyloidosis/autoimmune history → RADS-2. Normal tendon → ask blooming (with blooming → RADS-4, without → RADS-5).
     if (caseData.compartment === "intratendinous") {
       steps.push({
         id: "tendon_logic",
@@ -456,18 +419,18 @@ export function getWizardSteps(caseData) {
             label: "Tendon morphology",
             type: "radio",
             options: [
-              { value: "enlarged", label: "Enlarged tendon with calcifications, cystic change, fat, or underlying history of amyloidosis or autoimmune disease" },
+              { value: "enlarged", label: "Enlarged tendon with calcifications, cystic change, fat, or underlying history of amyloidosis or autoimmune disease (→ RADS-2: Gout, Amyloid, Xanthoma)" },
               { value: "normal", label: "Normal size tendon without calcifications, cystic change, fat, or no underlying history of amyloidosis or autoimmune disease" }
             ]
           },
-          ...(caseData.tendonMorph !== undefined ? [{
+          ...(caseData.tendonMorph === "normal" ? [{
             id: "tendonBlooming",
             label: "Hemosiderin staining and blooming on GRE?",
-            tooltip: "Enlarged: with blooming → RADS-2 (Gout, Amyloid, Xanthoma), without → RADS-3 (TSGCT). Normal: with blooming → RADS-4, without → RADS-5.",
+            tooltip: "Normal tendon: with blooming → RADS-3, without → RADS-4 or RADS-5.",
             type: "radio",
             options: [
-              { value: "blooming", label: "Hemosiderin staining with blooming on GRE" },
-              { value: "no_blooming", label: "Hemosiderin staining without blooming on GRE" }
+              { value: "blooming", label: "Hemosiderin staining with blooming on GRE (→ RADS-3: TSGCT)" },
+              { value: "no_blooming", label: "Hemosiderin staining without blooming on GRE (→ RADS-4 or RADS-5)" }
             ]
           }] : [])
         ]
@@ -528,7 +491,7 @@ export function getWizardSteps(caseData) {
   if (tissueType) {
     steps.push({
       id: "ancillary",
-      title: "Step 6: ADC & Ancillary Features",
+      title: "Step 6: ADC & Ancillary Features (optional)",
       description: "Additional features that may upgrade the score[cite: 270].",
       questions: [
         {
@@ -540,7 +503,7 @@ export function getWizardSteps(caseData) {
         },
         {
           id: "ancillaryFlags",
-          label: "High Risk Features (RADS-5 Triggers)",
+          label: "High Risk Features (RADS-5 Triggers) (optional)",
           type: "checkbox",
           options: [
             { value: "necrosis", label: "Internal Necrosis / Hemorrhage" },

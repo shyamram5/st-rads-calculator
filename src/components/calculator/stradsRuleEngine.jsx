@@ -76,7 +76,7 @@ export function calculateSTRADS(caseData) {
 // ─── Figure 2A: LIPOMATOUS LESIONS ────────────────────────────────
 // Flowchart: Predominantly (>90%) splits into:
 //   A) Thin septations (<2mm) OR absence of nodules and like subcutaneous fat on all sequences → RADS-2
-//   B) Septations and presence of nodules and like subcutaneous fat → thin/thick → if thin: vessels (many/few both RADS-3 Angiolipoma), if thick → RADS-4
+//   B) Septations and presence of nodules and like subcutaneous fat → thin/thick → if thin: vessels (many→RADS-3 Angiolipoma, few→RADS-4 ALT/WDL), if thick → RADS-4
 
 function scoreLipomatous(data) {
   const { lipFatContent, lipNoduleSeptation, lipSeptations, lipVessels, lipNoduleFeatures } = data;
@@ -93,8 +93,13 @@ function scoreLipomatous(data) {
         return r(4, "Predominantly lipomatous with thick septations (≥2mm) OR enhancement >10%. Suspicious for Atypical lipomatous tumor / well-differentiated liposarcoma (ALT/WDL).", ["Atypical lipomatous tumor", "Well-differentiated liposarcoma"]);
       }
       if (lipSeptations === "thin_low_enh") {
-        // Many or few prominent vessels → both RADS-3 (Angiolipoma) per flowchart
-        return r(3, "Predominantly lipomatous with septations and nodules, thin septations <2mm OR enhancement <10%. Angiolipoma.", ["Angiolipoma"]);
+        // Many prominent vessels → RADS-3 (Angiolipoma); few → RADS-4 (ALT/WDL)
+        if (lipVessels === "many") {
+          return r(3, "Predominantly lipomatous with septations and nodules, thin septations <2mm OR enhancement <10%, with many prominent vessels. Angiolipoma.", ["Angiolipoma"]);
+        }
+        if (lipVessels === "few") {
+          return r(4, "Predominantly lipomatous with septations and nodules, thin septations <2mm OR enhancement <10%, with few prominent vessels. Suspicious for ALT/WDL.", ["Atypical lipomatous tumor", "Well-differentiated liposarcoma"]);
+        }
       }
     }
   }
@@ -191,12 +196,7 @@ function scoreIntravascular(data) {
     return r(2, "Hyperintense lobules or tubules on T2W with hypointense phleboliths with fluid-fluid levels. Venous or venolymphatic malformation.", ["Venous malformation", "Venolymphatic malformation"]);
   }
   if (vascMorphology === "hyper_no_phleb") {
-    if (vascT2Enhancement === "hyperintense_peripheral") {
-      return r(4, "Hyperintense lobules on T2W without phleboliths/fluid-fluid; hyperintense on T2W and peripheral enhancement. ST-RADS 4.", ["Hemangioendothelioma", "Kaposi sarcoma", "Angiosarcoma", "Leiomyosarcoma"]);
-    }
-    if (vascT2Enhancement === "hypointense_no_peripheral") {
-      return r(5, "Hyperintense lobules on T2W without phleboliths/fluid-fluid; hypointense on T2W and no peripheral enhancement. ST-RADS 5.", ["Hemangioendothelioma", "Kaposi sarcoma", "Angiosarcoma", "Leiomyosarcoma"]);
-    }
+    return r(4, "Hyperintense lobules or tubules on T2W WITHOUT hypointense phleboliths WITHOUT fluid-fluid levels. ST-RADS 4 or 5.", ["Hemangioendothelioma", "Kaposi sarcoma", "Angiosarcoma", "Leiomyosarcoma"], true);
   }
   if (vascMorphology === "calc_hypo") {
     if (vascBlooming === "blooming") return r(2, "Calcified/ossified or predominantly hypointense T2 with hemosiderin staining and blooming on GRE. RADS-2.", ["Synovial chondromatosis", "Synovial hemangioma"]);
@@ -206,13 +206,12 @@ function scoreIntravascular(data) {
 }
 
 // Sub-function: Intraarticular (Fig 2D)
-// Calcified/hypointense → hemosiderin with/without blooming → both RADS-2. Not calcified/hyperintense → peripheral → RADS-3, no peripheral → RADS-4.
+// Calcified/hypointense → RADS-2. Not calcified/hyperintense → peripheral → RADS-3, no peripheral → RADS-4.
 function scoreIntraarticular(data) {
-  const { iaSignal, iaBlooming, iaEnhancement } = data;
+  const { iaSignal, iaEnhancement } = data;
 
   if (iaSignal === "calcified_hypo") {
-    if (iaBlooming === "blooming") return r(2, "Intraarticular calcified/ossified or predominantly hypointense T2 with hemosiderin and blooming on GRE. RADS-2.", ["Synovial chondromatosis", "Synovial hemangioma"]);
-    return r(2, "Intraarticular calcified/ossified or predominantly hypointense T2 with hemosiderin without blooming on GRE. RADS-2.", ["Gout", "Amyloid", "Xanthoma"]);
+    return r(2, "Intraarticular calcified/ossified or predominantly hypointense T2. RADS-2.", ["Synovial chondromatosis", "Synovial hemangioma", "Gout", "Amyloid", "Xanthoma"]);
   }
 
   if (iaSignal === "not_calcified_hyper") {
@@ -223,9 +222,9 @@ function scoreIntraarticular(data) {
 }
 
 // Sub-function: Intraneural (Fig 2D)
-// Target sign PRESENT → RADS-2 (no ADC question). Target sign ABSENT → ADC >1.1 → RADS-3, ADC ≤1.1 → T2/enh: hyperintense+peripheral→RADS-4, hypointense+no peripheral→RADS-5.
+// Target sign PRESENT → RADS-2 (no ADC question). Target sign ABSENT → ADC >1.1 → RADS-3, ADC ≤1.1 → RADS-4/5.
 function scoreIntraneural(data) {
-  const { targetSign, nerveADC, nerveT2Enhancement } = data;
+  const { targetSign, nerveADC } = data;
 
   if (targetSign === "yes") {
     return r(2, "Nerve-related lesion with target sign present. Benign peripheral nerve sheath tumor.", ["Benign peripheral nerve sheath tumor"]);
@@ -235,12 +234,7 @@ function scoreIntraneural(data) {
       return r(3, "Nerve-related lesion without target sign, ADC >1.1 mm²/s. RADS-3.", ["Perineurioma", "Ancient schwannoma", "Neurofibroma with degenerative change", "Atypical neurofibroma"]);
     }
     if (nerveADC === "low") {
-      if (nerveT2Enhancement === "hyperintense_peripheral") {
-        return r(4, "Nerve-related lesion without target sign, ADC ≤1.1; hyperintense on T2W and peripheral enhancement. ST-RADS 4.", ["Malignant peripheral nerve sheath tumor"]);
-      }
-      if (nerveT2Enhancement === "hypointense_no_peripheral") {
-        return r(5, "Nerve-related lesion without target sign, ADC ≤1.1; hypointense on T2W and no peripheral enhancement. ST-RADS 5.", ["Malignant peripheral nerve sheath tumor"]);
-      }
+      return r(4, "Nerve-related lesion without target sign, ADC ≤1.1 mm²/s. ST-RADS 4 or 5.", ["Malignant peripheral nerve sheath tumor"], true);
     }
   }
   return r(0, "Intraneural lesion — incomplete data.");
@@ -266,12 +260,11 @@ function scoreCutaneous(data) {
 function scoreTendon(data) {
   const { tendonMorph, tendonBlooming } = data;
   if (tendonMorph === "enlarged") {
-    if (tendonBlooming === "blooming") return r(2, "Enlarged tendon with calcifications, cystic change, fat, or amyloidosis/autoimmune; hemosiderin staining with blooming on GRE. RADS-2.", ["Gout", "Amyloid", "Xanthoma"]);
-    return r(3, "Enlarged tendon with calcifications, cystic change, fat, or amyloidosis/autoimmune; hemosiderin without blooming on GRE. RADS-3.", ["TSGCT"]);
+    return r(2, "Enlarged tendon with calcifications, cystic change, fat, or amyloidosis/autoimmune history. RADS-2.", ["Gout", "Amyloid", "Xanthoma"]);
   }
   if (tendonMorph === "normal") {
-    if (tendonBlooming === "blooming") return r(4, "Normal size tendon without calcifications/cysts/fat; hemosiderin staining with blooming on GRE. ST-RADS 4.", ["TSGCT"]);
-    return r(5, "Normal size tendon without calcifications/cysts/fat; hemosiderin without blooming on GRE. ST-RADS 5.", ["TSGCT"], true);
+    if (tendonBlooming === "blooming") return r(3, "Normal size tendon without calcifications/cysts/fat; hemosiderin staining with blooming on GRE. RADS-3.", ["TSGCT"]);
+    return r(4, "Normal size tendon without calcifications/cysts/fat; hemosiderin without blooming on GRE. ST-RADS 4 or 5.", ["TSGCT", "Synovial sarcoma", "Malignant PNST"], true);
   }
   return r(0, "Tendon lesion — incomplete data.");
 }
