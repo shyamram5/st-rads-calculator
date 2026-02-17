@@ -3,36 +3,31 @@ import N from "./FlowchartNode";
 import { TreeFork, Stem } from "./TreeLayout";
 
 /*
-  FIGURE 2D — Indeterminate Solid (Vascular, Articular, Neural, Cutaneous)
-  
-  Per manuscript AND rule engine:
+  FIGURE 2D — Indeterminate Solid Soft Tissue Mass* (exact manuscript match)
 
-  Indeterminate solid soft tissue mass
-  ├─ Intravascular / vessel-related
-  │   ├─ Hyper T2 lobules WITH phleboliths WITH fluid-fluid → ST-RADS 2
-  │   ├─ Hyper T2 lobules WITHOUT phleboliths WITHOUT fluid-fluid → ST-RADS 4 or 5
-  │   └─ Calcified/ossified or predominantly hypointense T2
-  │       ├─ Hemosiderin with blooming on GRE → ST-RADS 2
-  │       └─ Hemosiderin without blooming → ST-RADS 2
-  ├─ Intraarticular
-  │   ├─ Calcified/ossified or predominantly hypointense T2 → ST-RADS 2
-  │   └─ Not calcified, hyperintense T2
-  │       ├─ Hyper T2 + peripheral enhancement → ST-RADS 3
-  │       └─ Hypo T2 + no peripheral enhancement → ST-RADS 4
-  ├─ Intraneural / nerve-related
-  │   ├─ Target sign present → ST-RADS 2
+  Indeterminate Solid Soft Tissue Mass*
+  ├─ Intra-vascular or Vessel related**
+  │   ├─ Hyperintense lobules or tubules on T2W with hypointense phleboliths with fluid-fluid levels
+  │   │   → Soft Tissue RADS-2 (Venous or venolymphatic malformation)
+  │   └─ Hypointense lobules or tubules on T2W without hypointense phleboliths with fluid-fluid levels
+  │       → Soft Tissue RADS-4 / Soft Tissue RADS-5**
+  ├─ Intra-articular
+  │   ├─ Calcified/ossified on XR or CT and/or predominantly hypointense foci on T2W
+  │   │   ├─ Hemosiderin staining as blooming on GRE → Soft Tissue RADS-2
+  │   │   └─ Hemosiderin staining without blooming on GRE → Soft Tissue RADS-2
+  │   └─ Not calcified/ossified on XR or CT OR predominantly hyperintense foci on T2W
+  │       ├─ Hyperintense on T2W and peripheral enhancement → Soft Tissue RADS-3
+  │       └─ Hypointense on T2W and no peripheral enhancement → Soft Tissue RADS-4
+  ├─ Intra-neural or Nerve related*
+  │   ├─ Target sign → Soft Tissue RADS-2 (Benign PNST)
   │   └─ No target sign
-  │       ├─ ADC >1.1 → ST-RADS 3
-  │       └─ ADC ≤1.1 → ST-RADS 4 or 5
-  └─ Cutaneous / subcutaneous
+  │       ├─ ADC >1.1 mm²/s → Soft Tissue RADS-3
+  │       └─ ADC ≤1.1 mm²/s → Soft Tissue RADS-4** / Soft Tissue RADS-5**
+  └─ Cutaneous or Subcutaneous
       ├─ Exophytic
-      │   ├─ Peripheral enhancement → ST-RADS 2
-      │   └─ Internal enhancement → ST-RADS 4
-      └─ Endophytic → ST-RADS 5
-
-  NOTE: The vascular calc_hypo path exists in the rule engine but is NOT
-  reachable from the wizard (wizard only offers phleboliths and hyper_no_phleb).
-  We include it here to match the manuscript figure.
+      │   ├─ Peripheral enhancement → Soft Tissue RADS-2
+      │   └─ Internal enhancement → Soft Tissue RADS-4
+      └─ Endophytic → Soft Tissue RADS-5**
 */
 
 export default function Figure2DChart({ caseData, finalScore }) {
@@ -40,7 +35,7 @@ export default function Figure2DChart({ caseData, finalScore }) {
 
   return (
     <div className="flex flex-col items-center">
-      <N label="Indeterminate solid soft tissue mass" isHighlighted className="font-bold px-5 py-2.5" />
+      <N label="Indeterminate Solid Soft Tissue Mass*" isHighlighted className="font-bold px-5 py-2.5" />
       <TreeFork parentHighlighted>
         <VascBranch cd={caseData} fs={finalScore} on={c === "intravascular"} />
         <IABranch cd={caseData} fs={finalScore} on={c === "intraarticular"} />
@@ -51,57 +46,39 @@ export default function Figure2DChart({ caseData, finalScore }) {
   );
 }
 
-/* Intravascular — 3 branches per manuscript: phleboliths, hyper no phleb, calc/hypo */
+/* Intra-vascular or Vessel related — 2 branches per manuscript */
 function VascBranch({ cd, fs, on }) {
   const vm = cd.vascMorphology;
-  const vb = cd.vascBlooming;
 
   const hPhleb = on && vm === "phleboliths";
-  const hHyper = on && vm === "hyper_no_phleb";
-  const hCalc = on && vm === "calc_hypo";
+  const hNoP = on && vm === "hyper_no_phleb";
 
   return (
     <div className="flex flex-col items-center">
-      <N label="Intravascular / vessel-related" isHighlighted={on} className="max-w-[115px]" />
+      <N label="Intra-vascular or Vessel related**" isHighlighted={on} className="max-w-[120px]" />
       <TreeFork parentHighlighted={on}>
-        {/* Phleboliths → RADS 2 */}
         <div className="flex flex-col items-center">
-          <N label="Hyper T2 lobules WITH phleboliths WITH fluid-fluid" isHighlighted={hPhleb} className="max-w-[105px]" />
+          <N label="Hyperintense lobules or tubules on T2W with hypointense phleboliths with fluid-fluid levels" isHighlighted={hPhleb} className="max-w-[115px]" />
           <Stem h={hPhleb} />
           <N type="score" score={2} isHighlighted={hPhleb} isActive={hPhleb && fs === 2} />
         </div>
-
-        {/* Hyper T2 no phleboliths → RADS 4 or 5 */}
         <div className="flex flex-col items-center">
-          <N label="Hyper T2 lobules WITHOUT phleboliths WITHOUT fluid-fluid" isHighlighted={hHyper} className="max-w-[105px]" />
-          <Stem h={hHyper} />
-          <N type="score" score={4} isHighlighted={hHyper} isActive={hHyper && (fs === 4 || fs === 5)} />
-        </div>
-
-        {/* Calcified / hypo T2 → blooming fork → both RADS 2 */}
-        <div className="flex flex-col items-center">
-          <N label="Calcified / ossified or predominantly hypointense T2" isHighlighted={hCalc} className="max-w-[105px]" />
-          <TreeFork parentHighlighted={hCalc}>
-            <div className="flex flex-col items-center">
-              <N label="Hemosiderin with blooming on GRE" isHighlighted={hCalc && vb === "blooming"} className="max-w-[85px]" />
-              <Stem h={hCalc && vb === "blooming"} />
-              <N type="score" score={2} isHighlighted={hCalc && vb === "blooming"} isActive={hCalc && vb === "blooming" && fs === 2} />
-            </div>
-            <div className="flex flex-col items-center">
-              <N label="Hemosiderin without blooming" isHighlighted={hCalc && vb === "no_blooming"} className="max-w-[85px]" />
-              <Stem h={hCalc && vb === "no_blooming"} />
-              <N type="score" score={2} isHighlighted={hCalc && vb === "no_blooming"} isActive={hCalc && vb === "no_blooming" && fs === 2} />
-            </div>
-          </TreeFork>
+          <N label="Hypointense lobules or tubules on T2W without hypointense phleboliths with fluid-fluid levels" isHighlighted={hNoP} className="max-w-[115px]" />
+          <Stem h={hNoP} />
+          <div className="flex gap-1.5">
+            <N type="score" score={4} isHighlighted={hNoP} isActive={hNoP && fs === 4} />
+            <N type="score" score={5} isHighlighted={hNoP} isActive={hNoP && fs === 5} />
+          </div>
         </div>
       </TreeFork>
     </div>
   );
 }
 
-/* Intraarticular — calcified → RADS 2 directly, not calcified → enhancement fork */
+/* Intra-articular — calcified with blooming splits, not calcified with enh fork */
 function IABranch({ cd, fs, on }) {
   const sig = cd.iaSignal;
+  const bl = cd.iaBlooming;
   const enh = cd.iaEnhancement;
 
   const hCalc = on && sig === "calcified_hypo";
@@ -109,23 +86,33 @@ function IABranch({ cd, fs, on }) {
 
   return (
     <div className="flex flex-col items-center">
-      <N label="Intraarticular" isHighlighted={on} className="max-w-[100px]" />
+      <N label="Intra-articular" isHighlighted={on} className="max-w-[105px]" />
       <TreeFork parentHighlighted={on}>
         <div className="flex flex-col items-center">
-          <N label="Calcified / ossified or predominantly hypointense T2" isHighlighted={hCalc} className="max-w-[105px]" />
-          <Stem h={hCalc} />
-          <N type="score" score={2} isHighlighted={hCalc} isActive={hCalc && fs === 2} />
+          <N label="Calcified/ossified on XR or CT and/or predominantly hypointense foci on T2W" isHighlighted={hCalc} className="max-w-[110px]" />
+          <TreeFork parentHighlighted={hCalc}>
+            <div className="flex flex-col items-center">
+              <N label="Hemosiderin staining as blooming on GRE" isHighlighted={hCalc && bl === "blooming"} className="max-w-[90px]" />
+              <Stem h={hCalc && bl === "blooming"} />
+              <N type="score" score={2} isHighlighted={hCalc && bl === "blooming"} isActive={hCalc && bl === "blooming" && fs === 2} />
+            </div>
+            <div className="flex flex-col items-center">
+              <N label="Hemosiderin staining without blooming on GRE" isHighlighted={hCalc && bl === "no_blooming"} className="max-w-[90px]" />
+              <Stem h={hCalc && bl === "no_blooming"} />
+              <N type="score" score={2} isHighlighted={hCalc && bl === "no_blooming"} isActive={hCalc && bl === "no_blooming" && fs === 2} />
+            </div>
+          </TreeFork>
         </div>
         <div className="flex flex-col items-center">
-          <N label="Not calcified, hyperintense T2" isHighlighted={hHyper} className="max-w-[105px]" />
+          <N label="Not calcified/ossified on XR or CT OR predominantly hyperintense foci on T2W" isHighlighted={hHyper} className="max-w-[110px]" />
           <TreeFork parentHighlighted={hHyper}>
             <div className="flex flex-col items-center">
-              <N label="Hyper T2 + peripheral enhancement" isHighlighted={hHyper && enh === "peripheral"} className="max-w-[90px]" />
+              <N label="Hyperintense on T2W and peripheral enhancement" isHighlighted={hHyper && enh === "peripheral"} className="max-w-[95px]" />
               <Stem h={hHyper && enh === "peripheral"} />
               <N type="score" score={3} isHighlighted={hHyper && enh === "peripheral"} isActive={hHyper && enh === "peripheral" && fs === 3} />
             </div>
             <div className="flex flex-col items-center">
-              <N label="Hypo T2 + no peripheral enhancement" isHighlighted={hHyper && enh === "no_peripheral"} className="max-w-[90px]" />
+              <N label="Hypointense on T2W and no peripheral enhancement" isHighlighted={hHyper && enh === "no_peripheral"} className="max-w-[95px]" />
               <Stem h={hHyper && enh === "no_peripheral"} />
               <N type="score" score={4} isHighlighted={hHyper && enh === "no_peripheral"} isActive={hHyper && enh === "no_peripheral" && fs === 4} />
             </div>
@@ -136,7 +123,7 @@ function IABranch({ cd, fs, on }) {
   );
 }
 
-/* Intraneural — target sign → 2, no target → ADC fork → 3 or 4/5 */
+/* Intra-neural or Nerve related — target sign → 2, no target → ADC fork */
 function NerveBranch({ cd, fs, on }) {
   const ts = cd.targetSign;
   const adc = cd.nerveADC;
@@ -148,25 +135,28 @@ function NerveBranch({ cd, fs, on }) {
 
   return (
     <div className="flex flex-col items-center">
-      <N label="Intraneural / nerve-related" isHighlighted={on} className="max-w-[105px]" />
+      <N label="Intra-neural or Nerve related*" isHighlighted={on} className="max-w-[110px]" />
       <TreeFork parentHighlighted={on}>
         <div className="flex flex-col items-center">
-          <N label="Target sign present" isHighlighted={hTarget} className="max-w-[90px]" />
+          <N label="Target sign" isHighlighted={hTarget} className="max-w-[85px]" />
           <Stem h={hTarget} />
           <N type="score" score={2} isHighlighted={hTarget} isActive={hTarget && fs === 2} />
         </div>
         <div className="flex flex-col items-center">
-          <N label="No target sign" isHighlighted={hNoTarget} className="max-w-[90px]" />
+          <N label="No target sign" isHighlighted={hNoTarget} className="max-w-[85px]" />
           <TreeFork parentHighlighted={hNoTarget}>
             <div className="flex flex-col items-center">
-              <N label="ADC >1.1 × 10⁻³" isHighlighted={hHighADC} className="max-w-[85px]" />
+              <N label="ADC >1.1 mm²/s" isHighlighted={hHighADC} className="max-w-[85px]" />
               <Stem h={hHighADC} />
               <N type="score" score={3} isHighlighted={hHighADC} isActive={hHighADC && fs === 3} />
             </div>
             <div className="flex flex-col items-center">
-              <N label="ADC ≤1.1 × 10⁻³" isHighlighted={hLowADC} className="max-w-[85px]" />
+              <N label="ADC ≤1.1 mm²/s" isHighlighted={hLowADC} className="max-w-[85px]" />
               <Stem h={hLowADC} />
-              <N type="score" score={4} isHighlighted={hLowADC} isActive={hLowADC && (fs === 4 || fs === 5)} />
+              <div className="flex gap-1.5">
+                <N type="score" score={4} isHighlighted={hLowADC} isActive={hLowADC && fs === 4} />
+                <N type="score" score={5} isHighlighted={hLowADC} isActive={hLowADC && fs === 5} />
+              </div>
             </div>
           </TreeFork>
         </div>
@@ -175,7 +165,7 @@ function NerveBranch({ cd, fs, on }) {
   );
 }
 
-/* Cutaneous — exophytic → enh fork, endophytic → 5 */
+/* Cutaneous or Subcutaneous — exophytic/endophytic */
 function CutBranch({ cd, fs, on }) {
   const gp = cd.growthPattern;
   const ce = cd.cutEnhancement;
@@ -185,7 +175,7 @@ function CutBranch({ cd, fs, on }) {
 
   return (
     <div className="flex flex-col items-center">
-      <N label="Cutaneous / subcutaneous" isHighlighted={on} className="max-w-[105px]" />
+      <N label="Cutaneous or Subcutaneous" isHighlighted={on} className="max-w-[105px]" />
       <TreeFork parentHighlighted={on}>
         <div className="flex flex-col items-center">
           <N label="Exophytic" isHighlighted={hExo} className="max-w-[85px]" />
