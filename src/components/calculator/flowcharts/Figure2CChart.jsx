@@ -47,7 +47,22 @@ export default function Figure2CChart({ caseData, finalScore }) {
   );
 }
 
-/* Deep (subfascial)/inter or intra-muscular */
+/*
+  Deep (subfascial)/inter or intra-muscular
+  
+  MANUSCRIPT (image 4):
+    Muscle signature → RADS-2
+    No muscle signature →
+      History of prior injury with peritumoral edema & mature peripheral mineralization
+        Yes → RADS-2
+        No → RADS-4 / RADS-5**
+
+  RULE ENGINE (scoreDeepMuscle):
+    muscleSignature === "yes" → RADS-2
+    muscleSignature === "no":
+      myositisTriad === "yes" → RADS-2
+      myositisTriad === "no" (default) → RADS-4 (radiologistChoice=true)
+*/
 function DeepBranch({ cd, fs, on }) {
   const ms = cd.muscleSignature;
   const mt = cd.myositisTriad;
@@ -69,7 +84,7 @@ function DeepBranch({ cd, fs, on }) {
         <div className="flex flex-col items-center">
           <N label="No muscle signature" isHighlighted={hMusNo} className="max-w-[100px]" />
           <Stem h={hMusNo} />
-          <N label="History of prior injury with peritumoral edema & mature peripheral mineralization" isHighlighted={hTriadYes} className="max-w-[120px]" />
+          <N label="History of prior injury with peritumoral edema & mature peripheral mineralization" isHighlighted={hMusNo} className="max-w-[130px]" />
           <TreeFork parentHighlighted={hMusNo}>
             <div className="flex flex-col items-center">
               <N label="Yes" isHighlighted={hTriadYes} className="max-w-[50px]" />
@@ -80,8 +95,8 @@ function DeepBranch({ cd, fs, on }) {
               <N label="No" isHighlighted={hTriadNo} className="max-w-[50px]" />
               <Stem h={hTriadNo} />
               <div className="flex gap-1.5">
-                <N type="score" score={4} isHighlighted={hTriadNo} isActive={hTriadNo && fs === 4} />
-                <N type="score" score={5} isHighlighted={hTriadNo} isActive={hTriadNo && fs === 5} />
+                <N type="score" score={4} isHighlighted={hTriadNo} isActive={hTriadNo && (fs === 4 || fs === 5)} />
+                <N type="score" score={5} isHighlighted={hTriadNo} isActive={hTriadNo && (fs === 4 || fs === 5)} />
               </div>
             </div>
           </TreeFork>
