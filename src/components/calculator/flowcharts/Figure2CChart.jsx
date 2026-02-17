@@ -3,7 +3,9 @@ import N from "./FlowchartNode";
 import { TreeFork, Stem } from "./TreeLayout";
 
 /*
-  FIGURE 2C — Indeterminate Solid Soft Tissue Lesion (Fig 2C compartments)
+  FIGURE 2C — Indeterminate Solid (Deep, Tendon, Fascial, Subungual)
+  Matches scoreDeepMuscle(), scoreTendon(), scoreFascial(), scoreSubungual() 
+  in stradsRuleEngine.js exactly.
 
   Indeterminate solid soft tissue lesion
   ├─ Deep (subfascial) / inter or intramuscular
@@ -12,12 +14,10 @@ import { TreeFork, Stem } from "./TreeLayout";
   │       ├─ Prior injury + peritumoral edema + peripheral mineralization → ST-RADS 2
   │       └─ No benign triad → ST-RADS 4 or 5
   ├─ Intratendinous
-  │   ├─ Enlarged tendon (calcifications / cystic change / fat)
-  │   │   ├─ Hemosiderin with blooming on GRE → ST-RADS 2
-  │   │   └─ Hemosiderin without blooming → ST-RADS 3
+  │   ├─ Enlarged tendon (calcifications / cystic change / fat / amyloid / autoimmune) → ST-RADS 2
   │   └─ Normal size tendon
-  │       ├─ Hemosiderin with blooming on GRE → ST-RADS 4
-  │       └─ Hemosiderin without blooming → ST-RADS 5
+  │       ├─ Hemosiderin with blooming on GRE → ST-RADS 3
+  │       └─ Hemosiderin without blooming → ST-RADS 4 or 5
   ├─ Plantar / palmar fascial
   │   ├─ <2 cm → ST-RADS 2
   │   └─ ≥2 cm
@@ -44,6 +44,7 @@ export default function Figure2CChart({ caseData, finalScore }) {
   );
 }
 
+/* Deep (subfascial) / inter or intramuscular */
 function DeepBranch({ cd, fs, on }) {
   const ms = cd.muscleSignature;
   const mt = cd.myositisTriad;
@@ -61,14 +62,14 @@ function DeepBranch({ cd, fs, on }) {
           <N label="No muscle signature" isHighlighted={on && ms === "no"} className="max-w-[100px]" />
           <TreeFork parentHighlighted={on && ms === "no"}>
             <div className="flex flex-col items-center">
-              <N label="Prior injury + peritumoral edema + peripheral mineralization" isHighlighted={on && mt === "yes"} className="max-w-[105px]" />
-              <Stem h={on && mt === "yes"} />
-              <N type="score" score={2} isHighlighted={on && mt === "yes"} isActive={on && mt === "yes" && fs === 2} />
+              <N label="Prior injury + peritumoral edema + peripheral mineralization" isHighlighted={on && ms === "no" && mt === "yes"} className="max-w-[105px]" />
+              <Stem h={on && ms === "no" && mt === "yes"} />
+              <N type="score" score={2} isHighlighted={on && ms === "no" && mt === "yes"} isActive={on && ms === "no" && mt === "yes" && fs === 2} />
             </div>
             <div className="flex flex-col items-center">
-              <N label="No benign triad" isHighlighted={on && mt === "no"} className="max-w-[85px]" />
-              <Stem h={on && mt === "no"} />
-              <N type="score" score={4} isHighlighted={on && mt === "no"} isActive={on && mt === "no" && (fs === 4 || fs === 5)} />
+              <N label="No benign triad" isHighlighted={on && ms === "no" && mt === "no"} className="max-w-[85px]" />
+              <Stem h={on && ms === "no" && mt === "no"} />
+              <N type="score" score={4} isHighlighted={on && ms === "no" && mt === "no"} isActive={on && ms === "no" && mt === "no" && (fs === 4 || fs === 5)} />
             </div>
           </TreeFork>
         </div>
@@ -77,6 +78,7 @@ function DeepBranch({ cd, fs, on }) {
   );
 }
 
+/* Intratendinous — rule engine: enlarged → always RADS 2, normal → blooming RADS 3, no blooming RADS 4/5 */
 function TendonBranch({ cd, fs, on }) {
   const tm = cd.tendonMorph;
   const tb = cd.tendonBlooming;
@@ -88,33 +90,25 @@ function TendonBranch({ cd, fs, on }) {
     <div className="flex flex-col items-center">
       <N label="Intratendinous" isHighlighted={on} className="max-w-[105px]" />
       <TreeFork parentHighlighted={on}>
+        {/* Enlarged tendon → RADS 2 (no further split) */}
         <div className="flex flex-col items-center">
-          <N label="Enlarged tendon with calcifications / cystic change / fat" isHighlighted={hEnlarged} className="max-w-[105px]" />
-          <TreeFork parentHighlighted={hEnlarged}>
-            <div className="flex flex-col items-center">
-              <N label="Hemosiderin with blooming on GRE" isHighlighted={hEnlarged && tb === "blooming"} className="max-w-[90px]" />
-              <Stem h={hEnlarged && tb === "blooming"} />
-              <N type="score" score={2} isHighlighted={hEnlarged && tb === "blooming"} isActive={hEnlarged && tb === "blooming" && fs === 2} />
-            </div>
-            <div className="flex flex-col items-center">
-              <N label="Hemosiderin without blooming" isHighlighted={hEnlarged && tb === "no_blooming"} className="max-w-[90px]" />
-              <Stem h={hEnlarged && tb === "no_blooming"} />
-              <N type="score" score={3} isHighlighted={hEnlarged && tb === "no_blooming"} isActive={hEnlarged && tb === "no_blooming" && fs === 3} />
-            </div>
-          </TreeFork>
+          <N label="Enlarged tendon with calcifications / cystic change / fat" isHighlighted={hEnlarged} className="max-w-[110px]" />
+          <Stem h={hEnlarged} />
+          <N type="score" score={2} isHighlighted={hEnlarged} isActive={hEnlarged && fs === 2} />
         </div>
+        {/* Normal tendon → blooming fork */}
         <div className="flex flex-col items-center">
           <N label="Normal size tendon" isHighlighted={hNormal} className="max-w-[105px]" />
           <TreeFork parentHighlighted={hNormal}>
             <div className="flex flex-col items-center">
               <N label="Hemosiderin with blooming on GRE" isHighlighted={hNormal && tb === "blooming"} className="max-w-[90px]" />
               <Stem h={hNormal && tb === "blooming"} />
-              <N type="score" score={4} isHighlighted={hNormal && tb === "blooming"} isActive={hNormal && tb === "blooming" && fs === 4} />
+              <N type="score" score={3} isHighlighted={hNormal && tb === "blooming"} isActive={hNormal && tb === "blooming" && fs === 3} />
             </div>
             <div className="flex flex-col items-center">
               <N label="Hemosiderin without blooming" isHighlighted={hNormal && tb === "no_blooming"} className="max-w-[90px]" />
               <Stem h={hNormal && tb === "no_blooming"} />
-              <N type="score" score={5} isHighlighted={hNormal && tb === "no_blooming"} isActive={hNormal && tb === "no_blooming" && fs === 5} />
+              <N type="score" score={4} isHighlighted={hNormal && tb === "no_blooming"} isActive={hNormal && tb === "no_blooming" && (fs === 4 || fs === 5)} />
             </div>
           </TreeFork>
         </div>
@@ -123,6 +117,7 @@ function TendonBranch({ cd, fs, on }) {
   );
 }
 
+/* Plantar / palmar fascial */
 function FascialBranch({ cd, fs, on }) {
   const sz = cd.fascialSize;
   const mu = cd.fascialMulti;
@@ -159,6 +154,7 @@ function FascialBranch({ cd, fs, on }) {
   );
 }
 
+/* Subungual */
 function SubungualBranch({ cd, fs, on }) {
   const sz = cd.subungualSize;
 
