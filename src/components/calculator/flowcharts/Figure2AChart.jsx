@@ -70,18 +70,19 @@ export default function Figure2AChart({ caseData, finalScore }) {
                     </div>
                     <div className="flex flex-col items-center">
                       <N label="Few prominent vessels" isHighlighted={hFewVes} className="max-w-[95px]" />
+                      <Stem h={hFewVes} />
+                      <N type="score" score={4} isHighlighted={hFewVes} isActive={hFewVes && finalScore === 4} />
                     </div>
                   </TreeFork>
                 </div>
 
-                {/* Thick sept / high enh */}
+                {/* Thick sept / high enh → RADS-4 directly below */}
                 <div className="flex flex-col items-center">
                   <N label="Thick septations ≥2 mm OR Enhancement >10%*" isHighlighted={hThickEnh} className="max-w-[120px]" />
+                  <Stem h={hThickEnh} />
+                  <N type="score" score={4} isHighlighted={hThickEnh} isActive={hThickEnh && finalScore === 4} />
                 </div>
               </TreeFork>
-              {/* Shared RADS-4 for few vessels + thick sept */}
-              <Stem h={hFewVes || hThickEnh} />
-              <N type="score" score={4} isHighlighted={hFewVes || hThickEnh} isActive={(hFewVes || hThickEnh) && finalScore === 4} />
             </div>
           </TreeFork>
         </div>
