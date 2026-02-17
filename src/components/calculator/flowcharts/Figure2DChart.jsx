@@ -4,18 +4,21 @@ import { TreeFork, Stem } from "./TreeLayout";
 
 /*
   FIGURE 2D — Indeterminate Solid (Vascular, Articular, Neural, Cutaneous)
-  Matches scoreIntravascular(), scoreIntraarticular(), scoreIntraneural(), 
-  scoreCutaneous() in stradsRuleEngine.js exactly.
+  
+  Per manuscript AND rule engine:
 
   Indeterminate solid soft tissue mass
   ├─ Intravascular / vessel-related
   │   ├─ Hyper T2 lobules WITH phleboliths WITH fluid-fluid → ST-RADS 2
-  │   └─ Hyper T2 lobules WITHOUT phleboliths WITHOUT fluid-fluid → ST-RADS 4 or 5
+  │   ├─ Hyper T2 lobules WITHOUT phleboliths WITHOUT fluid-fluid → ST-RADS 4 or 5
+  │   └─ Calcified/ossified or predominantly hypointense T2
+  │       ├─ Hemosiderin with blooming on GRE → ST-RADS 2
+  │       └─ Hemosiderin without blooming → ST-RADS 2
   ├─ Intraarticular
   │   ├─ Calcified/ossified or predominantly hypointense T2 → ST-RADS 2
   │   └─ Not calcified, hyperintense T2
-  │       ├─ Hyperintense T2 + peripheral enhancement → ST-RADS 3
-  │       └─ Hypointense T2 + no peripheral enhancement → ST-RADS 4
+  │       ├─ Hyper T2 + peripheral enhancement → ST-RADS 3
+  │       └─ Hypo T2 + no peripheral enhancement → ST-RADS 4
   ├─ Intraneural / nerve-related
   │   ├─ Target sign present → ST-RADS 2
   │   └─ No target sign
@@ -27,9 +30,9 @@ import { TreeFork, Stem } from "./TreeLayout";
       │   └─ Internal enhancement → ST-RADS 4
       └─ Endophytic → ST-RADS 5
 
-  NOTE: The wizard only offers two vascMorphology options (phleboliths, hyper_no_phleb).
-  The rule engine also handles calc_hypo but the wizard doesn't present it. The flowchart
-  matches the wizard-reachable paths exactly.
+  NOTE: The vascular calc_hypo path exists in the rule engine but is NOT
+  reachable from the wizard (wizard only offers phleboliths and hyper_no_phleb).
+  We include it here to match the manuscript figure.
 */
 
 export default function Figure2DChart({ caseData, finalScore }) {
@@ -48,33 +51,55 @@ export default function Figure2DChart({ caseData, finalScore }) {
   );
 }
 
-/* Intravascular — rule engine only has 2 wizard-reachable paths: phleboliths → 2, hyper_no_phleb → 4/5 */
+/* Intravascular — 3 branches per manuscript: phleboliths, hyper no phleb, calc/hypo */
 function VascBranch({ cd, fs, on }) {
   const vm = cd.vascMorphology;
+  const vb = cd.vascBlooming;
 
   const hPhleb = on && vm === "phleboliths";
   const hHyper = on && vm === "hyper_no_phleb";
+  const hCalc = on && vm === "calc_hypo";
 
   return (
     <div className="flex flex-col items-center">
       <N label="Intravascular / vessel-related" isHighlighted={on} className="max-w-[115px]" />
       <TreeFork parentHighlighted={on}>
+        {/* Phleboliths → RADS 2 */}
         <div className="flex flex-col items-center">
-          <N label="Hyper T2 lobules WITH phleboliths WITH fluid-fluid" isHighlighted={hPhleb} className="max-w-[110px]" />
+          <N label="Hyper T2 lobules WITH phleboliths WITH fluid-fluid" isHighlighted={hPhleb} className="max-w-[105px]" />
           <Stem h={hPhleb} />
           <N type="score" score={2} isHighlighted={hPhleb} isActive={hPhleb && fs === 2} />
         </div>
+
+        {/* Hyper T2 no phleboliths → RADS 4 or 5 */}
         <div className="flex flex-col items-center">
-          <N label="Hyper T2 lobules WITHOUT phleboliths WITHOUT fluid-fluid" isHighlighted={hHyper} className="max-w-[110px]" />
+          <N label="Hyper T2 lobules WITHOUT phleboliths WITHOUT fluid-fluid" isHighlighted={hHyper} className="max-w-[105px]" />
           <Stem h={hHyper} />
           <N type="score" score={4} isHighlighted={hHyper} isActive={hHyper && (fs === 4 || fs === 5)} />
+        </div>
+
+        {/* Calcified / hypo T2 → blooming fork → both RADS 2 */}
+        <div className="flex flex-col items-center">
+          <N label="Calcified / ossified or predominantly hypointense T2" isHighlighted={hCalc} className="max-w-[105px]" />
+          <TreeFork parentHighlighted={hCalc}>
+            <div className="flex flex-col items-center">
+              <N label="Hemosiderin with blooming on GRE" isHighlighted={hCalc && vb === "blooming"} className="max-w-[85px]" />
+              <Stem h={hCalc && vb === "blooming"} />
+              <N type="score" score={2} isHighlighted={hCalc && vb === "blooming"} isActive={hCalc && vb === "blooming" && fs === 2} />
+            </div>
+            <div className="flex flex-col items-center">
+              <N label="Hemosiderin without blooming" isHighlighted={hCalc && vb === "no_blooming"} className="max-w-[85px]" />
+              <Stem h={hCalc && vb === "no_blooming"} />
+              <N type="score" score={2} isHighlighted={hCalc && vb === "no_blooming"} isActive={hCalc && vb === "no_blooming" && fs === 2} />
+            </div>
+          </TreeFork>
         </div>
       </TreeFork>
     </div>
   );
 }
 
-/* Intraarticular — rule engine: calcified_hypo → 2 (no blooming split), not_calcified_hyper → enh fork */
+/* Intraarticular — calcified → RADS 2 directly, not calcified → enhancement fork */
 function IABranch({ cd, fs, on }) {
   const sig = cd.iaSignal;
   const enh = cd.iaEnhancement;
@@ -86,13 +111,11 @@ function IABranch({ cd, fs, on }) {
     <div className="flex flex-col items-center">
       <N label="Intraarticular" isHighlighted={on} className="max-w-[100px]" />
       <TreeFork parentHighlighted={on}>
-        {/* Calcified → RADS 2 directly */}
         <div className="flex flex-col items-center">
           <N label="Calcified / ossified or predominantly hypointense T2" isHighlighted={hCalc} className="max-w-[105px]" />
           <Stem h={hCalc} />
           <N type="score" score={2} isHighlighted={hCalc} isActive={hCalc && fs === 2} />
         </div>
-        {/* Not calcified → enhancement fork */}
         <div className="flex flex-col items-center">
           <N label="Not calcified, hyperintense T2" isHighlighted={hHyper} className="max-w-[105px]" />
           <TreeFork parentHighlighted={hHyper}>
