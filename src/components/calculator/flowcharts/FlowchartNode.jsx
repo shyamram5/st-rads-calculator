@@ -16,17 +16,14 @@ export default function FlowchartNode({ label, type = "decision", score, isHighl
   if (type === "score") {
     return (
       <div className={cn(
-        "relative rounded-xl border-2 text-center transition-all duration-300 min-w-[70px]",
+        "rounded-xl border-2 text-center transition-all duration-300 min-w-[70px]",
         isActive
           ? cn("px-4 py-2.5 scale-110 z-10", s.activeBg, s.activeText, s.activeBorder, `ring-4 ${s.activeRing}/40`, `shadow-xl ${s.activeShadow}`)
           : cn("px-3 py-2", s.bg, s.text, s.border, isHighlighted ? "opacity-70" : "opacity-30"),
         className
       )}>
-        <div className={cn("leading-tight font-semibold", isActive ? "text-[10px]" : "text-[10px]")}>ST-RADS</div>
+        <div className="leading-tight font-semibold text-[10px]">ST-RADS</div>
         <div className={cn("font-black", isActive ? "text-xl" : "text-base")}>{score}</div>
-        {isActive && (
-          <div className={cn("absolute -top-1.5 -right-1.5 w-4 h-4 rounded-full animate-pulse border-2 border-white dark:border-slate-900", s.activeBg)} />
-        )}
       </div>
     );
   }
