@@ -1,8 +1,8 @@
 import { base44 } from "@/api/base44Client";
 
 export const User = {
-    login: async () => {
-        await base44.auth.redirectToLogin(window.location.href);
+    login: () => {
+        base44.auth.redirectToLogin(window.location.href);
     },
     logout: async () => {
         await base44.auth.logout();
