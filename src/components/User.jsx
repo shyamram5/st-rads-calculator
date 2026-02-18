@@ -2,34 +2,7 @@ import { base44 } from "@/api/base44Client";
 
 export const User = {
     login: async () => {
-        try {
-            const from = encodeURIComponent(window.location.href);
-            const serverUrl = appParams.serverUrl || '';
-
-            if (serverUrl) {
-                try {
-                    const parsed = new URL(serverUrl, window.location.href);
-                    if (parsed.origin !== window.location.origin) {
-                        const basePath = `${parsed.origin.replace(/\/$/, '')}${parsed.pathname.replace(/\/$/, '')}`;
-                        window.location.href = `${basePath}/login?from_url=${from}`;
-                        return;
-                    }
-                } catch (e) {
-                    console.warn('User.login: failed to parse serverUrl, falling back to SDK', e);
-                }
-            }
-
-            if (base44 && base44.auth && typeof base44.auth.redirectToLogin === 'function') {
-                await base44.auth.redirectToLogin(window.location.href);
-                return;
-            }
-
-            // Fallback: navigate to app root to avoid /login 404
-            window.location.href = '/';
-        } catch (e) {
-            console.error('User.login error:', e);
-            window.location.href = '/';
-        }
+        await base44.auth.redirectToLogin(window.location.href);
     },
     logout: async () => {
         await base44.auth.logout();
