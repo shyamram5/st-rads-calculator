@@ -189,7 +189,7 @@ export default function CalculatorPage() {
             <h2 className="text-2xl font-bold text-slate-900 dark:text-slate-100">Sign Up to Use the Calculator</h2>
             <p className="text-slate-600 dark:text-slate-400">Create a free account to access the ST-RADS Calculator — unlimited analyses, completely free.</p>
             <Button
-              onClick={() => User.login()}
+              onClick={(e) => { e.preventDefault(); User.login(); }}
               className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-full text-lg"
             >
               <LogIn className="mr-2 h-5 w-5" /> Sign Up / Log In

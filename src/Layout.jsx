@@ -223,13 +223,13 @@ export default function Layout({ children, currentPageName }) {
                                 <div className="flex items-center gap-2">
                                      <Button
                                         variant="ghost"
-                                        onClick={() => User.login()}
+                                        onClick={(e) => { e.preventDefault(); User.login(); }}
                                         className="font-semibold"
                                      >
                                         Log In
-                                    </Button>
-                                    <Button
-                                        onClick={() => User.login()}
+                                     </Button>
+                                     <Button
+                                        onClick={(e) => { e.preventDefault(); User.login(); }}
                                         className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-full font-semibold transition-all duration-300 shadow-sm hover:shadow-md">
                                         Sign Up Free
                                     </Button>
