@@ -19,6 +19,7 @@ export default function CalculatorPage() {
   const [showResult, setShowResult] = useState(false);
   const [showEducation, setShowEducation] = useState(false);
   const hasTrackedRef = useRef(false);
+  const autoAdvanceRef = useRef(false);
 
   useEffect(() => {
     const checkUser = async () => {
@@ -121,6 +122,8 @@ export default function CalculatorPage() {
       return next;
     });
     setShowResult(false);
+    // Flag that user just answered a question — auto-advance effect will check
+    autoAdvanceRef.current = true;
   }, []);
 
   // ─── CALCULATION ──────────────────────────────────────────────────
@@ -167,6 +170,45 @@ export default function CalculatorPage() {
     caseData.examAdequacy === "incomplete" ||
     caseData.lesionPresent === "no"
   );
+
+  // ─── AUTO-ADVANCE EFFECT ────────────────────────────────────────────
+  // After caseData updates, check if the current step is fully answered
+  // with only radio questions. If so, auto-advance after a short delay.
+  useEffect(() => {
+    if (!autoAdvanceRef.current || showResult) return;
+    autoAdvanceRef.current = false;
+
+    const step = steps[currentStepIndex];
+    if (!step) return;
+
+    // Only auto-advance if ALL questions on this step are radio type
+    const allRadio = step.questions.every(q => q.type === "radio");
+    if (!allRadio) return;
+
+    // Check all radio questions are answered
+    const allAnswered = step.questions.every(q => caseData[q.id] !== undefined && caseData[q.id] !== "");
+    if (!allAnswered) return;
+
+    // Don't auto-advance on early termination steps — let user click Calculate
+    const wouldTerminateEarly = (
+      caseData.examAdequacy === "incomplete" ||
+      caseData.lesionPresent === "no"
+    );
+    if (wouldTerminateEarly) return;
+
+    const isLast = currentStepIndex === steps.length - 1;
+    const canNext = currentStepIndex < steps.length - 1;
+
+    const timer = setTimeout(() => {
+      if (isLast) {
+        setShowResult(true);
+      } else if (canNext) {
+        setCurrentStepIndex(i => i + 1);
+      }
+    }, 300);
+
+    return () => clearTimeout(timer);
+  }, [caseData, steps, currentStepIndex, showResult]);
 
   // No usage limits — all features are free
 
@@ -271,20 +313,6 @@ export default function CalculatorPage() {
                 questions={currentStep.questions}
                 values={caseData}
                 onChange={handleChange}
-                onAutoAdvance={(updatedValues) => {
-                  // Check early termination with the UPDATED values
-                  const wouldTerminateEarly = (
-                    updatedValues?.examAdequacy === "incomplete" ||
-                    updatedValues?.lesionPresent === "no"
-                  );
-                  // Don't auto-advance into early termination — let user click Calculate
-                  if (wouldTerminateEarly) return;
-                  if (isLastStep) {
-                    setShowResult(true);
-                  } else if (canGoNext) {
-                    setCurrentStepIndex(i => i + 1);
-                  }
-                }}
               />
             )}
           </motion.div>
