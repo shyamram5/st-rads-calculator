@@ -89,7 +89,7 @@ export default function CalculatorPage() {
       cystFlow: ["cystHematoma", "cystSeptationNodules"],
       cystHematoma: ["cystSeptationNodules"],
 
-      // Solid Compartments (Parent)
+      // Solid Compartments (Parent) — also reset ancillary since options differ per compartment
       compartment: [
         "muscleSignature", "myositisTriad",
         "vascMorphology", "vascBlooming", "vascT2Enhancement",
@@ -98,7 +98,8 @@ export default function CalculatorPage() {
         "growthPattern", "cutEnhancement",
         "tendonMorph", "tendonBlooming",
         "fascialSize", "fascialMulti",
-        "subungualSize"
+        "subungualSize",
+        "adcValue", "ancillaryFlags"
       ],
 
       // Solid Sub-branches
