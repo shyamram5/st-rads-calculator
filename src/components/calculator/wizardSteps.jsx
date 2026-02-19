@@ -516,33 +516,54 @@ export function getWizardSteps(caseData) {
   return steps;
 }
 
-function getAncillaryOptionsForType(tissueType) {
+function getAncillaryOptionsForType(tissueType, compartment) {
+  // Fig 2A footnote: Lipomatous ST-RADS 5 ancillary features
   if (tissueType === "lipomatous") {
     return [
-      { value: "enhancing_nodule", label: "Enhancing non-lipomatous nodule or mass-like component" },
-      { value: "necrosis", label: "Internal necrosis or hemorrhage within non-fat component" },
-      { value: "rapid_growth", label: "Rapid interval growth" },
-      { value: "size_10cm", label: "Size ≥ 10 cm with non-fat soft tissue component" },
-      { value: "low_adc_nodule", label: "Low ADC (≤ 1.1) within non-fat nodular component" }
+      { value: "necrosis", label: "Non-enhancing areas of necrosis" },
+      { value: "hemorrhage", label: "Hemorrhage" },
+      { value: "peritumoral_edema", label: "Peritumoral edema" },
+      { value: "low_adc", label: "Low ADC (< 1.1 × 10⁻³ mm²/s)" },
+      { value: "rapid_growth", label: "Rapid increase in size or symptoms" },
+      { value: "metastasis", label: "Regional or distant metastatic lesions" }
     ];
   }
+  // Fig 2B footnote: Cyst-like ST-RADS 5 ancillary features
   if (tissueType === "cystlike") {
     return [
-      { value: "thick_septations", label: "Thick enhancing septations (≥ 2 mm)" },
-      { value: "mural_nodule", label: "Mural nodule ≥ 1 cm or solid soft-tissue component" },
-      { value: "hemorrhagic_necrosis", label: "Hemorrhagic necrosis within lesion" },
-      { value: "perilesional_edema", label: "Perilesional edema / infiltrative margins" },
-      { value: "rapid_growth", label: "Rapid interval growth" }
+      { value: "hemorrhage", label: "Hemorrhage" },
+      { value: "peritumoral_edema", label: "Peritumoral edema" },
+      { value: "fascial_tails", label: "Fascial tails" },
+      { value: "intercompartmental", label: "Intercompartmental extension" },
+      { value: "low_adc", label: "Low ADC (< 1.1 × 10⁻³ mm²/s) in nodule" },
+      { value: "rapid_growth", label: "Rapid increase in size or symptoms" },
+      { value: "metastasis", label: "Regional or distant metastatic lesions" }
     ];
   }
-  // indeterminate_solid
+  // Indeterminate solid: different footnotes for Fig 2C vs Fig 2D compartments
+  const fig2dCompartments = ["intravascular", "intraarticular", "intraneural", "cutaneous"];
+  if (fig2dCompartments.includes(compartment)) {
+    // Fig 2D footnote
+    return [
+      { value: "hemorrhage", label: "Internal hemorrhage" },
+      { value: "necrosis", label: "Necrosis" },
+      { value: "peritumoral_edema", label: "Peritumoral edema" },
+      { value: "crossing_compartments", label: "Crossing compartments" },
+      { value: "low_adc", label: "Low ADC (< 1.1 × 10⁻³ mm²/s)" },
+      { value: "rapid_growth", label: "Rapid increase in size or symptoms" },
+      { value: "metastasis", label: "Regional or distant metastatic lesions" }
+    ];
+  }
+  // Fig 2C footnote (deep_muscle, intratendinous, fascial, subungual)
   return [
-    { value: "size_5cm", label: "Size ≥ 5 cm" },
-    { value: "deep_location", label: "Deep to investing fascia" },
-    { value: "necrosis", label: "Internal necrosis or hemorrhage" },
-    { value: "perilesional_edema", label: "Perilesional edema / infiltrative margins" },
-    { value: "fascial_tail", label: "Fascial tail sign" },
-    { value: "rapid_growth", label: "Rapid interval growth" },
-    { value: "metastasis", label: "Known or suspected metastasis" }
+    { value: "solid_nodules", label: "Presence of solid enhancing nodules (> 2 cm for fascia-based)" },
+    { value: "fascial_tails", label: "Fascial tails" },
+    { value: "extracompartmental", label: "Extra-compartmental extension" },
+    { value: "necrosis", label: "Necrosis" },
+    { value: "hemorrhage", label: "Hemorrhage" },
+    { value: "peritumoral_edema", label: "Peritumoral edema" },
+    { value: "low_adc", label: "Low ADC (< 1.1 × 10⁻³ mm²/s)" },
+    { value: "rapid_growth", label: "Rapid increase in size or symptoms" },
+    { value: "metastasis", label: "Regional or distant metastasis" }
   ];
 }
