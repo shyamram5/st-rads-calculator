@@ -493,7 +493,7 @@ export function getWizardSteps(caseData) {
     steps.push({
       id: "ancillary",
       title: "Step 6: ADC & Ancillary Features (optional)",
-      description: "Additional features that may upgrade the score. Select any that apply.",
+      description: "Per the flowchart footnotes, these ancillary features may favor upgrading to ST-RADS 5.",
       questions: [
         {
           id: "adcValue",
