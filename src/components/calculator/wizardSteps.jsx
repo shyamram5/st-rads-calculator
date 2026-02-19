@@ -486,13 +486,14 @@ export function getWizardSteps(caseData) {
   }
 
   // ══════════════════════════════════════════════════════════════
-  // OPTIONAL: ADC & ANCILLARY FEATURES
+  // OPTIONAL: ADC & ANCILLARY FEATURES (tissue-type specific)
   // ══════════════════════════════════════════════════════════════
   if (tissueType) {
+    const ancillaryOptions = getAncillaryOptionsForType(tissueType);
     steps.push({
       id: "ancillary",
       title: "Step 6: ADC & Ancillary Features (optional)",
-      description: "Additional features that may upgrade the score[cite: 270].",
+      description: "Additional features that may upgrade the score. Select any that apply.",
       questions: [
         {
           id: "adcValue",
@@ -503,18 +504,45 @@ export function getWizardSteps(caseData) {
         },
         {
           id: "ancillaryFlags",
-          label: "High Risk Features (RADS-5 Triggers) (optional)",
+          label: "High Risk Features — ST-RADS 5 Triggers (optional)",
+          tooltip: "If any of these features are present and the current score is 3 or 4, the score will be upgraded to ST-RADS 5.",
           type: "checkbox",
-          options: [
-            { value: "necrosis", label: "Internal Necrosis / Hemorrhage" },
-            { value: "fascial_tail", label: "Fascial Tail Sign" },
-            { value: "rapid_growth", label: "Rapid Growth" },
-            { value: "metastasis", label: "Metastasis" }
-          ]
+          options: ancillaryOptions
         }
       ]
     });
   }
 
   return steps;
+}
+
+function getAncillaryOptionsForType(tissueType) {
+  if (tissueType === "lipomatous") {
+    return [
+      { value: "enhancing_nodule", label: "Enhancing non-lipomatous nodule or mass-like component" },
+      { value: "necrosis", label: "Internal necrosis or hemorrhage within non-fat component" },
+      { value: "rapid_growth", label: "Rapid interval growth" },
+      { value: "size_10cm", label: "Size ≥ 10 cm with non-fat soft tissue component" },
+      { value: "low_adc_nodule", label: "Low ADC (≤ 1.1) within non-fat nodular component" }
+    ];
+  }
+  if (tissueType === "cystlike") {
+    return [
+      { value: "thick_septations", label: "Thick enhancing septations (≥ 2 mm)" },
+      { value: "mural_nodule", label: "Mural nodule ≥ 1 cm or solid soft-tissue component" },
+      { value: "hemorrhagic_necrosis", label: "Hemorrhagic necrosis within lesion" },
+      { value: "perilesional_edema", label: "Perilesional edema / infiltrative margins" },
+      { value: "rapid_growth", label: "Rapid interval growth" }
+    ];
+  }
+  // indeterminate_solid
+  return [
+    { value: "size_5cm", label: "Size ≥ 5 cm" },
+    { value: "deep_location", label: "Deep to investing fascia" },
+    { value: "necrosis", label: "Internal necrosis or hemorrhage" },
+    { value: "perilesional_edema", label: "Perilesional edema / infiltrative margins" },
+    { value: "fascial_tail", label: "Fascial tail sign" },
+    { value: "rapid_growth", label: "Rapid interval growth" },
+    { value: "metastasis", label: "Known or suspected metastasis" }
+  ];
 }
