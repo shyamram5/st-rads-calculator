@@ -205,7 +205,7 @@ export default function CalculatorPage() {
       } else if (canNext) {
         setCurrentStepIndex(i => i + 1);
       }
-    }, 300);
+    }, 100);
 
     return () => clearTimeout(timer);
   }, [caseData, steps, currentStepIndex, showResult]);
