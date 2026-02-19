@@ -489,7 +489,7 @@ export function getWizardSteps(caseData) {
   // OPTIONAL: ADC & ANCILLARY FEATURES (tissue-type specific)
   // ══════════════════════════════════════════════════════════════
   if (tissueType) {
-    const ancillaryOptions = getAncillaryOptionsForType(tissueType);
+    const ancillaryOptions = getAncillaryOptionsForType(tissueType, caseData.compartment);
     steps.push({
       id: "ancillary",
       title: "Step 6: ADC & Ancillary Features (optional)",
