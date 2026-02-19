@@ -271,6 +271,13 @@ export default function CalculatorPage() {
                 questions={currentStep.questions}
                 values={caseData}
                 onChange={handleChange}
+                onAutoAdvance={() => {
+                  if (canCalculateEarly || isLastStep) {
+                    setShowResult(true);
+                  } else if (canGoNext) {
+                    setCurrentStepIndex(i => i + 1);
+                  }
+                }}
               />
             )}
           </motion.div>

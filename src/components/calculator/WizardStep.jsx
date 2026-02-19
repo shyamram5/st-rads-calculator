@@ -7,7 +7,9 @@ import { Input } from "@/components/ui/input";
 import { Info } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
-export default function WizardStep({ title, description, questions, values, onChange }) {
+export default function WizardStep({ title, description, questions, values, onChange, onAutoAdvance }) {
+  const radioQuestions = questions.filter(q => q.type === "radio");
+  const canAutoAdvance = radioQuestions.length > 0 && questions.length === radioQuestions.length;
   return (
     <div className="space-y-6">
       <div>
@@ -33,7 +35,16 @@ export default function WizardStep({ title, description, questions, values, onCh
               </div>
 
               {q.type === "radio" && (
-                <RadioGroup value={values[q.id] || ""} onValueChange={(v) => onChange(q.id, v)}>
+                <RadioGroup value={values[q.id] || ""} onValueChange={(v) => {
+                  onChange(q.id, v);
+                  if (canAutoAdvance && onAutoAdvance) {
+                    // Check if all radio questions will be answered after this selection
+                    const allAnswered = radioQuestions.every(rq => rq.id === q.id ? true : !!values[rq.id]);
+                    if (allAnswered) {
+                      setTimeout(() => onAutoAdvance(), 250);
+                    }
+                  }
+                }}>
                   <div className="space-y-2">
                     {q.options.map((opt) => (
                       <div key={opt.value} className="flex items-center space-x-3 p-3 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700/50 transition-colors cursor-pointer min-h-[48px]">
