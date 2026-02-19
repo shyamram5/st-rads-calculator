@@ -334,23 +334,12 @@ export default function CalculatorPage() {
               <RotateCcw className="w-4 h-4" /> Reset
             </Button>
 
-            {(canCalculateEarly || isLastStep) && hasRequiredAnswers ? (
+            {(canCalculateEarly || isLastStep) && hasRequiredAnswers && (
               <Button
                 onClick={() => setShowResult(true)}
                 className="gap-2 bg-blue-600 hover:bg-blue-700 text-white"
               >
                 <Sparkles className="w-4 h-4" /> Calculate ST-RADS
-              </Button>
-            ) : canGoNext && hasRequiredAnswers ? (
-              <Button
-                onClick={() => setCurrentStepIndex(i => i + 1)}
-                className="gap-2 bg-blue-600 hover:bg-blue-700 text-white"
-              >
-                Next <ArrowRight className="w-4 h-4" />
-              </Button>
-            ) : (
-              <Button disabled className="gap-2">
-                Next <ArrowRight className="w-4 h-4" />
               </Button>
             )}
           </div>
