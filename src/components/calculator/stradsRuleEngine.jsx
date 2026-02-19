@@ -302,22 +302,22 @@ export function applyModifiers(result, data) {
   if (adcValue && !isNaN(parseFloat(adcValue))) {
     const adc = parseFloat(adcValue);
     let note = "";
-    if (adc < 1.1) note = ` [ADC ${adc} < 1.1 supports Malignancy]`;
-    else if (adc > 1.5) note = ` [ADC ${adc} > 1.5 supports Benignity]`;
+    if (adc < 1.1) note = ` [ADC ${adc} × 10⁻³ mm²/s < 1.1 supports malignancy]`;
+    else if (adc > 1.5) note = ` [ADC ${adc} × 10⁻³ mm²/s > 1.5 supports benignity]`;
     modifiedResult.reasoning += note;
   }
 
-  // 2. High Risk Ancillary Features (Upgrade Logic)
+  // 2. High Risk Ancillary Features (Upgrade to RADS-5)
   if (ancillaryFlags && ancillaryFlags.length > 0) {
-    const riskCount = ancillaryFlags.length;
-    modifiedResult.reasoning += ` [${riskCount} Ancillary Risk Features Present]`;
+    const flagLabels = ancillaryFlags.join(", ");
+    modifiedResult.reasoning += ` [Ancillary risk features: ${flagLabels}]`;
     
-    // If score is 3 or 4, and multiple risk factors exist, suggest upgrade to 5
-    if ((result.category.score === 3 || result.category.score === 4) && riskCount >= 1) {
+    // Upgrade scores 3 or 4 to ST-RADS 5 when ≥1 ancillary risk feature is present
+    if ((result.category.score === 3 || result.category.score === 4)) {
       modifiedResult.upgraded = true;
       modifiedResult.originalScore = result.category.score;
       modifiedResult.category = STRADS_CATEGORIES[5];
-      modifiedResult.reasoning += " -> Upgraded to ST-RADS 5 due to ancillary features.";
+      modifiedResult.reasoning += " → Upgraded to ST-RADS 5 due to ancillary high-risk features.";
     }
   }
 
