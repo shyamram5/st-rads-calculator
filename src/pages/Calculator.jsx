@@ -298,10 +298,10 @@ export default function CalculatorPage() {
         <AnimatePresence mode="wait">
           <motion.div
             key={currentStep?.id || currentStepIndex}
-            initial={{ x: 30, opacity: 0 }}
-            animate={{ x: 0, opacity: 1 }}
-            exit={{ x: -30, opacity: 0 }}
-            transition={{ duration: 0.2 }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.08 }}
           >
             {currentStep && (
               <WizardStep
