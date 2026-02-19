@@ -271,8 +271,15 @@ export default function CalculatorPage() {
                 questions={currentStep.questions}
                 values={caseData}
                 onChange={handleChange}
-                onAutoAdvance={() => {
-                  if (canCalculateEarly || isLastStep) {
+                onAutoAdvance={(updatedValues) => {
+                  // Check early termination with the UPDATED values
+                  const wouldTerminateEarly = (
+                    updatedValues?.examAdequacy === "incomplete" ||
+                    updatedValues?.lesionPresent === "no"
+                  );
+                  // Don't auto-advance into early termination — let user click Calculate
+                  if (wouldTerminateEarly) return;
+                  if (isLastStep) {
                     setShowResult(true);
                   } else if (canGoNext) {
                     setCurrentStepIndex(i => i + 1);

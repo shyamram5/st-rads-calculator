@@ -38,10 +38,11 @@ export default function WizardStep({ title, description, questions, values, onCh
                 <RadioGroup value={values[q.id] || ""} onValueChange={(v) => {
                   onChange(q.id, v);
                   if (canAutoAdvance && onAutoAdvance) {
-                    // Check if all radio questions will be answered after this selection
                     const allAnswered = radioQuestions.every(rq => rq.id === q.id ? true : !!values[rq.id]);
                     if (allAnswered) {
-                      setTimeout(() => onAutoAdvance(), 250);
+                      // Pass the updated values so parent can decide whether to advance
+                      const updatedValues = { ...values, [q.id]: v };
+                      setTimeout(() => onAutoAdvance(updatedValues), 250);
                     }
                   }
                 }}>
