@@ -207,11 +207,15 @@ export default function CalculatorPage() {
     const isLast = currentStepIndex === steps.length - 1;
     const canNext = currentStepIndex < steps.length - 1;
 
-    if (isLast) {
-      setShowResult(true);
-    } else if (canNext) {
-      setCurrentStepIndex(i => i + 1);
-    }
+    const timer = setTimeout(() => {
+      if (isLast) {
+        setShowResult(true);
+      } else if (canNext) {
+        setCurrentStepIndex(i => i + 1);
+      }
+    }, 100);
+
+    return () => clearTimeout(timer);
   }, [caseData, steps, currentStepIndex, showResult]);
 
   // No usage limits — all features are free
