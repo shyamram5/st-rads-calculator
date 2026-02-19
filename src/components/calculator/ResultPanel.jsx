@@ -92,6 +92,23 @@ export default function ResultPanel({ result, caseData, onReset, isPremium }) {
         </CardContent>
       </Card>
 
+      {/* Structured Report */}
+      <Card className="border border-slate-200 dark:border-slate-700">
+        <CardHeader className="pb-3">
+          <div className="flex items-center justify-between">
+            <CardTitle className="text-base">Structured Report</CardTitle>
+            <Button variant="outline" size="sm" onClick={handleCopy} className="gap-2">
+              <ClipboardCopy className="w-4 h-4" /> Copy Report
+            </Button>
+          </div>
+        </CardHeader>
+        <CardContent>
+          <pre className="text-xs text-slate-700 dark:text-slate-300 whitespace-pre-wrap font-mono bg-slate-50 dark:bg-slate-800/50 p-4 rounded-lg border border-slate-200 dark:border-slate-700">
+            {generateReportText()}
+          </pre>
+        </CardContent>
+      </Card>
+
       {/* Reasoning & Differentials */}
       <Card className="border border-slate-200 dark:border-slate-700">
         <CardHeader className="pb-3">
@@ -120,23 +137,6 @@ export default function ResultPanel({ result, caseData, onReset, isPremium }) {
 
       {/* Flowchart Figures */}
       <FigureViewer caseData={caseData} result={result} />
-
-      {/* Structured Report */}
-      <Card className="border border-slate-200 dark:border-slate-700">
-        <CardHeader className="pb-3">
-          <div className="flex items-center justify-between">
-            <CardTitle className="text-base">Structured Report</CardTitle>
-            <Button variant="outline" size="sm" onClick={handleCopy} className="gap-2">
-              <ClipboardCopy className="w-4 h-4" /> Copy Report
-            </Button>
-          </div>
-        </CardHeader>
-        <CardContent>
-          <pre className="text-xs text-slate-700 dark:text-slate-300 whitespace-pre-wrap font-mono bg-slate-50 dark:bg-slate-800/50 p-4 rounded-lg border border-slate-200 dark:border-slate-700">
-            {generateReportText()}
-          </pre>
-        </CardContent>
-      </Card>
 
       {/* Disclaimer */}
       <div className="bg-red-50 dark:bg-red-950/40 p-4 rounded-lg border-l-4 border-red-500">
