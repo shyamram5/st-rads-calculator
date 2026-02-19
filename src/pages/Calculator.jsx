@@ -136,6 +136,13 @@ export default function CalculatorPage() {
     return r;
   }, [showResult, caseData]);
 
+  // Scroll to top when results are shown
+  useEffect(() => {
+    if (showResult && result) {
+      window.scrollTo(0, 0);
+    }
+  }, [showResult, result]);
+
   // Track analysis count (analytics only, no limits)
   useEffect(() => {
     if (showResult && result && user && !hasTrackedRef.current) {
