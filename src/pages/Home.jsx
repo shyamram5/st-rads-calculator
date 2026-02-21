@@ -118,12 +118,12 @@ export default function LandingPage() {
           <Clock className="w-3 h-3" /> 7 RADS systems available
         </motion.div>
 
-        <motion.h1 variants={fadeUp} custom={1} className="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight text-slate-900 dark:text-white leading-[1.08]">
-          The <span className="bg-gradient-to-r from-blue-600 via-indigo-500 to-purple-600 dark:from-blue-400 dark:via-indigo-400 dark:to-purple-400 bg-clip-text text-transparent">RADS</span> Calculator
+        <motion.h1 variants={fadeUp} custom={1} className="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white leading-tight">
+          The RADS Calculator
         </motion.h1>
 
-        <motion.p variants={fadeUp} custom={2} className="text-base md:text-lg text-slate-500 dark:text-slate-400 max-w-xl mx-auto leading-relaxed">
-          Evidence-based radiology risk stratification tools — step-by-step wizards, deterministic scoring, and structured reports, all in one place.
+        <motion.p variants={fadeUp} custom={2} className="text-sm text-slate-500 dark:text-slate-400 max-w-xl mx-auto leading-relaxed">
+          Evidence-based radiology risk stratification tools — step-by-step wizards, deterministic scoring, and structured reports.
         </motion.p>
 
         <motion.div variants={fadeUp} custom={3} className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-100/80 dark:bg-slate-800/50 text-slate-500 dark:text-slate-400 text-[11px] font-medium">

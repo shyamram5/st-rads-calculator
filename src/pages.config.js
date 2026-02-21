@@ -56,14 +56,14 @@ import CaseReview from './pages/CaseReview';
 import Home from './pages/Home';
 import InstitutionalPlan from './pages/InstitutionalPlan';
 import LIRADSCalculator from './pages/LIRADSCalculator';
+import LungRADSCalculator from './pages/LungRADSCalculator';
+import PIRADSCalculator from './pages/PIRADSCalculator';
 import PaymentCancel from './pages/PaymentCancel';
 import PaymentSuccess from './pages/PaymentSuccess';
 import Premium from './pages/Premium';
 import StudyAssistant from './pages/StudyAssistant';
 import Support from './pages/Support';
 import TIRADSCalculator from './pages/TIRADSCalculator';
-import LungRADSCalculator from './pages/LungRADSCalculator';
-import PIRADSCalculator from './pages/PIRADSCalculator';
 import ORADSCalculator from './pages/ORADSCalculator';
 import __Layout from './Layout.jsx';
 
@@ -78,14 +78,14 @@ export const PAGES = {
     "Home": Home,
     "InstitutionalPlan": InstitutionalPlan,
     "LIRADSCalculator": LIRADSCalculator,
+    "LungRADSCalculator": LungRADSCalculator,
+    "PIRADSCalculator": PIRADSCalculator,
     "PaymentCancel": PaymentCancel,
     "PaymentSuccess": PaymentSuccess,
     "Premium": Premium,
     "StudyAssistant": StudyAssistant,
     "Support": Support,
     "TIRADSCalculator": TIRADSCalculator,
-    "LungRADSCalculator": LungRADSCalculator,
-    "PIRADSCalculator": PIRADSCalculator,
     "ORADSCalculator": ORADSCalculator,
 }
 
