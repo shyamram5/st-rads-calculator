@@ -229,9 +229,9 @@ export default function BIRADSCalculatorPage() {
                 </button>
               ))}
             </div>
-            <div className="flex items-start gap-2.5 p-3 rounded-lg bg-blue-50 dark:bg-blue-950/30 border border-blue-100 dark:border-blue-900/50">
-              <Info className="w-4 h-4 text-blue-500 flex-shrink-0 mt-0.5" />
-              <p className="text-xs text-blue-700 dark:text-blue-300 leading-relaxed">
+            <div className="flex items-start gap-2.5 p-3 rounded-lg bg-pink-50 dark:bg-pink-950/30 border border-pink-100 dark:border-pink-900/50">
+              <Info className="w-4 h-4 text-pink-500 flex-shrink-0 mt-0.5" />
+              <p className="text-xs text-pink-700 dark:text-pink-300 leading-relaxed">
                 When both modalities are performed, the final overall BI-RADS assessment must be based on the most suspicious finding — i.e., the highest likelihood of malignancy between the two studies.
               </p>
             </div>

@@ -14,13 +14,13 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 const NAV_ITEMS = [
-  { name: "Home", label: "Home", page: "Home" },
-  { name: "Calculator", label: "ST-RADS", page: "Calculator" },
-  { name: "TIRADSCalculator", label: "TI-RADS", page: "TIRADSCalculator" },
-  { name: "LIRADSCalculator", label: "LI-RADS", page: "LIRADSCalculator" },
-  { name: "BIRADSCalculator", label: "BI-RADS", page: "BIRADSCalculator" },
-  { name: "CaseExamples", label: "Cases", page: "CaseExamples" },
-  { name: "Billing", label: "Billing", page: "Billing" },
+  { name: "Home", label: "Home", page: "Home", color: "" },
+  { name: "Calculator", label: "ST-RADS", page: "Calculator", color: "text-blue-600 dark:text-blue-400" },
+  { name: "TIRADSCalculator", label: "TI-RADS", page: "TIRADSCalculator", color: "text-amber-600 dark:text-amber-400" },
+  { name: "LIRADSCalculator", label: "LI-RADS", page: "LIRADSCalculator", color: "text-emerald-600 dark:text-emerald-400" },
+  { name: "BIRADSCalculator", label: "BI-RADS", page: "BIRADSCalculator", color: "text-pink-600 dark:text-pink-400" },
+  { name: "CaseExamples", label: "Cases", page: "CaseExamples", color: "" },
+  { name: "Billing", label: "Billing", page: "Billing", color: "" },
 ];
 
 export default function Layout({ children, currentPageName }) {
@@ -137,7 +137,7 @@ export default function Layout({ children, currentPageName }) {
                     <button className={`px-3 py-1.5 rounded-lg text-[13px] font-semibold transition-all duration-200 ${
                       isActive
                         ? "bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900"
-                        : "text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 hover:bg-slate-100 dark:hover:bg-slate-800"
+                        : `${item.color || "text-slate-500 dark:text-slate-400"} hover:text-slate-900 dark:hover:text-slate-100 hover:bg-slate-100 dark:hover:bg-slate-800`
                     }`}>
                       {item.label}
                     </button>
@@ -218,7 +218,7 @@ export default function Layout({ children, currentPageName }) {
                       <button className={`w-full px-4 py-3 rounded-xl text-sm font-semibold text-left transition-all ${
                         isActive
                           ? "bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900"
-                          : "text-slate-600 dark:text-slate-300 bg-slate-100/80 dark:bg-slate-800/50 hover:bg-slate-200 dark:hover:bg-slate-700"
+                          : `${item.color || "text-slate-600 dark:text-slate-300"} bg-slate-100/80 dark:bg-slate-800/50 hover:bg-slate-200 dark:hover:bg-slate-700`
                       }`}>
                         {item.label}
                       </button>
