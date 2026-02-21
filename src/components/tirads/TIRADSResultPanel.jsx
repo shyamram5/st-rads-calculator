@@ -1,11 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { AlertTriangle, ClipboardCopy, Info, CheckCircle, Ruler } from "lucide-react";
-import { getSizeRecommendation } from "./tiradsRuleEngine";
+import { AlertTriangle, ClipboardCopy, Info, CheckCircle, Ruler, Check } from "lucide-react";
+import { getSizeRecommendation, COMPOSITION_OPTIONS, ECHOGENICITY_OPTIONS, SHAPE_OPTIONS, MARGIN_OPTIONS, ECHOGENIC_FOCI_OPTIONS } from "./tiradsRuleEngine";
 import TIRADSCategoryCard from "./TIRADSCategoryCard";
 
 const levelColors = {
@@ -16,37 +16,41 @@ const levelColors = {
 
 export default function TIRADSResultPanel({ result, selections, noduleSize, onSizeChange }) {
   const { totalPoints, category, compositionPts, echogenicityPts, shapePts, marginPts, fociPts, isSpongiform } = result;
+  const [copied, setCopied] = useState(false);
 
   const sizeRec = getSizeRecommendation(category, noduleSize);
 
+  const getLabel = (options, value) => options.find(o => o.value === value)?.label || "";
+  const getFociLabels = (values) => {
+    if (!values || values.length === 0) return "None";
+    return values.map(v => ECHOGENIC_FOCI_OPTIONS.find(o => o.value === v)?.label || v).join("; ");
+  };
+
   const generateReport = () => {
     const lines = [];
-    lines.push("ACR TI-RADS ASSESSMENT");
-    lines.push("======================");
-    lines.push("");
     lines.push("FINDINGS:");
-    lines.push(`Composition: ${compositionPts} pts | Echogenicity: ${echogenicityPts} pts | Shape: ${shapePts} pts | Margin: ${marginPts} pts | Echogenic Foci: ${fociPts} pts`);
+    lines.push(`Composition: ${getLabel(COMPOSITION_OPTIONS, selections.composition) || "(not selected)"} (${compositionPts} pts)`);
+    lines.push(`Echogenicity: ${getLabel(ECHOGENICITY_OPTIONS, selections.echogenicity) || "(not selected)"} (${echogenicityPts} pts)`);
+    lines.push(`Shape: ${getLabel(SHAPE_OPTIONS, selections.shape) || "(not selected)"} (${shapePts} pts)`);
+    lines.push(`Margin: ${getLabel(MARGIN_OPTIONS, selections.margin) || "(not selected)"} (${marginPts} pts)`);
+    lines.push(`Echogenic Foci: ${getFociLabels(selections.echogenicFoci)} (${fociPts} pts)`);
     if (isSpongiform) lines.push("Note: Spongiform nodule — no additional points assigned per ACR TI-RADS.");
-    lines.push(`Total Points: ${totalPoints}`);
     if (noduleSize) lines.push(`Nodule Maximum Diameter: ${noduleSize} cm`);
     lines.push("");
     lines.push("IMPRESSION:");
-    lines.push(`ACR TI-RADS ${category.score} — ${category.label}`);
+    lines.push(`ACR TI-RADS ${category.score} — ${category.label} (Total: ${totalPoints} points)`);
     lines.push(`Malignancy Risk: ${category.risk}`);
-    lines.push(`FNA Recommendation: ${category.fna}`);
-    lines.push(`Follow-up: ${category.followUp}`);
+    lines.push(`Recommendation: ${category.fna}. ${category.followUp}.`);
     if (sizeRec) {
-      lines.push("");
       lines.push(`Size-Based Recommendation: ${sizeRec.action}`);
     }
-    lines.push("");
-    lines.push("Reference: Tessler FN et al. ACR TI-RADS White Paper. JACR 2017;14:587-595.");
-    lines.push("Disclaimer: For educational and clinical decision support only.");
     return lines.join("\n");
   };
 
   const handleCopy = () => {
     navigator.clipboard.writeText(generateReport());
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
   };
 
   return (
@@ -113,15 +117,29 @@ export default function TIRADSResultPanel({ result, selections, noduleSize, onSi
         </CardContent>
       </Card>
 
-      {/* Management Reference Table */}
+      {/* Structured Report for Copy */}
       <Card className="border border-slate-200 dark:border-slate-700">
         <CardHeader className="pb-2">
           <div className="flex items-center justify-between">
-            <CardTitle className="text-sm">Management Guidelines</CardTitle>
-            <Button variant="outline" size="sm" onClick={handleCopy} className="gap-2">
-              <ClipboardCopy className="w-3.5 h-3.5" /> Copy Report
+            <CardTitle className="text-sm flex items-center gap-2">
+              <ClipboardCopy className="w-4 h-4 text-blue-500" /> Structured Report
+            </CardTitle>
+            <Button variant={copied ? "default" : "outline"} size="sm" onClick={handleCopy} className={`gap-2 transition-all ${copied ? "bg-green-600 hover:bg-green-700 text-white" : ""}`}>
+              {copied ? <><Check className="w-3.5 h-3.5" /> Copied!</> : <><ClipboardCopy className="w-3.5 h-3.5" /> Copy Report</>}
             </Button>
           </div>
+        </CardHeader>
+        <CardContent>
+          <pre className="text-xs text-slate-700 dark:text-slate-300 whitespace-pre-wrap font-mono bg-slate-50 dark:bg-slate-800/50 p-4 rounded-lg border border-slate-200 dark:border-slate-700 select-all cursor-pointer" onClick={handleCopy}>
+            {generateReport()}
+          </pre>
+        </CardContent>
+      </Card>
+
+      {/* Management Reference Table */}
+      <Card className="border border-slate-200 dark:border-slate-700">
+        <CardHeader className="pb-2">
+          <CardTitle className="text-sm">Management Guidelines</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="overflow-x-auto">
