@@ -48,9 +48,9 @@ const CALCULATORS = [
     fullName: "Lung Cancer Screening",
     desc: "LDCT lung nodule classification per ACR Lung-RADS v2022",
     page: "LungRADSCalculator",
-    bgAccent: "bg-teal-50 dark:bg-teal-950/30",
-    textAccent: "text-teal-600 dark:text-teal-400",
-    borderAccent: "border-teal-100 dark:border-teal-900/50",
+    bgAccent: "bg-slate-50 dark:bg-slate-800/30",
+    textAccent: "text-slate-600 dark:text-slate-400",
+    borderAccent: "border-slate-200 dark:border-slate-700/50",
   },
 ];
 
