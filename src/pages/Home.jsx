@@ -61,6 +61,9 @@ export default function LandingPage() {
                 <a href="https://doi.org/10.1016/j.jacr.2017.01.046" target="_blank" rel="noopener noreferrer" className="text-blue-400 dark:text-blue-400 text-[11px] hover:text-blue-600 dark:hover:text-blue-300 transition-colors text-center leading-snug">
                     ACR TI-RADS White Paper — <span className="font-medium">Tessler, Middleton, Grant et al.</span> JACR 2017
                 </a>
+                <a href="https://www.acr.org/Clinical-Resources/Reporting-and-Data-Systems/LI-RADS" target="_blank" rel="noopener noreferrer" className="text-blue-400 dark:text-blue-400 text-[11px] hover:text-blue-600 dark:hover:text-blue-300 transition-colors text-center leading-snug">
+                    ACR LI-RADS v2018 Core — <span className="font-medium">American College of Radiology</span>
+                </a>
             </div>
         </div>
 
@@ -79,9 +82,11 @@ export default function LandingPage() {
                             TI-RADS Calculator <ArrowRight className="ml-2 h-5 w-5" />
                         </Button>
                     </Link>
-                    <Button size="lg" disabled className="h-12 px-10 text-base rounded-full bg-gradient-to-r from-emerald-500/60 to-teal-500/60 text-white/80 cursor-not-allowed font-semibold ring-1 ring-emerald-500/20">
-                        LI-RADS — Coming Soon
-                    </Button>
+                    <Link to={createPageUrl("LIRADSCalculator")}>
+                        <Button size="lg" className="h-12 px-10 text-base rounded-full bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white shadow-lg shadow-emerald-500/25 hover:shadow-emerald-500/40 transition-all duration-300 hover:scale-[1.04] font-semibold ring-1 ring-emerald-500/20">
+                            LI-RADS Calculator <ArrowRight className="ml-2 h-5 w-5" />
+                        </Button>
+                    </Link>
                 </div>
 
                 <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-slate-100/80 dark:bg-slate-800/50 text-slate-500 dark:text-slate-400 text-xs font-medium">
