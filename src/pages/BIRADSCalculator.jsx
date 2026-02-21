@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useCallback } from "react";
+import { User } from "@/components/User";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { ArrowLeft, ArrowRight, RotateCcw, Calculator, Info } from "lucide-react";
+import { ArrowLeft, ArrowRight, RotateCcw, Calculator, Info, LogIn } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 import MammoWizard, { getMammoSteps, canCalculateMammo } from "../components/birads/MammoWizard";
