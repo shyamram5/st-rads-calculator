@@ -97,17 +97,22 @@ export default function LandingPage() {
             </div>
         </div>
 
-        {/* Support Section */}
+        {/* Institutional Section */}
         <div className="max-w-lg mx-auto text-center space-y-4 px-4">
             <div className="flex items-center justify-center gap-2 text-slate-600 dark:text-slate-300">
                 <Heart className="w-4 h-4 text-rose-500" />
                 <span className="text-sm font-semibold">Built by a Medical Student, for the Radiology Community</span>
             </div>
             <p className="text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
-                      100% free for all users. Sign up and get unlimited access to all features.
-                  </p>
-
-                  </div>
+                Free for individual users. Need access for your department or residency program?
+            </p>
+            <Link to={createPageUrl("InstitutionalPlan")}>
+                <Button variant="outline" className="rounded-full text-sm font-semibold gap-2 mt-2">
+                    <ExternalLink className="w-3.5 h-3.5" />
+                    Institutional Plans Available
+                </Button>
+            </Link>
+        </div>
     </div>
   );
 }
