@@ -44,10 +44,10 @@ export default function LandingPage() {
   }, []);
 
   return (
-    <div className="py-12 md:py-20">
+    <div className="py-6 md:py-10">
 
       {/* ── Hero ── */}
-      <section className="text-center max-w-3xl mx-auto px-4 mb-20">
+      <section className="text-center max-w-3xl mx-auto px-4 mb-12">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -83,7 +83,7 @@ export default function LandingPage() {
       </section>
 
       {/* ── Calculator Grid ── */}
-      <section className="max-w-3xl mx-auto px-4 mb-24">
+      <section className="max-w-3xl mx-auto px-4 mb-14">
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-px bg-gray-200 dark:bg-gray-800 rounded-xl overflow-hidden border border-gray-200 dark:border-gray-800">
           {CALCULATORS.map((calc, i) => (
             <motion.div
@@ -109,8 +109,8 @@ export default function LandingPage() {
       </section>
 
       {/* ── How It Works ── */}
-      <section className="max-w-3xl mx-auto px-4 mb-24">
-        <p className="text-[11px] font-medium uppercase tracking-[0.15em] text-gray-400 dark:text-gray-500 mb-8 text-center">How it works</p>
+      <section className="max-w-3xl mx-auto px-4 mb-14">
+        <p className="text-[11px] font-medium uppercase tracking-[0.15em] text-gray-400 dark:text-gray-500 mb-6 text-center">How it works</p>
         <div className="grid sm:grid-cols-3 gap-6">
           {STEPS.map((step, i) => (
             <motion.div
@@ -130,12 +130,12 @@ export default function LandingPage() {
       </section>
 
       {/* ── Institutional CTA ── */}
-      <section className="max-w-3xl mx-auto px-4 mb-24">
-        <div className="rounded-xl border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-950 p-8 sm:p-10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
-          <div className="space-y-2">
+      <section className="max-w-3xl mx-auto px-4 mb-14">
+        <div className="rounded-xl border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-950 p-5 sm:p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div className="space-y-1">
             <p className="text-[11px] font-medium uppercase tracking-[0.15em] text-gray-400 dark:text-gray-500">For Teams</p>
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Need access for your department?</h3>
-            <p className="text-[13px] text-gray-500 dark:text-gray-400">Institutional plans for programs, departments, and health systems.</p>
+            <h3 className="text-sm font-semibold text-gray-900 dark:text-white">Need access for your department?</h3>
+            <p className="text-[12px] text-gray-500 dark:text-gray-400">Institutional plans for programs, departments, and health systems.</p>
           </div>
           <Link to={createPageUrl("InstitutionalPlan")}>
             <Button variant="outline" className="shrink-0 h-9 px-5 rounded-lg text-[13px] font-medium border-gray-200 dark:border-gray-800 hover:bg-gray-100 dark:hover:bg-gray-900 gap-2 shadow-none">
