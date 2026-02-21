@@ -1,8 +1,12 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect, useRef } from "react";
+import { User } from "@/components/User";
 import { Button } from "@/components/ui/button";
-import { RotateCcw } from "lucide-react";
+import { Card, CardContent } from "@/components/ui/card";
+import { RotateCcw, Calculator as CalcIcon, LogIn } from "lucide-react";
 import TIRADSFeatureSelector from "@/components/tirads/TIRADSFeatureSelector";
 import TIRADSResultPanel from "@/components/tirads/TIRADSResultPanel";
+import UsageTracker from "../components/UsageTracker";
+import PremiumUpgrade from "../components/PremiumUpgrade";
 import {
   calculateTIRADS,
   COMPOSITION_OPTIONS,
@@ -13,6 +17,10 @@ import {
 } from "@/components/tirads/tiradsRuleEngine";
 
 export default function TIRADSCalculatorPage() {
+  const [user, setUser] = useState(null);
+  const [authLoading, setAuthLoading] = useState(true);
+  const hasTrackedRef = useRef(false);
+
   const [selections, setSelections] = useState({
     composition: "",
     echogenicity: "",
@@ -22,6 +30,20 @@ export default function TIRADSCalculatorPage() {
   });
   const [noduleSize, setNoduleSize] = useState("");
   const [showResult, setShowResult] = useState(false);
+
+  useEffect(() => {
+    const checkUser = async () => {
+      try {
+        const currentUser = await User.me();
+        setUser(currentUser);
+      } catch (e) {
+        setUser(null);
+      } finally {
+        setAuthLoading(false);
+      }
+    };
+    checkUser();
+  }, []);
 
   const handleChange = (field, value) => {
     setSelections((prev) => ({ ...prev, [field]: value }));
