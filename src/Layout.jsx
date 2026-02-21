@@ -22,7 +22,7 @@ const TAB_ROOTS = {
 const PAGE_NAV_COLORS = {
   Home: { light: "rgba(59, 130, 246, 0.08)", dark: "rgba(59, 130, 246, 0.12)", border: "rgba(59, 130, 246, 0.15)" },
   Calculator: { light: "rgba(99, 102, 241, 0.08)", dark: "rgba(99, 102, 241, 0.12)", border: "rgba(99, 102, 241, 0.15)" },
-  TIRADSCalculator: { light: "rgba(168, 85, 247, 0.08)", dark: "rgba(168, 85, 247, 0.12)", border: "rgba(168, 85, 247, 0.15)" },
+  TIRADSCalculator: { light: "rgba(234, 179, 8, 0.08)", dark: "rgba(234, 179, 8, 0.12)", border: "rgba(234, 179, 8, 0.15)" },
   LIRADSCalculator: { light: "rgba(16, 185, 129, 0.08)", dark: "rgba(16, 185, 129, 0.12)", border: "rgba(16, 185, 129, 0.15)" },
   BIRADSCalculator: { light: "rgba(236, 72, 153, 0.08)", dark: "rgba(236, 72, 153, 0.12)", border: "rgba(236, 72, 153, 0.15)" },
   CaseExamples: { light: "rgba(245, 158, 11, 0.08)", dark: "rgba(245, 158, 11, 0.12)", border: "rgba(245, 158, 11, 0.15)" },
