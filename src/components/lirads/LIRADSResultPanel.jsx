@@ -2,7 +2,8 @@ import React, { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Copy, Check, RotateCcw, AlertTriangle, ChevronDown, ChevronUp, Info } from "lucide-react";
+import { Copy, Check, RotateCcw, AlertTriangle, ChevronDown, ChevronUp, Info, ClipboardCopy } from "lucide-react";
+import { Card as CardFull, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   LIRADS_CATEGORIES,
   MAJOR_FEATURES,
@@ -58,18 +59,27 @@ export default function LIRADSResultPanel({ result, data, onReset }) {
   }
   if (data.tumorInVein === "yes") summaryLines.push("Tumor in vein: Yes");
 
+  // Build ancillary feature labels for report
+  const ancillaryHCCLabels = ancillaryHCC.map(v => ANCILLARY_FAVORING_HCC.find(f => f.value === v)?.label || v);
+  const ancillaryBenignLabels = ancillaryBenign.map(v => ANCILLARY_FAVORING_BENIGN.find(f => f.value === v)?.label || v);
+  const ancillaryNonHCCLabels = ancillaryNonHCC.map(v => ANCILLARY_NON_HCC_MALIGNANCY.find(f => f.value === v)?.label || v);
+
   const report = [
-    "LI-RADS v2018 Assessment Report",
-    "================================",
-    "",
+    "FINDINGS:",
     ...summaryLines,
+    ...(data.majorFeatures?.length === 0 ? ["Major features: None"] : []),
+    ...(data.tumorInVein === "no" ? ["Tumor in vein: No"] : []),
+    ...(ancillaryHCCLabels.length > 0 ? [`Ancillary features favoring HCC: ${ancillaryHCCLabels.join(", ")}`] : []),
+    ...(ancillaryBenignLabels.length > 0 ? [`Ancillary features favoring benignity: ${ancillaryBenignLabels.join(", ")}`] : []),
+    ...(ancillaryNonHCCLabels.length > 0 ? [`Ancillary features favoring non-HCC malignancy: ${ancillaryNonHCCLabels.join(", ")}`] : []),
     "",
-    `Primary Category: ${result.category} — ${result.name}`,
-    ...(ancillaryResult.shifted ? [`Adjusted Category: ${finalCategory} — ${finalInfo.name} (ancillary feature adjustment)`] : []),
+    "IMPRESSION:",
+    `ACR LI-RADS Category: ${finalCategory} — ${finalInfo.name}`,
+    ...(finalInfo.hccRisk ? [`HCC Risk: ${finalInfo.hccRisk}`] : []),
+    ...(ancillaryResult.shifted ? [`(Adjusted from ${result.category} via ancillary features)`] : []),
+    `Recommendation: ${finalInfo.management}`,
     "",
-    `Management: ${finalInfo.management}`,
-    "",
-    "Based on ACR LI-RADS v2018. For clinical decision support only.",
+    "Disclaimer: For clinical decision support only. Not a substitute for radiologist judgment. Based on ACR LI-RADS v2018.",
   ].join("\n");
 
   const handleCopy = () => {
@@ -115,11 +125,25 @@ export default function LIRADSResultPanel({ result, data, onReset }) {
             </div>
           </div>
 
-          {/* Copy Report */}
-          <Button onClick={handleCopy} variant="outline" className="w-full gap-2">
-            {copied ? <Check className="w-4 h-4 text-green-500" /> : <Copy className="w-4 h-4" />}
-            {copied ? "Copied!" : "Copy Report"}
-          </Button>
+        </CardContent>
+      </Card>
+
+      {/* Structured Report */}
+      <Card className="border border-slate-200 dark:border-slate-700">
+        <CardHeader className="pb-2">
+          <div className="flex items-center justify-between">
+            <CardTitle className="text-sm flex items-center gap-2">
+              <ClipboardCopy className="w-4 h-4 text-blue-500" /> Structured Report
+            </CardTitle>
+            <Button variant={copied ? "default" : "outline"} size="sm" onClick={handleCopy} className={`gap-2 transition-all ${copied ? "bg-green-600 hover:bg-green-700 text-white" : ""}`}>
+              {copied ? <><Check className="w-3.5 h-3.5" /> Copied!</> : <><ClipboardCopy className="w-3.5 h-3.5" /> Copy Report</>}
+            </Button>
+          </div>
+        </CardHeader>
+        <CardContent>
+          <pre className="text-xs text-slate-700 dark:text-slate-300 whitespace-pre-wrap font-mono bg-slate-50 dark:bg-slate-800/50 p-4 rounded-lg border border-slate-200 dark:border-slate-700 select-all cursor-pointer" onClick={handleCopy}>
+            {report}
+          </pre>
         </CardContent>
       </Card>
 
