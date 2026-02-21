@@ -54,6 +54,7 @@ export default function TIRADSCalculatorPage() {
     setSelections({ composition: "", echogenicity: "", shape: "", margin: "", echogenicFoci: [] });
     setNoduleSize("");
     setShowResult(false);
+    hasTrackedRef.current = false;
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
