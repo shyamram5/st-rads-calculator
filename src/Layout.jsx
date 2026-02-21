@@ -124,11 +124,8 @@ export default function Layout({ children, currentPageName }) {
                 </Button>
               )}
               <Link to={createPageUrl("Home")} className="flex items-center gap-2.5 font-extrabold text-base text-slate-900 dark:text-slate-100 tracking-tight">
-                <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-blue-600 to-indigo-600 flex items-center justify-center">
-                  <span className="text-white text-[10px] font-black">R</span>
-                </div>
-                RADS Calculator
-              </Link>
+                  RADS Calculator
+                </Link>
             </div>
 
             {/* Center: Desktop Nav */}
@@ -291,11 +288,8 @@ export default function Layout({ children, currentPageName }) {
           <div className="grid md:grid-cols-4 gap-8 mb-8">
             <div className="col-span-2">
               <Link to={createPageUrl("Home")} className="flex items-center gap-2.5 font-extrabold text-lg text-slate-900 dark:text-slate-100 mb-3">
-                <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-blue-600 to-indigo-600 flex items-center justify-center">
-                  <span className="text-white text-[10px] font-black">R</span>
-                </div>
-                RADS Calculator
-              </Link>
+                  RADS Calculator
+                </Link>
               <p className="text-sm text-slate-500 dark:text-slate-400 max-w-xs leading-relaxed">
                 Evidence-based radiology risk stratification tools — ST-RADS, TI-RADS, LI-RADS, BI-RADS and more.
               </p>
