@@ -138,7 +138,7 @@ export default function InstitutionalPlanPage() {
     if (!formData.institution_name.trim() || !formData.contact_name.trim() || !formData.contact_email.trim() || !selectedTier) return;
     setIsSubmitting(true);
     try {
-      await base44.entities.InstitutionInquiry.create({
+      const inquiryData = {
         institution_name: formData.institution_name.trim(),
         contact_name: formData.contact_name.trim(),
         contact_email: formData.contact_email.trim(),
@@ -149,7 +149,10 @@ export default function InstitutionalPlanPage() {
         num_sites: formData.num_sites ? parseInt(formData.num_sites) : undefined,
         message: formData.message.trim(),
         status: "new",
-      });
+      };
+      await base44.entities.InstitutionInquiry.create(inquiryData);
+      // Send email notification
+      sendInquiryNotification({ inquiry: inquiryData }).catch(console.error);
       setSubmitted(true);
     } catch (err) {
       console.error("Error submitting inquiry:", err);
