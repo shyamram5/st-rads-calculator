@@ -1,27 +1,14 @@
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { AlertTriangle, CheckCircle, Info, Stethoscope, ClipboardCopy, RotateCcw, Crown, Heart } from "lucide-react";
+import { AlertTriangle, ClipboardCopy, RotateCcw, Crown } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
-
-
-const scoreColors = {
-  gray: { ring: "ring-gray-400", text: "text-gray-700 dark:text-gray-300", bg: "bg-gray-100 dark:bg-gray-900" },
-  green: { ring: "ring-green-400", text: "text-green-700 dark:text-green-300", bg: "bg-green-100 dark:bg-green-950/50" },
-  emerald: { ring: "ring-emerald-400", text: "text-emerald-700 dark:text-emerald-300", bg: "bg-emerald-100 dark:bg-emerald-950/50" },
-  yellow: { ring: "ring-yellow-400", text: "text-yellow-700 dark:text-yellow-300", bg: "bg-yellow-100 dark:bg-yellow-950/50" },
-  orange: { ring: "ring-orange-500", text: "text-orange-700 dark:text-orange-300", bg: "bg-orange-100 dark:bg-orange-950/50" },
-  red: { ring: "ring-red-500", text: "text-red-700 dark:text-red-300", bg: "bg-red-100 dark:bg-red-950/50" },
-  blue: { ring: "ring-blue-400", text: "text-blue-700 dark:text-blue-300", bg: "bg-blue-100 dark:bg-blue-950/50" },
-};
 
 export default function ResultPanel({ result, caseData, onReset, isPremium }) {
   if (!result) return null;
   const { category, reasoning, differentials, upgraded, originalScore, adcNote, ancillaryNote } = result;
-  const colors = scoreColors[category.color] || scoreColors.gray;
 
   const generateReportText = () => {
     const lines = [];
@@ -47,43 +34,37 @@ export default function ResultPanel({ result, caseData, onReset, isPremium }) {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       {/* Score Display */}
-      <Card className="glass-panel shadow-xl border-0">
-        <CardContent className="p-6 md:p-8">
+      <Card className="border border-gray-200 dark:border-gray-800 bg-white dark:bg-black shadow-none">
+        <CardContent className="p-6">
           <div className="grid md:grid-cols-3 gap-6 items-center">
             <div className="flex flex-col items-center justify-center text-center">
-              <div className={`relative w-28 h-28 rounded-full flex items-center justify-center ring-8 ${colors.ring} ${colors.bg} shadow-inner`}>
-                <span className={`font-bold text-5xl ${colors.text}`}>{category.score}</span>
+              <div className="w-20 h-20 rounded-xl bg-gray-100 dark:bg-gray-900 flex items-center justify-center">
+                <span className="font-semibold text-4xl text-gray-900 dark:text-white">{category.score}</span>
               </div>
-              <h2 className={`mt-3 text-xl font-bold ${colors.text}`}>{category.label}</h2>
-              <Badge className={`mt-2 ${colors.bg} ${colors.text} border-0`}>Risk: {category.risk}</Badge>
+              <h2 className="mt-2 text-base font-semibold text-gray-900 dark:text-white">{category.label}</h2>
+              <Badge variant="outline" className="mt-1 text-[11px] border-gray-200 dark:border-gray-800">Risk: {category.risk}</Badge>
             </div>
 
             <div className="md:col-span-2 space-y-4">
               <div>
-                <div className="flex items-center gap-2 mb-2">
-                  <Info className="w-4 h-4 text-blue-500" />
-                  <h3 className="font-semibold text-sm uppercase tracking-wider text-slate-600 dark:text-slate-400">Classification</h3>
-                </div>
-                <p className="text-slate-800 dark:text-slate-200 text-sm">{category.meaning}</p>
+                <h3 className="text-[12px] font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1">Classification</h3>
+                <p className="text-[13px] text-gray-700 dark:text-gray-300">{category.meaning}</p>
               </div>
 
               {upgraded && (
-                <div className="bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-800 rounded-lg p-3">
-                  <p className="text-sm text-red-800 dark:text-red-200">
-                    <strong>Upgraded from ST-RADS {originalScore}</strong> due to ancillary features suggesting malignancy.
+                <div className="bg-gray-100 dark:bg-gray-900 rounded-lg p-3">
+                  <p className="text-[13px] text-gray-600 dark:text-gray-400">
+                    <strong className="text-gray-900 dark:text-white">Upgraded from ST-RADS {originalScore}</strong> due to ancillary features.
                   </p>
                 </div>
               )}
 
               <div>
-                <div className="flex items-center gap-2 mb-2">
-                  <CheckCircle className="w-4 h-4 text-green-500" />
-                  <h3 className="font-semibold text-sm uppercase tracking-wider text-slate-600 dark:text-slate-400">Management</h3>
-                </div>
-                <div className="bg-blue-50 dark:bg-blue-950/30 p-3 rounded-lg border border-blue-200 dark:border-blue-800">
-                  <p className="text-sm text-blue-900 dark:text-blue-200">{category.management}</p>
+                <h3 className="text-[12px] font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1">Management</h3>
+                <div className="bg-gray-50 dark:bg-gray-950 p-3 rounded-lg border border-gray-100 dark:border-gray-900">
+                  <p className="text-[13px] text-gray-700 dark:text-gray-300">{category.management}</p>
                 </div>
               </div>
             </div>
@@ -92,38 +73,37 @@ export default function ResultPanel({ result, caseData, onReset, isPremium }) {
       </Card>
 
       {/* Structured Report */}
-      <Card className="border border-slate-200 dark:border-slate-700">
-        <CardHeader className="pb-3">
+      <Card className="border border-gray-200 dark:border-gray-800 bg-white dark:bg-black shadow-none">
+        <CardHeader className="p-5 pb-3 border-b border-gray-100 dark:border-gray-900">
           <div className="flex items-center justify-between">
-            <CardTitle className="text-base">Structured Report</CardTitle>
-            <Button variant="outline" size="sm" onClick={handleCopy} className="gap-2">
-              <ClipboardCopy className="w-4 h-4" /> Copy Report
+            <CardTitle className="text-sm font-semibold text-gray-900 dark:text-white">Structured Report</CardTitle>
+            <Button variant="outline" size="sm" onClick={handleCopy} className="gap-2 border-gray-200 dark:border-gray-800 shadow-none text-[13px]">
+              <ClipboardCopy className="w-3.5 h-3.5" /> Copy
             </Button>
           </div>
         </CardHeader>
-        <CardContent>
-          <pre className="text-xs text-slate-700 dark:text-slate-300 whitespace-pre-wrap font-mono bg-slate-50 dark:bg-slate-800/50 p-4 rounded-lg border border-slate-200 dark:border-slate-700">
+        <CardContent className="p-5">
+          <pre className="text-[12px] text-gray-600 dark:text-gray-400 whitespace-pre-wrap font-mono bg-gray-50 dark:bg-gray-950 p-4 rounded-lg border border-gray-100 dark:border-gray-900">
             {generateReportText()}
           </pre>
         </CardContent>
       </Card>
 
       {/* Reasoning & Differentials */}
-      <Card className="border border-slate-200 dark:border-slate-700">
-        <CardHeader className="pb-3">
-          <CardTitle className="text-base flex items-center gap-2">
-            <Stethoscope className="w-5 h-5 text-blue-500" />
+      <Card className="border border-gray-200 dark:border-gray-800 bg-white dark:bg-black shadow-none">
+        <CardHeader className="p-5 pb-3 border-b border-gray-100 dark:border-gray-900">
+          <CardTitle className="text-sm font-semibold text-gray-900 dark:text-white">
             Reasoning & Differentials
           </CardTitle>
         </CardHeader>
-        <CardContent className="space-y-4">
-          <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed">{reasoning}</p>
+        <CardContent className="p-5 space-y-4">
+          <p className="text-[13px] text-gray-600 dark:text-gray-400 leading-relaxed">{reasoning}</p>
           {differentials?.length > 0 && (
             <div>
-              <p className="text-sm font-semibold text-slate-600 dark:text-slate-400 mb-2">Differential Diagnoses:</p>
-              <div className="flex flex-wrap gap-2">
+              <p className="text-[12px] font-medium text-gray-500 dark:text-gray-400 mb-2">Differential Diagnoses</p>
+              <div className="flex flex-wrap gap-1.5">
                 {differentials.map((d, i) => (
-                  <Badge key={i} variant="outline" className="text-xs">{d}</Badge>
+                  <Badge key={i} variant="outline" className="text-[11px] border-gray-200 dark:border-gray-800">{d}</Badge>
                 ))}
               </div>
             </div>
@@ -132,37 +112,31 @@ export default function ResultPanel({ result, caseData, onReset, isPremium }) {
       </Card>
 
       {/* Disclaimer */}
-      <div className="bg-red-50 dark:bg-red-950/40 p-4 rounded-lg border-l-4 border-red-500">
-        <div className="flex items-center gap-2 mb-2">
-          <AlertTriangle className="h-5 w-5 text-red-600 dark:text-red-400" />
-          <h3 className="font-bold text-red-800 dark:text-red-200 text-sm">Disclaimer</h3>
-        </div>
-        <p className="text-xs text-red-700 dark:text-red-300">
-          This tool is for <strong>educational and clinical decision support only</strong>. It is not FDA approved and is not a substitute for clinical judgment. The ST-RADS framework is currently designated by the ACR as a work-in-progress.
+      <div className="flex items-start gap-2.5 bg-gray-100 dark:bg-gray-900 px-4 py-3 rounded-lg">
+        <AlertTriangle className="w-3.5 h-3.5 flex-shrink-0 mt-0.5 text-gray-400" />
+        <p className="text-[11px] text-gray-500 dark:text-gray-400 leading-relaxed">
+          <strong className="text-gray-600 dark:text-gray-300">Disclaimer:</strong> Educational and clinical decision support only. Not FDA approved. Not a substitute for clinical judgment.
         </p>
       </div>
 
       {!isPremium && (
-        <div className="bg-gradient-to-r from-amber-50 to-orange-50 dark:from-amber-950/30 dark:to-orange-950/30 border border-amber-200 dark:border-amber-800 rounded-xl p-5 text-center space-y-3">
-          <div className="flex items-center justify-center gap-2">
-            <Heart className="w-4 h-4 text-rose-500" />
-            <p className="text-sm font-semibold text-slate-800 dark:text-slate-200">
-              Enjoying RADS Calculator?
-            </p>
-          </div>
-          <p className="text-xs text-slate-600 dark:text-slate-400 max-w-md mx-auto">
-            Premium gives you unlimited analyses for $9.99/mo — and directly supports a medical student keeping this tool free for the radiology community.
+        <div className="border border-gray-200 dark:border-gray-800 rounded-xl p-5 text-center space-y-3">
+          <p className="text-[13px] font-semibold text-gray-900 dark:text-white">
+            Enjoying RADS Calculator?
+          </p>
+          <p className="text-[12px] text-gray-500 dark:text-gray-400 max-w-md mx-auto">
+            Premium gives you unlimited analyses for $9.99/mo.
           </p>
           <Link to={createPageUrl("Premium")}>
-            <Button className="rounded-full bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-semibold px-6 py-2 shadow-md hover:shadow-lg transition-all mt-1">
-              <Crown className="mr-2 h-4 w-4" /> Go Premium
+            <Button className="bg-gray-900 dark:bg-white text-white dark:text-black hover:bg-black dark:hover:bg-gray-100 rounded-lg shadow-none text-[13px] font-medium mt-1">
+              <Crown className="mr-2 h-3.5 w-3.5" /> Go Premium
             </Button>
           </Link>
         </div>
       )}
 
       <div className="text-center">
-        <Button variant="outline" onClick={onReset} className="gap-2">
+        <Button variant="outline" onClick={onReset} className="gap-2 border-gray-200 dark:border-gray-800 shadow-none rounded-lg">
           <RotateCcw className="w-4 h-4" /> Start New Case
         </Button>
       </div>
