@@ -159,15 +159,17 @@ export default function LandingPage() {
         ))}
       </section>
 
-      {/* ── Coming Soon ── */}
-      <div className="flex flex-wrap items-center justify-center gap-2 px-4 -mt-8">
-        {COMING_SOON.map((name) => (
-          <span key={name} className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-100 dark:bg-slate-800/50 text-slate-400 dark:text-slate-500 text-xs font-medium border border-slate-200/60 dark:border-slate-700/40">
-            {name}
-            <span className="text-[9px] px-1.5 py-0.5 rounded-full bg-slate-200 dark:bg-slate-700 text-slate-500 dark:text-slate-400 font-semibold uppercase">Soon</span>
-          </span>
-        ))}
-      </div>
+      {/* Coming Soon - hidden when empty */}
+      {COMING_SOON.length > 0 && (
+        <div className="flex flex-wrap items-center justify-center gap-2 px-4 -mt-8">
+          {COMING_SOON.map((name) => (
+            <span key={name} className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-100 dark:bg-slate-800/50 text-slate-400 dark:text-slate-500 text-xs font-medium border border-slate-200/60 dark:border-slate-700/40">
+              {name}
+              <span className="text-[9px] px-1.5 py-0.5 rounded-full bg-slate-200 dark:bg-slate-700 text-slate-500 dark:text-slate-400 font-semibold uppercase">Soon</span>
+            </span>
+          ))}
+        </div>
+      )}
 
       {/* ── How It Works ── */}
       <section className="max-w-3xl mx-auto px-4">
