@@ -112,7 +112,7 @@ export default function LandingPage() {
                 <span className="text-sm font-semibold">Built by a Medical Student, for the Radiology Community</span>
             </div>
             <p className="text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
-                Free for individual users. Need access for your department or residency program?
+                5 free analyses to get started. Premium for $9.99/month for unlimited access. Need access for your department?
             </p>
             <Link to={createPageUrl("InstitutionalPlan")}>
                 <Button variant="outline" className="rounded-full text-sm font-semibold gap-2 mt-2">
