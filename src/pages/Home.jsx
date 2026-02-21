@@ -12,10 +12,6 @@ const CALCULATORS = [
     fullName: "Soft Tissue RADS",
     desc: "MRI risk stratification for soft-tissue tumors via official ACR flowcharts",
     page: "Calculator",
-    gradient: "from-blue-600 to-indigo-600",
-    hoverGradient: "hover:from-blue-700 hover:to-indigo-700",
-    shadow: "shadow-blue-500/20",
-    ring: "ring-blue-500/20",
     bgAccent: "bg-blue-50 dark:bg-blue-950/30",
     textAccent: "text-blue-600 dark:text-blue-400",
     borderAccent: "border-blue-100 dark:border-blue-900/50",
@@ -25,10 +21,6 @@ const CALCULATORS = [
     fullName: "Thyroid Imaging RADS",
     desc: "Thyroid nodule malignancy risk assessment from ultrasound features",
     page: "TIRADSCalculator",
-    gradient: "from-amber-500 to-orange-500",
-    hoverGradient: "hover:from-amber-600 hover:to-orange-600",
-    shadow: "shadow-amber-500/20",
-    ring: "ring-amber-500/20",
     bgAccent: "bg-amber-50 dark:bg-amber-950/30",
     textAccent: "text-amber-600 dark:text-amber-400",
     borderAccent: "border-amber-100 dark:border-amber-900/50",
@@ -38,10 +30,6 @@ const CALCULATORS = [
     fullName: "Liver Imaging RADS",
     desc: "Liver observation scoring for patients at risk of HCC",
     page: "LIRADSCalculator",
-    gradient: "from-emerald-500 to-teal-500",
-    hoverGradient: "hover:from-emerald-600 hover:to-teal-600",
-    shadow: "shadow-emerald-500/20",
-    ring: "ring-emerald-500/20",
     bgAccent: "bg-emerald-50 dark:bg-emerald-950/30",
     textAccent: "text-emerald-600 dark:text-emerald-400",
     borderAccent: "border-emerald-100 dark:border-emerald-900/50",
@@ -51,17 +39,22 @@ const CALCULATORS = [
     fullName: "Breast Imaging RADS",
     desc: "Mammography & ultrasound assessment per ACR 5th Edition",
     page: "BIRADSCalculator",
-    gradient: "from-pink-500 to-rose-500",
-    hoverGradient: "hover:from-pink-600 hover:to-rose-600",
-    shadow: "shadow-pink-500/20",
-    ring: "ring-pink-500/20",
     bgAccent: "bg-pink-50 dark:bg-pink-950/30",
     textAccent: "text-pink-600 dark:text-pink-400",
     borderAccent: "border-pink-100 dark:border-pink-900/50",
   },
+  {
+    name: "Lung-RADS",
+    fullName: "Lung Cancer Screening",
+    desc: "LDCT lung nodule classification per ACR Lung-RADS v2022",
+    page: "LungRADSCalculator",
+    bgAccent: "bg-teal-50 dark:bg-teal-950/30",
+    textAccent: "text-teal-600 dark:text-teal-400",
+    borderAccent: "border-teal-100 dark:border-teal-900/50",
+  },
 ];
 
-const COMING_SOON = ["Lung-RADS", "PI-RADS", "O-RADS"];
+const COMING_SOON = ["PI-RADS", "O-RADS"];
 
 const HOW_IT_WORKS = [
   { icon: Activity, title: "Select Features", desc: "Answer guided questions based on imaging findings", color: "text-indigo-500", bg: "bg-indigo-50 dark:bg-indigo-950/40" },
@@ -75,6 +68,7 @@ const PAPERS = [
   { title: "ACR TI-RADS White Paper", authors: "Tessler, Middleton, Grant et al.", journal: "JACR 2017", url: "https://doi.org/10.1016/j.jacr.2017.01.046" },
   { title: "ACR LI-RADS v2018 Core", authors: "American College of Radiology", journal: "", url: "https://www.acr.org/Clinical-Resources/Reporting-and-Data-Systems/LI-RADS" },
   { title: "ACR BI-RADS® Atlas, 5th Edition (2013)", authors: "American College of Radiology", journal: "", url: "https://www.acr.org/Clinical-Resources/Reporting-and-Data-Systems/Bi-Rads" },
+  { title: "ACR Lung-RADS® v2022", authors: "American College of Radiology", journal: "", url: "https://www.acr.org/Clinical-Resources/Reporting-and-Data-Systems/Lung-RADS" },
 ];
 
 const fadeUp = {
@@ -101,7 +95,7 @@ export default function LandingPage() {
         className="text-center space-y-6 max-w-3xl mx-auto px-4"
       >
         <motion.div variants={fadeUp} custom={0} className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-50 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400 text-xs font-semibold border border-blue-100 dark:border-blue-900/50">
-          <Clock className="w-3 h-3" /> 4 RADS systems · 3 more coming soon
+          <Clock className="w-3 h-3" /> 5 RADS systems · 2 more coming soon
         </motion.div>
 
         <motion.h1 variants={fadeUp} custom={1} className="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight text-slate-900 dark:text-white leading-[1.08]">
@@ -119,7 +113,7 @@ export default function LandingPage() {
       </motion.section>
 
       {/* ── Calculator Cards ── */}
-      <section className="grid grid-cols-2 lg:grid-cols-4 gap-3 max-w-3xl mx-auto px-4">
+      <section className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 max-w-4xl mx-auto px-4">
         {CALCULATORS.map((calc, i) => (
           <motion.div
             key={calc.name}

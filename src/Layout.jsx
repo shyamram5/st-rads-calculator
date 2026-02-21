@@ -19,6 +19,7 @@ const NAV_ITEMS = [
   { name: "TIRADSCalculator", label: "TI-RADS", page: "TIRADSCalculator", color: "text-amber-600 dark:text-amber-400" },
   { name: "LIRADSCalculator", label: "LI-RADS", page: "LIRADSCalculator", color: "text-emerald-600 dark:text-emerald-400" },
   { name: "BIRADSCalculator", label: "BI-RADS", page: "BIRADSCalculator", color: "text-pink-600 dark:text-pink-400" },
+  { name: "LungRADSCalculator", label: "Lung-RADS", page: "LungRADSCalculator", color: "text-teal-600 dark:text-teal-400" },
   { name: "CaseExamples", label: "Cases", page: "CaseExamples", color: "" },
   { name: "Billing", label: "Billing", page: "Billing", color: "" },
 ];
