@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight, ClipboardCheck, Shield, FileSearch, Stethoscope, Heart, ExternalLink } from "lucide-react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
-import QuickTIRADSCalculator from "@/components/tirads/QuickTIRADSCalculator";
+
 
 
 const STRADS_SYSTEM = {
@@ -74,7 +74,11 @@ export default function LandingPage() {
                             ST-RADS Calculator <ArrowRight className="ml-2 h-5 w-5" />
                         </Button>
                     </Link>
-                    <QuickTIRADSCalculator />
+                    <Link to={createPageUrl("TIRADSCalculator")}>
+                        <Button size="lg" className="h-12 px-10 text-base rounded-full bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-600 hover:to-yellow-600 text-white shadow-lg shadow-amber-500/25 hover:shadow-amber-500/40 transition-all duration-300 hover:scale-[1.04] font-semibold ring-1 ring-amber-500/20">
+                            TI-RADS Calculator <ArrowRight className="ml-2 h-5 w-5" />
+                        </Button>
+                    </Link>
                     <Button size="lg" disabled className="h-12 px-10 text-base rounded-full bg-gradient-to-r from-emerald-500/60 to-teal-500/60 text-white/80 cursor-not-allowed font-semibold ring-1 ring-emerald-500/20">
                         LI-RADS — Coming Soon
                     </Button>
