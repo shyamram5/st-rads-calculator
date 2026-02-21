@@ -21,6 +21,7 @@ const NAV_ITEMS = [
   { name: "BIRADSCalculator", label: "BI-RADS", page: "BIRADSCalculator", color: "text-pink-600 dark:text-pink-400" },
   { name: "LungRADSCalculator", label: "Lung-RADS", page: "LungRADSCalculator", color: "text-teal-600 dark:text-teal-400" },
   { name: "PIRADSCalculator", label: "PI-RADS", page: "PIRADSCalculator", color: "text-violet-600 dark:text-violet-400" },
+  { name: "ORADSCalculator", label: "O-RADS", page: "ORADSCalculator", color: "text-rose-600 dark:text-rose-400" },
   { name: "CaseExamples", label: "Cases", page: "CaseExamples", color: "" },
   { name: "Billing", label: "Billing", page: "Billing", color: "" },
 ];
