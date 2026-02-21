@@ -1,72 +1,37 @@
 import React, { useState, useEffect } from "react";
 import { User } from "@/components/User";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Shield, Sparkles, Activity, FileText, ChevronRight, BookOpen } from "lucide-react";
+import { ArrowRight, ArrowUpRight, Shield, ChevronRight, BookOpen } from "lucide-react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { motion } from "framer-motion";
 
 const CALCULATORS = [
-  {
-    name: "ST-RADS",
-    fullName: "Soft Tissue RADS",
-    page: "Calculator",
-  },
-  {
-    name: "TI-RADS",
-    fullName: "Thyroid Imaging RADS",
-    page: "TIRADSCalculator",
-  },
-  {
-    name: "LI-RADS",
-    fullName: "Liver Imaging RADS",
-    page: "LIRADSCalculator",
-  },
-  {
-    name: "BI-RADS",
-    fullName: "Breast Imaging RADS",
-    page: "BIRADSCalculator",
-  },
-  {
-    name: "Lung-RADS",
-    fullName: "Lung Cancer Screening",
-    page: "LungRADSCalculator",
-  },
-  {
-    name: "PI-RADS",
-    fullName: "Prostate Imaging RADS",
-    page: "PIRADSCalculator",
-  },
-  {
-    name: "O-RADS",
-    fullName: "Ovarian-Adnexal RADS",
-    page: "ORADSCalculator",
-  },
+  { name: "ST-RADS", fullName: "Soft Tissue", page: "Calculator" },
+  { name: "TI-RADS", fullName: "Thyroid", page: "TIRADSCalculator" },
+  { name: "LI-RADS", fullName: "Liver", page: "LIRADSCalculator" },
+  { name: "BI-RADS", fullName: "Breast", page: "BIRADSCalculator" },
+  { name: "Lung-RADS", fullName: "Lung", page: "LungRADSCalculator" },
+  { name: "PI-RADS", fullName: "Prostate", page: "PIRADSCalculator" },
+  { name: "O-RADS", fullName: "Ovarian", page: "ORADSCalculator" },
 ];
 
-const COMING_SOON = [];
-
-const HOW_IT_WORKS = [
-  { icon: Activity, title: "Select Features", desc: "Answer guided questions based on imaging findings", step: "01" },
-  { icon: Sparkles, title: "Get Classification", desc: "Instant deterministic scoring per official guidelines", step: "02" },
-  { icon: FileText, title: "Copy Report", desc: "One-click structured report for your workflow", step: "03" },
+const STEPS = [
+  { num: "1", title: "Select findings", desc: "Answer guided questions from imaging features" },
+  { num: "2", title: "Get classification", desc: "Deterministic scoring per official ACR guidelines" },
+  { num: "3", title: "Copy report", desc: "One-click structured report for your workflow" },
 ];
 
 const PAPERS = [
-  { title: "Soft Tissue-RADS: An ACR Work-in-Progress Framework…", authors: "Chhabra, Garner, Rehman et al.", journal: "AJR 2025", url: "https://www.ajronline.org/doi/10.2214/AJR.25.34013" },
-  { title: "MRI Findings for Differentiating Benign & Malignant Soft Tissue Tumors…", authors: "Wahid, Sharma, Rehman et al.", journal: "Skeletal Radiol 2026", url: "https://link.springer.com/article/10.1007/s00256-026-05155-w" },
-  { title: "ACR TI-RADS White Paper", authors: "Tessler, Middleton, Grant et al.", journal: "JACR 2017", url: "https://doi.org/10.1016/j.jacr.2017.01.046" },
-  { title: "ACR LI-RADS v2018 Core", authors: "American College of Radiology", journal: "", url: "https://www.acr.org/Clinical-Resources/Reporting-and-Data-Systems/LI-RADS" },
-  { title: "ACR BI-RADS® Atlas, 5th Edition (2013)", authors: "American College of Radiology", journal: "", url: "https://www.acr.org/Clinical-Resources/Reporting-and-Data-Systems/Bi-Rads" },
-  { title: "ACR Lung-RADS® v2022", authors: "American College of Radiology", journal: "", url: "https://www.acr.org/Clinical-Resources/Reporting-and-Data-Systems/Lung-RADS" },
-  { title: "PI-RADS® v2.1 (2019)", authors: "ACR–ESUR–AdMeTech Foundation", journal: "", url: "https://www.acr.org/Clinical-Resources/Reporting-and-Data-Systems/PI-RADS" },
-  { title: "ACR O-RADS™ US v2022 & O-RADS™ MRI", authors: "American College of Radiology", journal: "", url: "https://www.acr.org/Clinical-Resources/Reporting-and-Data-Systems/O-RADS" },
+  { title: "Soft Tissue-RADS: An ACR Work-in-Progress Framework", authors: "Chhabra et al.", journal: "AJR 2025", url: "https://www.ajronline.org/doi/10.2214/AJR.25.34013" },
+  { title: "MRI Findings for Differentiating Soft Tissue Tumors", authors: "Wahid et al.", journal: "Skeletal Radiol 2026", url: "https://link.springer.com/article/10.1007/s00256-026-05155-w" },
+  { title: "ACR TI-RADS White Paper", authors: "Tessler et al.", journal: "JACR 2017", url: "https://doi.org/10.1016/j.jacr.2017.01.046" },
+  { title: "ACR LI-RADS v2018 Core", authors: "ACR", journal: "", url: "https://www.acr.org/Clinical-Resources/Reporting-and-Data-Systems/LI-RADS" },
+  { title: "ACR BI-RADS® Atlas, 5th Edition", authors: "ACR", journal: "2013", url: "https://www.acr.org/Clinical-Resources/Reporting-and-Data-Systems/Bi-Rads" },
+  { title: "ACR Lung-RADS® v2022", authors: "ACR", journal: "", url: "https://www.acr.org/Clinical-Resources/Reporting-and-Data-Systems/Lung-RADS" },
+  { title: "PI-RADS® v2.1", authors: "ACR–ESUR", journal: "2019", url: "https://www.acr.org/Clinical-Resources/Reporting-and-Data-Systems/PI-RADS" },
+  { title: "ACR O-RADS™ US v2022 & MRI", authors: "ACR", journal: "", url: "https://www.acr.org/Clinical-Resources/Reporting-and-Data-Systems/O-RADS" },
 ];
-
-const fadeUp = {
-  hidden: { opacity: 0, y: 24 },
-  visible: (i) => ({ opacity: 1, y: 0, transition: { delay: i * 0.08, duration: 0.5, ease: "easeOut" } }),
-};
 
 export default function LandingPage() {
   const [user, setUser] = useState(null);
@@ -79,106 +44,109 @@ export default function LandingPage() {
   }, []);
 
   return (
-    <div className="space-y-16 py-8 md:py-16">
+    <div className="py-12 md:py-20">
 
       {/* ── Hero ── */}
-      <motion.section
-        initial="hidden" animate="visible"
-        className="text-center space-y-8 max-w-3xl mx-auto px-4"
-      >
-        <motion.div variants={fadeUp} custom={0}>
-          <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-indigo-50 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400 text-[11px] font-semibold tracking-wide uppercase border border-indigo-100 dark:border-indigo-900/50">
-            7 RADS Systems
-          </span>
+      <section className="text-center max-w-3xl mx-auto px-4 mb-20">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="space-y-6"
+        >
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-gray-200 dark:border-gray-800 text-[11px] font-medium text-gray-500 dark:text-gray-400">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+            7 RADS systems available
+          </div>
+
+          <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-[-0.04em] leading-[1.1] text-gray-900 dark:text-white">
+            The RADS
+            <br />
+            Calculator
+          </h1>
+
+          <p className="text-base sm:text-lg text-gray-500 dark:text-gray-400 max-w-lg mx-auto leading-relaxed">
+            Evidence-based radiology risk stratification.
+            <br className="hidden sm:block" />
+            Step-by-step wizards. Deterministic scoring. Structured reports.
+          </p>
+
+          <div className="flex items-center justify-center gap-3 pt-2">
+            <Link to={createPageUrl("Calculator")}>
+              <Button className="h-10 px-6 rounded-lg bg-gray-900 dark:bg-white text-white dark:text-black hover:bg-black dark:hover:bg-gray-100 text-sm font-medium shadow-none gap-2">
+                Open Calculator
+                <ArrowRight className="w-4 h-4" />
+              </Button>
+            </Link>
+          </div>
+
+          <div className="flex items-center justify-center gap-4 pt-4 text-[12px] text-gray-400 dark:text-gray-500 font-medium">
+            <span className="flex items-center gap-1.5"><Shield className="w-3 h-3" /> No patient data stored</span>
+            <span className="text-gray-200 dark:text-gray-800">·</span>
+            <span>Rule-based</span>
+            <span className="text-gray-200 dark:text-gray-800">·</span>
+            <span>Fully deterministic</span>
+          </div>
         </motion.div>
+      </section>
 
-        <motion.h1 variants={fadeUp} custom={1} className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight leading-[1.15] bg-gradient-to-r from-indigo-600 via-blue-600 to-indigo-700 dark:from-indigo-400 dark:via-blue-400 dark:to-indigo-300 bg-clip-text text-transparent">
-          The RADS Calculator
-        </motion.h1>
-
-        <motion.p variants={fadeUp} custom={2} className="text-base sm:text-lg text-slate-500 dark:text-slate-400 max-w-xl mx-auto leading-relaxed font-medium">
-          Evidence-based radiology risk stratification — step-by-step wizards, deterministic scoring, and structured reports.
-        </motion.p>
-
-        <motion.div variants={fadeUp} custom={3} className="flex items-center justify-center gap-4 text-[11px] text-slate-400 dark:text-slate-500 font-medium">
-          <span className="flex items-center gap-1.5"><Shield className="w-3.5 h-3.5" /> No patient data stored</span>
-          <span className="w-px h-3 bg-slate-200 dark:bg-slate-700" />
-          <span>Rule-based</span>
-          <span className="w-px h-3 bg-slate-200 dark:bg-slate-700" />
-          <span>Fully deterministic</span>
-        </motion.div>
-      </motion.section>
-
-      {/* ── Calculator Cards ── */}
-      <section className="max-w-4xl mx-auto px-4">
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+      {/* ── Calculator Grid ── */}
+      <section className="max-w-3xl mx-auto px-4 mb-24">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-px bg-gray-200 dark:bg-gray-800 rounded-xl overflow-hidden border border-gray-200 dark:border-gray-800">
           {CALCULATORS.map((calc, i) => (
             <motion.div
               key={calc.name}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.15 + i * 0.06, duration: 0.4, ease: "easeOut" }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.1 + i * 0.04, duration: 0.3 }}
             >
-              <Link to={createPageUrl(calc.page)} className="block group">
-                <div className="relative overflow-hidden rounded-xl border border-slate-200/80 dark:border-slate-700/50 bg-white dark:bg-slate-900/60 px-5 py-5 transition-all duration-300 hover:shadow-lg hover:border-indigo-200 dark:hover:border-indigo-800/60 hover:-translate-y-0.5 cursor-pointer">
-                  <div className="space-y-1">
-                    <span className="text-[10px] font-semibold uppercase tracking-wider text-slate-400 dark:text-slate-500 leading-none">{calc.fullName}</span>
-                    <h3 className="text-lg font-extrabold text-slate-900 dark:text-slate-100 leading-tight">{calc.name}</h3>
+              <Link to={createPageUrl(calc.page)} className="group block bg-white dark:bg-black px-5 py-5 hover:bg-gray-50 dark:hover:bg-gray-950 transition-colors duration-150 h-full">
+                <div className="flex flex-col justify-between h-full min-h-[80px]">
+                  <div>
+                    <p className="text-[11px] font-medium text-gray-400 dark:text-gray-500 mb-1">{calc.fullName}</p>
+                    <h3 className="text-base font-semibold text-gray-900 dark:text-white tracking-tight">{calc.name}</h3>
                   </div>
-                  <ChevronRight className="absolute top-1/2 right-3 -translate-y-1/2 w-4 h-4 text-slate-300 dark:text-slate-600 group-hover:text-indigo-500 dark:group-hover:text-indigo-400 transition-all group-hover:translate-x-0.5" />
+                  <ChevronRight className="w-4 h-4 text-gray-300 dark:text-gray-700 group-hover:text-gray-900 dark:group-hover:text-white group-hover:translate-x-0.5 transition-all duration-150 mt-3 self-end" />
                 </div>
               </Link>
             </motion.div>
           ))}
+          {/* Fill remaining cell for even grid */}
+          <div className="bg-white dark:bg-black hidden lg:block" />
         </div>
       </section>
 
-      {/* Coming Soon - hidden when empty */}
-      {COMING_SOON.length > 0 && (
-        <div className="flex flex-wrap items-center justify-center gap-2 px-4 -mt-8">
-          {COMING_SOON.map((name) => (
-            <span key={name} className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-100 dark:bg-slate-800/50 text-slate-400 dark:text-slate-500 text-xs font-medium border border-slate-200/60 dark:border-slate-700/40">
-              {name}
-              <span className="text-[9px] px-1.5 py-0.5 rounded-full bg-slate-200 dark:bg-slate-700 text-slate-500 dark:text-slate-400 font-semibold uppercase">Soon</span>
-            </span>
-          ))}
-        </div>
-      )}
-
       {/* ── How It Works ── */}
-      <section className="max-w-3xl mx-auto px-4">
-        <h2 className="text-center text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500 mb-8">How it works</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          {HOW_IT_WORKS.map((step, i) => (
+      <section className="max-w-3xl mx-auto px-4 mb-24">
+        <p className="text-[11px] font-medium uppercase tracking-[0.15em] text-gray-400 dark:text-gray-500 mb-8 text-center">How it works</p>
+        <div className="grid sm:grid-cols-3 gap-6">
+          {STEPS.map((step, i) => (
             <motion.div
-              key={step.title}
-              initial={{ opacity: 0, y: 16 }}
+              key={step.num}
+              initial={{ opacity: 0, y: 12 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-40px" }}
-              transition={{ delay: i * 0.1, duration: 0.4 }}
-              className="relative flex flex-col items-center text-center space-y-3 p-6 rounded-2xl bg-white/70 dark:bg-slate-800/30 border border-slate-200/60 dark:border-slate-700/30"
+              transition={{ delay: i * 0.1, duration: 0.35 }}
+              className="space-y-3"
             >
-              <span className="text-[10px] font-bold text-indigo-400 dark:text-indigo-500 tracking-widest">{step.step}</span>
-              <div className="w-10 h-10 flex items-center justify-center rounded-xl bg-indigo-50 dark:bg-indigo-950/40 text-indigo-500 dark:text-indigo-400">
-                <step.icon className="w-5 h-5" />
-              </div>
-              <h3 className="font-bold text-sm text-slate-900 dark:text-slate-100">{step.title}</h3>
-              <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">{step.desc}</p>
+              <span className="mono text-[11px] font-medium text-gray-300 dark:text-gray-600">0{step.num}</span>
+              <h3 className="text-sm font-semibold text-gray-900 dark:text-white">{step.title}</h3>
+              <p className="text-[13px] text-gray-500 dark:text-gray-400 leading-relaxed">{step.desc}</p>
             </motion.div>
           ))}
         </div>
       </section>
 
       {/* ── Institutional CTA ── */}
-      <section className="max-w-2xl mx-auto px-4">
-        <div className="relative overflow-hidden rounded-2xl border border-slate-200/60 dark:border-slate-700/40 bg-gradient-to-br from-white via-indigo-50/30 to-white dark:from-slate-900 dark:via-indigo-950/20 dark:to-slate-900 p-8 text-center space-y-4">
-          <p className="text-xs font-semibold uppercase tracking-widest text-indigo-500 dark:text-indigo-400">For Teams</p>
-          <h3 className="text-lg font-bold text-slate-900 dark:text-slate-100">Need access for your department?</h3>
-          <p className="text-sm text-slate-500 dark:text-slate-400 max-w-md mx-auto">
-            Institutional plans for residency programs, departments, and healthcare systems.
-          </p>
+      <section className="max-w-3xl mx-auto px-4 mb-24">
+        <div className="rounded-xl border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-950 p-8 sm:p-10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
+          <div className="space-y-2">
+            <p className="text-[11px] font-medium uppercase tracking-[0.15em] text-gray-400 dark:text-gray-500">For Teams</p>
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Need access for your department?</h3>
+            <p className="text-[13px] text-gray-500 dark:text-gray-400">Institutional plans for programs, departments, and health systems.</p>
+          </div>
           <Link to={createPageUrl("InstitutionalPlan")}>
-            <Button className="rounded-full text-sm font-semibold gap-2 mt-2 bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600 text-white">
+            <Button variant="outline" className="shrink-0 h-9 px-5 rounded-lg text-[13px] font-medium border-gray-200 dark:border-gray-800 hover:bg-gray-100 dark:hover:bg-gray-900 gap-2 shadow-none">
               Learn More
               <ArrowRight className="w-3.5 h-3.5" />
             </Button>
@@ -186,16 +154,19 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ── Foundational Research ── */}
-      <section className="max-w-2xl mx-auto px-4">
-        <h2 className="text-center text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500 mb-6 flex items-center justify-center gap-2">
-          <BookOpen className="w-3.5 h-3.5" /> Foundational Research
-        </h2>
-        <div className="space-y-2">
+      {/* ── Research ── */}
+      <section className="max-w-3xl mx-auto px-4 mb-12">
+        <p className="text-[11px] font-medium uppercase tracking-[0.15em] text-gray-400 dark:text-gray-500 mb-6 text-center flex items-center justify-center gap-2">
+          <BookOpen className="w-3.5 h-3.5" /> References
+        </p>
+        <div className="space-y-0 divide-y divide-gray-100 dark:divide-gray-900">
           {PAPERS.map((paper, i) => (
             <a key={i} href={paper.url} target="_blank" rel="noopener noreferrer"
-              className="block text-center text-[11px] text-slate-400 dark:text-slate-500 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors leading-relaxed">
-              {paper.title} — <span className="font-medium text-slate-500 dark:text-slate-400">{paper.authors}</span> {paper.journal && <span className="text-slate-300 dark:text-slate-600">· {paper.journal}</span>}
+              className="group flex items-start justify-between gap-4 py-3 text-[12px] text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors">
+              <span className="leading-relaxed">
+                {paper.title} <span className="text-gray-400 dark:text-gray-500">— {paper.authors}</span> {paper.journal && <span className="text-gray-300 dark:text-gray-600">{paper.journal}</span>}
+              </span>
+              <ArrowUpRight className="w-3.5 h-3.5 flex-shrink-0 mt-0.5 opacity-0 group-hover:opacity-100 transition-opacity" />
             </a>
           ))}
         </div>
