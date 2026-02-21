@@ -86,13 +86,13 @@ export default function LandingPage() {
         initial="hidden" animate="visible"
         className="text-center space-y-6 max-w-3xl mx-auto px-4"
       >
-        <motion.div variants={fadeUp} custom={0} className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-50 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400 text-xs font-semibold border border-blue-100 dark:border-blue-900/50">
+        <motion.div variants={fadeUp} custom={0} className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-indigo-50 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400 text-xs font-semibold border border-indigo-100 dark:border-indigo-900/50">
           <Clock className="w-3 h-3" /> 7 RADS systems available
         </motion.div>
 
         <motion.h1 variants={fadeUp} custom={1} className="text-2xl sm:text-3xl font-extrabold tracking-tight leading-tight">
           <span className="text-slate-900 dark:text-white">The </span>
-          <span className="bg-gradient-to-r from-blue-600 via-indigo-500 to-indigo-700 dark:from-blue-400 dark:via-indigo-400 dark:to-indigo-300 bg-clip-text text-transparent">RADS Calculator</span>
+          <span className="text-indigo-600 dark:text-indigo-400">RADS Calculator</span>
         </motion.h1>
 
         <motion.p variants={fadeUp} custom={2} className="text-sm text-slate-500 dark:text-slate-400 max-w-xl mx-auto leading-relaxed">
