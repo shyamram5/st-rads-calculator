@@ -8,6 +8,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import WizardStep from "../components/calculator/WizardStep";
 import ResultPanel from "../components/calculator/ResultPanel";
 import EducationSidebar from "../components/calculator/EducationSidebar";
+import UsageTracker from "../components/UsageTracker";
+import PremiumUpgrade from "../components/PremiumUpgrade";
 import { getWizardSteps } from "../components/calculator/wizardSteps";
 import { calculateSTRADS, applyModifiers } from "../components/calculator/stradsRuleEngine";
 
@@ -143,7 +145,7 @@ export default function CalculatorPage() {
     }
   }, [showResult, result]);
 
-  // Track analysis count (analytics only, no limits)
+  // Track analysis count
   useEffect(() => {
     if (showResult && result && user && !hasTrackedRef.current) {
       hasTrackedRef.current = true;
@@ -152,6 +154,10 @@ export default function CalculatorPage() {
       setUser(prev => ({ ...prev, analyses_used: newCount }));
     }
   }, [showResult, result]);
+
+  const isPremium = user?.subscription_tier === "premium" || user?.subscription_tier === "institutional";
+  const analysesUsed = user?.analyses_used || 0;
+  const hasReachedLimit = !isPremium && analysesUsed >= 5;
 
   const handleReset = () => {
     setCaseData({});
@@ -218,8 +224,6 @@ export default function CalculatorPage() {
     return () => clearTimeout(timer);
   }, [caseData, steps, currentStepIndex, showResult]);
 
-  // No usage limits — all features are free
-
   // ─── RENDER ───────────────────────────────────────────────────────
 
   if (authLoading) {
@@ -237,7 +241,7 @@ export default function CalculatorPage() {
           <CardContent className="p-8 space-y-6">
             <CalcIcon className="w-16 h-16 text-blue-500 mx-auto" />
             <h2 className="text-2xl font-bold text-slate-900 dark:text-slate-100">Sign Up to Use the Calculator</h2>
-            <p className="text-slate-600 dark:text-slate-400">Create a free account to access the ST-RADS Calculator — unlimited analyses, completely free.</p>
+            <p className="text-slate-600 dark:text-slate-400">Create a free account to access the ST-RADS Calculator — 5 free analyses to get started.</p>
             <Button
               onClick={(e) => { e.preventDefault(); User.login(); }}
               className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-full text-lg"
@@ -257,7 +261,8 @@ export default function CalculatorPage() {
           <h1 className="text-3xl font-bold text-slate-900 dark:text-slate-100 mb-2">ST-RADS Classification Result</h1>
           <p className="text-slate-600 dark:text-slate-400">Deterministic classification based on the official ST-RADS v2025 flowcharts</p>
         </div>
-        <ResultPanel result={result} caseData={caseData} onReset={handleReset} isPremium={true} />
+        <UsageTracker user={user} analysesUsed={analysesUsed} />
+        <ResultPanel result={result} caseData={caseData} onReset={handleReset} isPremium={isPremium} />
 
         {/* Education Panel on Results Page */}
         <div className="border-t border-slate-200 dark:border-slate-700 pt-8">
@@ -283,12 +288,27 @@ export default function CalculatorPage() {
     );
   }
 
+  if (hasReachedLimit) {
+    return (
+      <div className="min-h-screen space-y-8 max-w-2xl mx-auto">
+        <div className="text-center">
+          <h1 className="text-3xl font-bold text-slate-900 dark:text-slate-100 mb-1">ST-RADS Calculator</h1>
+          <p className="text-slate-600 dark:text-slate-400 text-sm">You've used all 5 free analyses</p>
+        </div>
+        <UsageTracker user={user} analysesUsed={analysesUsed} />
+        <PremiumUpgrade analysesUsed={analysesUsed} />
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen space-y-6">
       <div className="text-center">
         <h1 className="text-3xl font-bold text-slate-900 dark:text-slate-100 mb-1">ST-RADS Calculator</h1>
         <p className="text-slate-600 dark:text-slate-400 text-sm">Interactive decision engine based on the official ACR ST-RADS v2025 framework</p>
       </div>
+
+      <UsageTracker user={user} analysesUsed={analysesUsed} />
       
       {/* Progress Bar */}
       <div className="max-w-2xl mx-auto">
