@@ -57,6 +57,9 @@ export default function LandingPage() {
                 <a href="https://link.springer.com/article/10.1007/s00256-026-05155-w" target="_blank" rel="noopener noreferrer" className="text-blue-400 dark:text-blue-400 text-[11px] hover:text-blue-600 dark:hover:text-blue-300 transition-colors text-center leading-snug">
                     MRI Findings for Differentiating Benign & Malignant Soft Tissue Tumors… — <span className="font-medium">Wahid, Sharma, Rehman et al.</span> Skeletal Radiol 2026
                 </a>
+                <a href="https://doi.org/10.1016/j.jacr.2017.01.046" target="_blank" rel="noopener noreferrer" className="text-blue-400 dark:text-blue-400 text-[11px] hover:text-blue-600 dark:hover:text-blue-300 transition-colors text-center leading-snug">
+                    ACR TI-RADS White Paper — <span className="font-medium">Tessler, Middleton, Grant et al.</span> JACR 2017
+                </a>
             </div>
         </div>
 
@@ -67,7 +70,12 @@ export default function LandingPage() {
                 <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
                     <Link to={createPageUrl("Calculator")}>
                         <Button size="lg" className="h-12 px-10 text-base rounded-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white shadow-lg shadow-blue-500/25 hover:shadow-blue-500/40 transition-all duration-300 hover:scale-[1.04] font-semibold ring-1 ring-blue-500/20">
-                            Start ST-RADS Case <ArrowRight className="ml-2 h-5 w-5" />
+                            ST-RADS Calculator <ArrowRight className="ml-2 h-5 w-5" />
+                        </Button>
+                    </Link>
+                    <Link to={createPageUrl("TIRADSCalculator")}>
+                        <Button size="lg" variant="outline" className="h-12 px-10 text-base rounded-full font-semibold hover:scale-[1.04] transition-all duration-300">
+                            TI-RADS Calculator <ArrowRight className="ml-2 h-5 w-5" />
                         </Button>
                     </Link>
                 </div>
