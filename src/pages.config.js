@@ -53,9 +53,11 @@ import Billing from './pages/Billing';
 import Calculator from './pages/Calculator';
 import CaseExamples from './pages/CaseExamples';
 import CaseReview from './pages/CaseReview';
+import Home from './pages/Home';
 import InstitutionalPlan from './pages/InstitutionalPlan';
 import LIRADSCalculator from './pages/LIRADSCalculator';
 import LungRADSCalculator from './pages/LungRADSCalculator';
+import ORADSCalculator from './pages/ORADSCalculator';
 import PIRADSCalculator from './pages/PIRADSCalculator';
 import PaymentCancel from './pages/PaymentCancel';
 import PaymentSuccess from './pages/PaymentSuccess';
@@ -63,8 +65,6 @@ import Premium from './pages/Premium';
 import StudyAssistant from './pages/StudyAssistant';
 import Support from './pages/Support';
 import TIRADSCalculator from './pages/TIRADSCalculator';
-import ORADSCalculator from './pages/ORADSCalculator';
-import Home from './pages/Home';
 import __Layout from './Layout.jsx';
 
 
@@ -75,9 +75,11 @@ export const PAGES = {
     "Calculator": Calculator,
     "CaseExamples": CaseExamples,
     "CaseReview": CaseReview,
+    "Home": Home,
     "InstitutionalPlan": InstitutionalPlan,
     "LIRADSCalculator": LIRADSCalculator,
     "LungRADSCalculator": LungRADSCalculator,
+    "ORADSCalculator": ORADSCalculator,
     "PIRADSCalculator": PIRADSCalculator,
     "PaymentCancel": PaymentCancel,
     "PaymentSuccess": PaymentSuccess,
@@ -85,8 +87,6 @@ export const PAGES = {
     "StudyAssistant": StudyAssistant,
     "Support": Support,
     "TIRADSCalculator": TIRADSCalculator,
-    "ORADSCalculator": ORADSCalculator,
-    "Home": Home,
 }
 
 export const pagesConfig = {
