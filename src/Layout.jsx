@@ -181,7 +181,7 @@ export default function Layout({ children, currentPageName }) {
                             
                             <Link to={createPageUrl("Home")} className="flex items-center gap-2 font-bold text-lg text-slate-900 dark:text-slate-100">
                                 {/* You can add a logo here in the future */}
-                                RADS Calc
+                                RADS Calculator
                             </Link>
                         </div>
                         
@@ -316,7 +316,7 @@ export default function Layout({ children, currentPageName }) {
                      <div className="grid md:grid-cols-4 gap-8 mb-8">
                          <div className="col-span-2">
                              <Link to={createPageUrl("Home")} className="font-bold text-xl text-slate-900 dark:text-slate-100 mb-4 block">
-                                 RADS Calculator
+                                 RADS Calculatorulator
                              </Link>
                              <p className="text-sm text-slate-500 dark:text-slate-400 max-w-xs leading-relaxed">
                                  Evidence-based radiology risk stratification tools — ST-RADS, LI-RADS, BI-RADS and more.
@@ -350,7 +350,7 @@ export default function Layout({ children, currentPageName }) {
                                    </p>
                                </div>
                                <p className="text-xs text-slate-400 font-medium">
-                                   © 2025 RADS Calculator. All rights reserved.
+                                   © 2025 RADS Calculatorulator. All rights reserved.
                                </p>
                           </div>
                      </div>
