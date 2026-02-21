@@ -64,12 +64,68 @@ export default function TIRADSCalculatorPage() {
     return calculateTIRADS(selections);
   }, [selections, hasAnySelection, showResult]);
 
+  // Track analysis count
+  useEffect(() => {
+    if (showResult && result && user && !hasTrackedRef.current) {
+      hasTrackedRef.current = true;
+      const newCount = (user.tirads_analyses_used || 0) + 1;
+      User.updateMyUserData({ tirads_analyses_used: newCount });
+      setUser(prev => ({ ...prev, tirads_analyses_used: newCount }));
+    }
+  }, [showResult, result]);
+
+  const isPremium = user?.subscription_tier === "premium" || user?.subscription_tier === "institutional";
+  const analysesUsed = user?.tirads_analyses_used || 0;
+  const hasReachedLimit = !isPremium && analysesUsed >= 5;
+
   const handleCalculate = () => {
     setShowResult(true);
+    hasTrackedRef.current = false;
     setTimeout(() => {
       document.getElementById("tirads-result")?.scrollIntoView({ behavior: "smooth", block: "start" });
     }, 100);
   };
+
+  if (authLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="w-16 h-16 border-4 border-slate-200 dark:border-slate-700 border-t-blue-500 rounded-full animate-spin"></div>
+      </div>
+    );
+  }
+
+  if (!user) {
+    return (
+      <div className="min-h-[70vh] flex items-center justify-center p-4">
+        <Card className="shadow-2xl border-0 bg-white dark:bg-slate-900 max-w-md w-full text-center">
+          <CardContent className="p-8 space-y-6">
+            <CalcIcon className="w-16 h-16 text-blue-500 mx-auto" />
+            <h2 className="text-2xl font-bold text-slate-900 dark:text-slate-100">Sign Up to Use the Calculator</h2>
+            <p className="text-slate-600 dark:text-slate-400">Create a free account to access the TI-RADS Calculator — 5 free analyses to get started.</p>
+            <Button
+              onClick={(e) => { e.preventDefault(); User.login(); }}
+              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-full text-lg"
+            >
+              <LogIn className="mr-2 h-5 w-5" /> Sign Up / Log In
+            </Button>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
+  if (hasReachedLimit) {
+    return (
+      <div className="min-h-screen space-y-8 max-w-2xl mx-auto">
+        <div className="text-center">
+          <h1 className="text-3xl font-bold text-slate-900 dark:text-slate-100 mb-1">TI-RADS Calculator</h1>
+          <p className="text-slate-600 dark:text-slate-400 text-sm">You've used all 5 free analyses</p>
+        </div>
+        <UsageTracker user={user} analysesUsed={analysesUsed} />
+        <PremiumUpgrade analysesUsed={analysesUsed} />
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-3xl mx-auto space-y-6">
