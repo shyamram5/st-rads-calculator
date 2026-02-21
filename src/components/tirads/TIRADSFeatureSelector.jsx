@@ -72,7 +72,7 @@ export default function TIRADSFeatureSelector({ title, tooltip, type, options, v
                         }
                         onChange(updated);
                       }}
-                      className="data-[state=checked]:bg-amber-500 data-[state=checked]:border-amber-500"
+                      className="data-[state=checked]:bg-blue-600 data-[state=checked]:border-blue-600"
                     />
                     <Label htmlFor={`${title}-${opt.value}`} className="cursor-pointer flex-1">
                       <span className="text-sm font-medium text-slate-700 dark:text-slate-300">{opt.label}</span>

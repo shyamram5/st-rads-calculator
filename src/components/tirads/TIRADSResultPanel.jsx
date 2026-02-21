@@ -61,13 +61,13 @@ export default function TIRADSResultPanel({ result, selections, noduleSize, onSi
       <Card className="border border-slate-200 dark:border-slate-700">
         <CardHeader className="pb-2">
           <CardTitle className="text-sm flex items-center gap-2">
-            <Info className="w-4 h-4 text-amber-500" /> Point Breakdown
+            <Info className="w-4 h-4 text-blue-500" /> Point Breakdown
           </CardTitle>
         </CardHeader>
         <CardContent>
           {isSpongiform && (
-            <div className="bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 rounded-lg p-3 mb-3">
-              <p className="text-xs text-amber-800 dark:text-amber-200">
+            <div className="bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800 rounded-lg p-3 mb-3">
+              <p className="text-xs text-blue-800 dark:text-blue-200">
                 <strong>Spongiform nodule:</strong> Do not add points for other categories per ACR TI-RADS guidelines. Total = 0 points (TR1).
               </p>
             </div>
@@ -93,7 +93,7 @@ export default function TIRADSResultPanel({ result, selections, noduleSize, onSi
       <Card className="border border-slate-200 dark:border-slate-700">
         <CardHeader className="pb-2">
           <CardTitle className="text-sm flex items-center gap-2">
-            <Ruler className="w-4 h-4 text-amber-500" /> Size-Based Recommendation
+            <Ruler className="w-4 h-4 text-blue-500" /> Size-Based Recommendation
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-3">
@@ -122,7 +122,7 @@ export default function TIRADSResultPanel({ result, selections, noduleSize, onSi
         <CardHeader className="pb-2">
           <div className="flex items-center justify-between">
             <CardTitle className="text-sm flex items-center gap-2">
-              <ClipboardCopy className="w-4 h-4 text-amber-500" /> Structured Report
+              <ClipboardCopy className="w-4 h-4 text-blue-500" /> Structured Report
             </CardTitle>
             <Button variant={copied ? "default" : "outline"} size="sm" onClick={handleCopy} className={`gap-2 transition-all ${copied ? "bg-green-600 hover:bg-green-700 text-white" : ""}`}>
               {copied ? <><Check className="w-3.5 h-3.5" /> Copied!</> : <><ClipboardCopy className="w-3.5 h-3.5" /> Copy Report</>}
@@ -161,7 +161,7 @@ export default function TIRADSResultPanel({ result, selections, noduleSize, onSi
                   { cat: "TR4", pts: "4–6", risk: "5–20%", fna: "≥ 1.5 cm", fu: "≥ 1.0 cm", active: totalPoints >= 4 && totalPoints <= 6 },
                   { cat: "TR5", pts: "≥ 7", risk: ">20%", fna: "≥ 1.0 cm", fu: "≥ 0.5 cm", active: totalPoints >= 7 },
                 ].map((row) => (
-                  <tr key={row.cat} className={`border-b border-slate-100 dark:border-slate-800 ${row.active ? "bg-amber-50 dark:bg-amber-950/30 font-semibold" : ""}`}>
+                  <tr key={row.cat} className={`border-b border-slate-100 dark:border-slate-800 ${row.active ? "bg-blue-50 dark:bg-blue-950/30 font-semibold" : ""}`}>
                     <td className="py-2 px-2">{row.cat}</td>
                     <td className="py-2 px-2">{row.pts}</td>
                     <td className="py-2 px-2">{row.risk}</td>
