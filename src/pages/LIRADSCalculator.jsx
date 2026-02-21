@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { User } from "@/components/User";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Calculator as CalcIcon, LogIn, ArrowLeft, AlertTriangle } from "lucide-react";
+import { Calculator as CalcIcon, LogIn, ArrowLeft, ArrowRight, AlertTriangle } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 import LIRADSWizardStep from "../components/lirads/LIRADSWizardStep";
@@ -158,11 +158,14 @@ export default function LIRADSCalculatorPage() {
   const handleChange = (field, value) => {
     setData(prev => {
       const next = { ...prev, [field]: value };
-      // Clear dependent fields
-      const fieldOrder = STEPS.map(s => s.field);
-      const idx = fieldOrder.indexOf(field);
-      for (let i = idx + 1; i < fieldOrder.length; i++) {
-        delete next[fieldOrder[i]];
+      // Only clear dependent fields for radio steps (not checkbox like majorFeatures)
+      const step = STEPS.find(s => s.field === field);
+      if (step?.type !== "checkbox") {
+        const fieldOrder = STEPS.map(s => s.field);
+        const idx = fieldOrder.indexOf(field);
+        for (let i = idx + 1; i < fieldOrder.length; i++) {
+          delete next[fieldOrder[i]];
+        }
       }
       return next;
     });
@@ -358,6 +361,22 @@ export default function LIRADSCalculatorPage() {
           <Button variant="ghost" onClick={handleReset} className="gap-2 text-slate-500 text-sm">
             Reset
           </Button>
+
+          {/* Next button for checkbox steps */}
+          {currentStep?.type === "checkbox" && currentStepIndex < visibleSteps.length - 1 && (
+            <Button
+              onClick={() => {
+                if (!data[currentStep.field]) {
+                  setData(prev => ({ ...prev, [currentStep.field]: [] }));
+                }
+                setCurrentStepIndex(i => Math.min(i + 1, visibleSteps.length - 1));
+              }}
+              variant="outline"
+              className="gap-2 rounded-full px-6 font-semibold"
+            >
+              Next <ArrowRight className="w-4 h-4" />
+            </Button>
+          )}
 
           {canCalculate(data) && (
             <Button
