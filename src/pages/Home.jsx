@@ -74,7 +74,7 @@ export default function LandingPage() {
                         </Button>
                     </Link>
                     <Link to={createPageUrl("TIRADSCalculator")}>
-                        <Button size="lg" variant="outline" className="h-12 px-10 text-base rounded-full font-semibold hover:scale-[1.04] transition-all duration-300">
+                        <Button size="lg" className="h-12 px-10 text-base rounded-full bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-600 hover:to-yellow-600 text-white shadow-lg shadow-amber-500/25 hover:shadow-amber-500/40 transition-all duration-300 hover:scale-[1.04] font-semibold ring-1 ring-amber-500/20">
                             TI-RADS Calculator <ArrowRight className="ml-2 h-5 w-5" />
                         </Button>
                     </Link>
