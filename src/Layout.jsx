@@ -184,6 +184,9 @@ export default function Layout({ children, currentPageName }) {
                                 <Link to={createPageUrl("LIRADSCalculator")}>
                                     <Button variant={currentPageName === 'LIRADSCalculator' ? 'secondary' : 'ghost'} className="font-semibold">LI-RADS</Button>
                                 </Link>
+                                <Link to={createPageUrl("BIRADSCalculator")}>
+                                    <Button variant={currentPageName === 'BIRADSCalculator' ? 'secondary' : 'ghost'} className="font-semibold">BI-RADS</Button>
+                                </Link>
                             <Link to={createPageUrl("CaseExamples")}>
                                                   <Button variant={currentPageName === 'CaseExamples' ? 'secondary' : 'ghost'} className="font-semibold">Cases</Button>
                                               </Link>

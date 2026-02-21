@@ -64,6 +64,9 @@ export default function LandingPage() {
                 <a href="https://www.acr.org/Clinical-Resources/Reporting-and-Data-Systems/LI-RADS" target="_blank" rel="noopener noreferrer" className="text-blue-400 dark:text-blue-400 text-[11px] hover:text-blue-600 dark:hover:text-blue-300 transition-colors text-center leading-snug">
                     ACR LI-RADS v2018 Core — <span className="font-medium">American College of Radiology</span>
                 </a>
+                <a href="https://www.acr.org/Clinical-Resources/Reporting-and-Data-Systems/Bi-Rads" target="_blank" rel="noopener noreferrer" className="text-blue-400 dark:text-blue-400 text-[11px] hover:text-blue-600 dark:hover:text-blue-300 transition-colors text-center leading-snug">
+                    ACR BI-RADS® Atlas, 5th Edition (2013) — <span className="font-medium">American College of Radiology</span>
+                </a>
             </div>
         </div>
 
@@ -85,6 +88,11 @@ export default function LandingPage() {
                     <Link to={createPageUrl("LIRADSCalculator")}>
                         <Button size="lg" className="h-12 px-10 text-base rounded-full bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white shadow-lg shadow-emerald-500/25 hover:shadow-emerald-500/40 transition-all duration-300 hover:scale-[1.04] font-semibold ring-1 ring-emerald-500/20">
                             LI-RADS Calculator <ArrowRight className="ml-2 h-5 w-5" />
+                        </Button>
+                    </Link>
+                    <Link to={createPageUrl("BIRADSCalculator")}>
+                        <Button size="lg" className="h-12 px-10 text-base rounded-full bg-gradient-to-r from-pink-500 to-rose-500 hover:from-pink-600 hover:to-rose-600 text-white shadow-lg shadow-pink-500/25 hover:shadow-pink-500/40 transition-all duration-300 hover:scale-[1.04] font-semibold ring-1 ring-pink-500/20">
+                            BI-RADS Calculator <ArrowRight className="ml-2 h-5 w-5" />
                         </Button>
                     </Link>
                 </div>
