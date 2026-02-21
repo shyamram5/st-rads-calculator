@@ -21,24 +21,33 @@ export default function TIRADSCalculatorPage() {
     echogenicFoci: [],
   });
   const [noduleSize, setNoduleSize] = useState("");
+  const [showResult, setShowResult] = useState(false);
 
   const handleChange = (field, value) => {
     setSelections((prev) => ({ ...prev, [field]: value }));
+    setShowResult(false);
   };
 
   const handleReset = () => {
     setSelections({ composition: "", echogenicity: "", shape: "", margin: "", echogenicFoci: [] });
     setNoduleSize("");
+    setShowResult(false);
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  // Only show results when at least one selection is made
   const hasAnySelection = selections.composition || selections.echogenicity || selections.shape || selections.margin || selections.echogenicFoci.length > 0;
 
   const result = useMemo(() => {
-    if (!hasAnySelection) return null;
+    if (!showResult || !hasAnySelection) return null;
     return calculateTIRADS(selections);
-  }, [selections, hasAnySelection]);
+  }, [selections, hasAnySelection, showResult]);
+
+  const handleCalculate = () => {
+    setShowResult(true);
+    setTimeout(() => {
+      document.getElementById("tirads-result")?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }, 100);
+  };
 
   return (
     <div className="max-w-3xl mx-auto space-y-6">
