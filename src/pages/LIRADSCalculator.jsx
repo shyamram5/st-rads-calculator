@@ -41,7 +41,7 @@ const STEPS = [
     id: "enhancementType",
     title: "Step 3 — Enhancement Pattern",
     description: "What is the enhancement pattern?",
-    tip: "Non-rim APHE: Enhancement greater than surrounding liver, not in a rim pattern. Rim-like APHE with targetoid appearance, infiltrative growth, or marked diffusion restriction/necrosis suggests LR-M (non-HCC malignancy).",
+    tip: "Non-rim APHE: Enhancement greater than surrounding liver, not in a rim pattern — the hallmark of HCC. Hypo/isoenhancing observations without APHE are categorized LR-3 at most. Targetoid, infiltrative, or diffusion/necrosis patterns suggest LR-M.",
     field: "enhancementType",
     type: "radio",
     options: ENHANCEMENT_TYPE_OPTIONS,
@@ -99,6 +99,13 @@ function getVisibleSteps(data) {
     return visible; // LR-M, no more steps needed
   }
 
+  // No APHE → LR-3 directly, but still check tumor in vein
+  if (data.enhancementType === "no_aphe") {
+    visible.push(STEPS[5]); // Tumor in vein
+    return visible;
+  }
+
+  // Non-rim APHE path
   visible.push(STEPS[3]); // Size
   if (!data.size) return visible;
 
@@ -118,6 +125,12 @@ function canCalculate(data) {
 
   if (["rim_aphe_targetoid", "infiltrative", "diffusion_necrosis"].includes(data.enhancementType)) return true;
   if (!data.enhancementType) return false;
+
+  // No APHE → LR-3 but still need tumor in vein answer
+  if (data.enhancementType === "no_aphe") {
+    if (data.tumorInVein === undefined || data.tumorInVein === "") return false;
+    return true;
+  }
 
   if (data.enhancementType === "nonrim_aphe") {
     if (!data.size) return false;
