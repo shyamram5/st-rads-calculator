@@ -112,10 +112,17 @@ export default function TIRADSCalculatorPage() {
         />
       </div>
 
-      {/* Reset Button */}
+      {/* Calculate & Reset Buttons */}
       {hasAnySelection && (
-        <div className="flex justify-center">
-          <Button variant="outline" onClick={handleReset} className="gap-2">
+        <div className="flex justify-center gap-3">
+          <Button
+            onClick={handleCalculate}
+            size="lg"
+            className="gap-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white rounded-full px-8 font-semibold shadow-lg shadow-blue-500/25"
+          >
+            Calculate TI-RADS
+          </Button>
+          <Button variant="outline" onClick={handleReset} className="gap-2 rounded-full">
             <RotateCcw className="w-4 h-4" /> Reset
           </Button>
         </div>
@@ -123,7 +130,7 @@ export default function TIRADSCalculatorPage() {
 
       {/* Results */}
       {result && (
-        <div className="pt-2">
+        <div className="pt-2" id="tirads-result">
           <h2 className="text-xl font-bold text-slate-900 dark:text-slate-100 mb-4">Assessment Results</h2>
           <TIRADSResultPanel
             result={result}
