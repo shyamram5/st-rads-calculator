@@ -97,10 +97,11 @@ export const ENHANCEMENT_OPTIONS = [
 ];
 
 export const ENHANCEMENT_TYPE_OPTIONS = [
-  { value: "nonrim_aphe", label: "Non-rim arterial phase hyperenhancement (APHE)" },
-  { value: "rim_aphe_targetoid", label: "Rim-like APHE with peripheral washout and delayed central enhancement (targetoid)" },
-  { value: "infiltrative", label: "Infiltrative growth pattern" },
-  { value: "diffusion_necrosis", label: "Marked diffusion restriction or necrosis without typical HCC features" },
+  { value: "nonrim_aphe", label: "Non-rim arterial phase hyperenhancement (APHE)", tip: "Enhancement greater than surrounding liver parenchyma, not in a rim pattern — the hallmark of HCC." },
+  { value: "no_aphe", label: "Hypo- or isoenhancement in arterial phase (no APHE)", tip: "Observation enhances but does NOT show arterial phase hyperenhancement. Includes hypoenhancing and isoenhancing observations." },
+  { value: "rim_aphe_targetoid", label: "Rim-like APHE with peripheral washout and delayed central enhancement (targetoid)", tip: "Targetoid enhancement pattern — suggests non-HCC malignancy (e.g., intrahepatic cholangiocarcinoma)." },
+  { value: "infiltrative", label: "Infiltrative growth pattern", tip: "Ill-defined margins with parenchymal invasion — suggests non-HCC malignancy." },
+  { value: "diffusion_necrosis", label: "Marked diffusion restriction or necrosis without typical HCC features", tip: "Suggests non-HCC malignancy when not accompanied by classic HCC features." },
 ];
 
 export const SIZE_OPTIONS = [
@@ -164,27 +165,62 @@ export function calculateLIRADS(data) {
     return { category: "LR-M", ...LIRADS_CATEGORIES["LR-M"] };
   }
 
+  // No APHE path — per LI-RADS v2018 diagnostic table:
+  // Observations without APHE are LR-3 at most (regardless of size or additional features)
+  if (enhancementType === "no_aphe") {
+    return { category: "LR-3", ...LIRADS_CATEGORIES["LR-3"] };
+  }
+
   // Non-rim APHE path — count additional major features
+  // Per ACR LI-RADS v2018 diagnostic table, the TYPE of feature matters:
+  //   - Enhancing capsule alone → LR-4 (noted LR-4 in some references)
+  //   - Non-peripheral washout OR threshold growth → stronger upgrade toward LR-5
   const featureCount = majorFeatures.length;
+  const hasWashout = majorFeatures.includes("washout");
+  const hasCapsule = majorFeatures.includes("capsule");
+  const hasGrowth = majorFeatures.includes("threshold_growth");
+  // "Strong" features = washout or threshold growth (per LI-RADS v2018 table footnote)
+  const hasStrongFeature = hasWashout || hasGrowth;
+
   let category;
 
   if (enhancementType === "nonrim_aphe") {
     if (size === "<10") {
-      if (featureCount === 0) category = "LR-3";
-      else if (featureCount === 1) category = "LR-4";
-      else category = "LR-5"; // ≥ 2
+      // APHE + <10mm
+      if (featureCount === 0) {
+        category = "LR-3";
+      } else if (featureCount === 1) {
+        // Capsule alone = LR-4; washout or growth alone = LR-4
+        category = "LR-4";
+      } else {
+        // ≥ 2 features = LR-5
+        category = "LR-5";
+      }
     } else if (size === "10-19") {
-      if (featureCount === 0) category = "LR-3";
-      else if (featureCount === 1) category = "LR-4";
-      else category = "LR-5"; // ≥ 2
+      // APHE + 10-19mm
+      if (featureCount === 0) {
+        category = "LR-3";
+      } else if (featureCount === 1) {
+        if (hasStrongFeature) {
+          // Washout or growth alone with APHE + 10-19mm = LR-5
+          category = "LR-5";
+        } else {
+          // Capsule alone with APHE + 10-19mm = LR-4
+          category = "LR-4";
+        }
+      } else {
+        // ≥ 2 features = LR-5
+        category = "LR-5";
+      }
     } else {
-      // ≥ 20 mm
-      if (featureCount === 0) category = "LR-4";
-      else category = "LR-5"; // ≥ 1
+      // APHE + ≥ 20 mm
+      if (featureCount === 0) {
+        category = "LR-4";
+      } else {
+        // ≥ 1 feature of any type = LR-5
+        category = "LR-5";
+      }
     }
-  } else {
-    // Enhancement but no APHE (hypo/iso)
-    category = "LR-3";
   }
 
   return { category, ...LIRADS_CATEGORIES[category] };
@@ -206,16 +242,19 @@ export function applyAncillaryFeatures(baseCategory, ancillaryHCC = [], ancillar
   const originalIdx = idx;
 
   // Upgrade by 1 if HCC-favoring features present
+  // Rule: Cannot upgrade from LR-4 to LR-5 using ancillary features
   if (ancillaryHCC.length > 0 && idx < scale.length - 1) {
-    // Cannot upgrade from LR-4 to LR-5
     if (scale[idx] !== "LR-4") {
       idx = Math.min(idx + 1, scale.length - 1);
     }
   }
 
   // Downgrade by 1 if benign-favoring features present
+  // Rule: Cannot downgrade LR-5 (definite HCC should not be downgraded by ancillary features)
   if (ancillaryBenign.length > 0 && idx > 0) {
-    idx = Math.max(idx - 1, 0);
+    if (scale[idx] !== "LR-5") {
+      idx = Math.max(idx - 1, 0);
+    }
   }
 
   const adjustedCategory = scale[idx];
