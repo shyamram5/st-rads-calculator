@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight, ClipboardCheck, Shield, FileSearch, Stethoscope, Heart, ExternalLink } from "lucide-react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
+import QuickTIRADSCalculator from "@/components/tirads/QuickTIRADSCalculator";
 
 
 const STRADS_SYSTEM = {
