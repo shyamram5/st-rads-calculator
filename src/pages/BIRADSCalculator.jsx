@@ -20,6 +20,8 @@ const MODALITY_OPTIONS = [
 ];
 
 export default function BIRADSCalculatorPage() {
+  const [user, setUser] = useState(null);
+  const [authLoading, setAuthLoading] = useState(true);
   const [modality, setModality] = useState(null);
   const [mammoData, setMammoData] = useState({});
   const [usData, setUSData] = useState({});
@@ -29,6 +31,20 @@ export default function BIRADSCalculatorPage() {
   const [location, setLocation] = useState({});
   const [showResult, setShowResult] = useState(false);
   const [showLocationPrompt, setShowLocationPrompt] = useState(false);
+
+  useEffect(() => {
+    const checkUser = async () => {
+      try {
+        const currentUser = await User.me();
+        setUser(currentUser);
+      } catch (e) {
+        setUser(null);
+      } finally {
+        setAuthLoading(false);
+      }
+    };
+    checkUser();
+  }, []);
 
   // Dynamic steps
   const mammoSteps = getMammoSteps(mammoData);
