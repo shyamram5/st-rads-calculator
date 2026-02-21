@@ -6,39 +6,14 @@ import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { motion } from "framer-motion";
 
-const CALCULATOR_SECTIONS = [
-  {
-    label: "Body",
-    items: [
-      { name: "LI-RADS", fullName: "Liver", page: "LIRADSCalculator" },
-      { name: "PI-RADS", fullName: "Prostate", page: "PIRADSCalculator" },
-      { name: "O-RADS", fullName: "Ovarian", page: "ORADSCalculator" },
-    ],
-  },
-  {
-    label: "Breast",
-    items: [
-      { name: "BI-RADS", fullName: "Breast Imaging", page: "BIRADSCalculator" },
-    ],
-  },
-  {
-    label: "Chest",
-    items: [
-      { name: "Lung-RADS", fullName: "Lung Screening", page: "LungRADSCalculator" },
-    ],
-  },
-  {
-    label: "Head & Neck",
-    items: [
-      { name: "TI-RADS", fullName: "Thyroid", page: "TIRADSCalculator" },
-    ],
-  },
-  {
-    label: "MSK",
-    items: [
-      { name: "ST-RADS", fullName: "Soft Tissue", page: "Calculator" },
-    ],
-  },
+const CALCULATORS = [
+  { name: "ST-RADS", fullName: "Soft Tissue", page: "Calculator" },
+  { name: "TI-RADS", fullName: "Thyroid", page: "TIRADSCalculator" },
+  { name: "LI-RADS", fullName: "Liver", page: "LIRADSCalculator" },
+  { name: "BI-RADS", fullName: "Breast", page: "BIRADSCalculator" },
+  { name: "Lung-RADS", fullName: "Lung", page: "LungRADSCalculator" },
+  { name: "PI-RADS", fullName: "Prostate", page: "PIRADSCalculator" },
+  { name: "O-RADS", fullName: "Ovarian", page: "ORADSCalculator" },
 ];
 
 const STEPS = [
@@ -107,31 +82,30 @@ export default function LandingPage() {
         </motion.div>
       </section>
 
-      {/* ── Calculators by Section ── */}
-      <section className="max-w-3xl mx-auto px-4 mb-24 space-y-6">
-        {CALCULATOR_SECTIONS.map((section, si) => (
-          <div key={section.label}>
-            <p className="text-[11px] font-medium uppercase tracking-[0.15em] text-gray-400 dark:text-gray-500 mb-2 ml-1">{section.label}</p>
-            <div className="rounded-xl border border-gray-200 dark:border-gray-800 overflow-hidden divide-y divide-gray-100 dark:divide-gray-900">
-              {section.items.map((calc, i) => (
-                <motion.div
-                  key={calc.name}
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 0.1 + (si * 3 + i) * 0.04, duration: 0.3 }}
-                >
-                  <Link to={createPageUrl(calc.page)} className="group flex items-center justify-between bg-white dark:bg-black px-5 py-4 hover:bg-gray-50 dark:hover:bg-gray-950 transition-colors duration-150">
-                    <div>
-                      <h3 className="text-sm font-semibold text-gray-900 dark:text-white tracking-tight">{calc.name}</h3>
-                      <p className="text-[12px] text-gray-400 dark:text-gray-500 mt-0.5">{calc.fullName}</p>
-                    </div>
-                    <ChevronRight className="w-4 h-4 text-gray-300 dark:text-gray-700 group-hover:text-gray-900 dark:group-hover:text-white group-hover:translate-x-0.5 transition-all duration-150" />
-                  </Link>
-                </motion.div>
-              ))}
-            </div>
-          </div>
-        ))}
+      {/* ── Calculator Grid ── */}
+      <section className="max-w-3xl mx-auto px-4 mb-24">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-px bg-gray-200 dark:bg-gray-800 rounded-xl overflow-hidden border border-gray-200 dark:border-gray-800">
+          {CALCULATORS.map((calc, i) => (
+            <motion.div
+              key={calc.name}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.1 + i * 0.04, duration: 0.3 }}
+            >
+              <Link to={createPageUrl(calc.page)} className="group block bg-white dark:bg-black px-5 py-5 hover:bg-gray-50 dark:hover:bg-gray-950 transition-colors duration-150 h-full">
+                <div className="flex flex-col justify-between h-full min-h-[80px]">
+                  <div>
+                    <p className="text-[11px] font-medium text-gray-400 dark:text-gray-500 mb-1">{calc.fullName}</p>
+                    <h3 className="text-base font-semibold text-gray-900 dark:text-white tracking-tight">{calc.name}</h3>
+                  </div>
+                  <ChevronRight className="w-4 h-4 text-gray-300 dark:text-gray-700 group-hover:text-gray-900 dark:group-hover:text-white group-hover:translate-x-0.5 transition-all duration-150 mt-3 self-end" />
+                </div>
+              </Link>
+            </motion.div>
+          ))}
+          {/* Fill remaining cell for even grid */}
+          <div className="bg-white dark:bg-black hidden lg:block" />
+        </div>
       </section>
 
       {/* ── How It Works ── */}
