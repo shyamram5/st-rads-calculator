@@ -49,25 +49,7 @@ export default function LandingPage() {
                 Evidence-based radiology risk stratification tools — all in one place.
             </p>
 
-            {/* Founding Papers */}
-            <div className="flex flex-col items-center gap-1.5 pt-2">
-                <p className="text-[11px] text-slate-400 dark:text-slate-500 uppercase tracking-widest font-semibold">Built from the foundational research</p>
-                <a href="https://www.ajronline.org/doi/10.2214/AJR.25.34013" target="_blank" rel="noopener noreferrer" className="text-blue-400 dark:text-blue-400 text-[11px] hover:text-blue-600 dark:hover:text-blue-300 transition-colors text-center leading-snug">
-                    Soft Tissue-RADS: An ACR Work-in-Progress Framework… — <span className="font-medium">Chhabra, Garner, Rehman et al.</span> AJR 2025
-                </a>
-                <a href="https://link.springer.com/article/10.1007/s00256-026-05155-w" target="_blank" rel="noopener noreferrer" className="text-blue-400 dark:text-blue-400 text-[11px] hover:text-blue-600 dark:hover:text-blue-300 transition-colors text-center leading-snug">
-                    MRI Findings for Differentiating Benign & Malignant Soft Tissue Tumors… — <span className="font-medium">Wahid, Sharma, Rehman et al.</span> Skeletal Radiol 2026
-                </a>
-                <a href="https://doi.org/10.1016/j.jacr.2017.01.046" target="_blank" rel="noopener noreferrer" className="text-blue-400 dark:text-blue-400 text-[11px] hover:text-blue-600 dark:hover:text-blue-300 transition-colors text-center leading-snug">
-                    ACR TI-RADS White Paper — <span className="font-medium">Tessler, Middleton, Grant et al.</span> JACR 2017
-                </a>
-                <a href="https://www.acr.org/Clinical-Resources/Reporting-and-Data-Systems/LI-RADS" target="_blank" rel="noopener noreferrer" className="text-blue-400 dark:text-blue-400 text-[11px] hover:text-blue-600 dark:hover:text-blue-300 transition-colors text-center leading-snug">
-                    ACR LI-RADS v2018 Core — <span className="font-medium">American College of Radiology</span>
-                </a>
-                <a href="https://www.acr.org/Clinical-Resources/Reporting-and-Data-Systems/Bi-Rads" target="_blank" rel="noopener noreferrer" className="text-blue-400 dark:text-blue-400 text-[11px] hover:text-blue-600 dark:hover:text-blue-300 transition-colors text-center leading-snug">
-                    ACR BI-RADS® Atlas, 5th Edition (2013) — <span className="font-medium">American College of Radiology</span>
-                </a>
-            </div>
+
         </div>
 
         {/* System Content */}
@@ -137,6 +119,26 @@ export default function LandingPage() {
                     Institutional Plans Available
                 </Button>
             </Link>
+        </div>
+
+        {/* Founding Papers */}
+        <div className="flex flex-col items-center gap-1.5 pt-2 px-4">
+            <p className="text-[11px] text-slate-400 dark:text-slate-500 uppercase tracking-widest font-semibold">Built from the foundational research</p>
+            <a href="https://www.ajronline.org/doi/10.2214/AJR.25.34013" target="_blank" rel="noopener noreferrer" className="text-blue-400 dark:text-blue-400 text-[11px] hover:text-blue-600 dark:hover:text-blue-300 transition-colors text-center leading-snug">
+                Soft Tissue-RADS: An ACR Work-in-Progress Framework… — <span className="font-medium">Chhabra, Garner, Rehman et al.</span> AJR 2025
+            </a>
+            <a href="https://link.springer.com/article/10.1007/s00256-026-05155-w" target="_blank" rel="noopener noreferrer" className="text-blue-400 dark:text-blue-400 text-[11px] hover:text-blue-600 dark:hover:text-blue-300 transition-colors text-center leading-snug">
+                MRI Findings for Differentiating Benign & Malignant Soft Tissue Tumors… — <span className="font-medium">Wahid, Sharma, Rehman et al.</span> Skeletal Radiol 2026
+            </a>
+            <a href="https://doi.org/10.1016/j.jacr.2017.01.046" target="_blank" rel="noopener noreferrer" className="text-blue-400 dark:text-blue-400 text-[11px] hover:text-blue-600 dark:hover:text-blue-300 transition-colors text-center leading-snug">
+                ACR TI-RADS White Paper — <span className="font-medium">Tessler, Middleton, Grant et al.</span> JACR 2017
+            </a>
+            <a href="https://www.acr.org/Clinical-Resources/Reporting-and-Data-Systems/LI-RADS" target="_blank" rel="noopener noreferrer" className="text-blue-400 dark:text-blue-400 text-[11px] hover:text-blue-600 dark:hover:text-blue-300 transition-colors text-center leading-snug">
+                ACR LI-RADS v2018 Core — <span className="font-medium">American College of Radiology</span>
+            </a>
+            <a href="https://www.acr.org/Clinical-Resources/Reporting-and-Data-Systems/Bi-Rads" target="_blank" rel="noopener noreferrer" className="text-blue-400 dark:text-blue-400 text-[11px] hover:text-blue-600 dark:hover:text-blue-300 transition-colors text-center leading-snug">
+                ACR BI-RADS® Atlas, 5th Edition (2013) — <span className="font-medium">American College of Radiology</span>
+            </a>
         </div>
     </div>
   );
