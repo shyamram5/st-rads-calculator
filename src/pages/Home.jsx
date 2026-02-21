@@ -79,6 +79,15 @@ export default function LandingPage() {
                     </Link>
                 </div>
 
+                {/* Coming Soon */}
+                <div className="flex flex-wrap items-center justify-center gap-3 mt-2">
+                    {["Lung-RADS", "PI-RADS", "O-RADS"].map((name) => (
+                        <span key={name} className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-slate-100 dark:bg-slate-800/60 text-slate-400 dark:text-slate-500 text-sm font-medium border border-slate-200 dark:border-slate-700/50">
+                            {name} <span className="text-xs opacity-70">— Coming Soon</span>
+                        </span>
+                    ))}
+                </div>
+
                 <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-slate-100/80 dark:bg-slate-800/50 text-slate-500 dark:text-slate-400 text-xs font-medium">
                     <Shield className="w-3.5 h-3.5" />
                     No patient data stored · Fully deterministic · Rule-based

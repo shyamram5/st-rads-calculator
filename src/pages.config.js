@@ -48,6 +48,7 @@
  * The mainPage value must match a key in the PAGES object exactly.
  */
 import Account from './pages/Account';
+import BIRADSCalculator from './pages/BIRADSCalculator';
 import Billing from './pages/Billing';
 import Calculator from './pages/Calculator';
 import CaseExamples from './pages/CaseExamples';
@@ -61,12 +62,12 @@ import Premium from './pages/Premium';
 import StudyAssistant from './pages/StudyAssistant';
 import Support from './pages/Support';
 import TIRADSCalculator from './pages/TIRADSCalculator';
-import BIRADSCalculator from './pages/BIRADSCalculator';
 import __Layout from './Layout.jsx';
 
 
 export const PAGES = {
     "Account": Account,
+    "BIRADSCalculator": BIRADSCalculator,
     "Billing": Billing,
     "Calculator": Calculator,
     "CaseExamples": CaseExamples,
@@ -80,7 +81,6 @@ export const PAGES = {
     "StudyAssistant": StudyAssistant,
     "Support": Support,
     "TIRADSCalculator": TIRADSCalculator,
-    "BIRADSCalculator": BIRADSCalculator,
 }
 
 export const pagesConfig = {
