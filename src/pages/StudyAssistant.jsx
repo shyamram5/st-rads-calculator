@@ -5,10 +5,12 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import MessageBubble from '../components/MessageBubble';
-import { Send, Loader2, GraduationCap, BookOpen, Sparkles, BrainCircuit, MessageSquare } from 'lucide-react';
+import { Send, Loader2, GraduationCap, BookOpen, Sparkles, BrainCircuit, MessageSquare, Building2, Lock } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import PullToRefresh from '../components/PullToRefresh';
 import QuizMode from '../components/study/QuizMode';
+import { Link } from "react-router-dom";
+import { createPageUrl } from "@/utils";
 
 const MODES = [
   { id: "quiz", label: "Question Bank", icon: BrainCircuit, description: "100 clinical vignette questions" },
@@ -127,10 +129,26 @@ export default function StudyAssistantPage() {
   const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [activeMode, setActiveMode] = useState("quiz");
+  const [hasAccess, setHasAccess] = useState(false);
 
   useEffect(() => {
     const fetchUser = async () => {
-      try { setUser(await User.me()); } catch { setUser(null); }
+      try {
+        const u = await User.me();
+        setUser(u);
+        if (u) {
+          // Check if user is admin or belongs to an active institution
+          if (u.role === "admin") {
+            setHasAccess(true);
+          } else {
+            const institutions = await base44.entities.Institution.filter({ status: "active" });
+            const hasInstitution = institutions.some(inst =>
+              inst.admin_email === u.email || (inst.member_emails && inst.member_emails.includes(u.email))
+            );
+            setHasAccess(hasInstitution);
+          }
+        }
+      } catch { setUser(null); }
       setIsLoading(false);
     };
     fetchUser();
@@ -147,6 +165,29 @@ export default function StudyAssistantPage() {
         <CardContent className="space-y-4">
           <p className="text-slate-600 dark:text-slate-400">Log in to access the Study Assistant.</p>
           <Button onClick={() => User.login()}>Log In</Button>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  if (!hasAccess) {
+    return (
+      <Card className="max-w-xl mx-auto mt-8 border-amber-200 dark:border-amber-800">
+        <CardHeader className="text-center space-y-3">
+          <div className="mx-auto w-14 h-14 rounded-2xl bg-amber-100 dark:bg-amber-900/40 flex items-center justify-center">
+            <Lock className="w-7 h-7 text-amber-600 dark:text-amber-400" />
+          </div>
+          <CardTitle className="text-xl">Institutional Access Only</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4 text-center">
+          <p className="text-slate-600 dark:text-slate-400">
+            The Study Assistant with question bank and AI tutor is available exclusively to institutional plan members.
+          </p>
+          <Link to={createPageUrl("InstitutionalPlan")}>
+            <Button className="gap-2 bg-amber-600 hover:bg-amber-700 text-white">
+              <Building2 className="w-4 h-4" /> View Institutional Plan
+            </Button>
+          </Link>
         </CardContent>
       </Card>
     );
