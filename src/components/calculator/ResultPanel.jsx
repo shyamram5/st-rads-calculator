@@ -6,8 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
-import DecisionPathTrace from "./DecisionPathTrace";
-import FigureViewer from "./FigureViewer";
+
 
 const scoreColors = {
   gray: { ring: "ring-gray-400", text: "text-gray-700 dark:text-gray-300", bg: "bg-gray-100 dark:bg-gray-900" },
@@ -131,12 +130,6 @@ export default function ResultPanel({ result, caseData, onReset, isPremium }) {
           )}
         </CardContent>
       </Card>
-
-      {/* Decision Path Trace */}
-      <DecisionPathTrace caseData={caseData} result={result} />
-
-      {/* Flowchart Figures */}
-      <FigureViewer caseData={caseData} result={result} />
 
       {/* Disclaimer */}
       <div className="bg-red-50 dark:bg-red-950/40 p-4 rounded-lg border-l-4 border-red-500">
