@@ -10,65 +10,37 @@ const CALCULATORS = [
   {
     name: "ST-RADS",
     fullName: "Soft Tissue RADS",
-    desc: "MRI risk stratification for soft-tissue tumors via official ACR flowcharts",
     page: "Calculator",
-    bgAccent: "bg-blue-50 dark:bg-blue-950/30",
-    textAccent: "text-blue-600 dark:text-blue-400",
-    borderAccent: "border-blue-100 dark:border-blue-900/50",
   },
   {
     name: "TI-RADS",
     fullName: "Thyroid Imaging RADS",
-    desc: "Thyroid nodule malignancy risk assessment from ultrasound features",
     page: "TIRADSCalculator",
-    bgAccent: "bg-amber-50 dark:bg-amber-950/30",
-    textAccent: "text-amber-600 dark:text-amber-400",
-    borderAccent: "border-amber-100 dark:border-amber-900/50",
   },
   {
     name: "LI-RADS",
     fullName: "Liver Imaging RADS",
-    desc: "Liver observation scoring for patients at risk of HCC",
     page: "LIRADSCalculator",
-    bgAccent: "bg-emerald-50 dark:bg-emerald-950/30",
-    textAccent: "text-emerald-600 dark:text-emerald-400",
-    borderAccent: "border-emerald-100 dark:border-emerald-900/50",
   },
   {
     name: "BI-RADS",
     fullName: "Breast Imaging RADS",
-    desc: "Mammography & ultrasound assessment per ACR 5th Edition",
     page: "BIRADSCalculator",
-    bgAccent: "bg-pink-50 dark:bg-pink-950/30",
-    textAccent: "text-pink-600 dark:text-pink-400",
-    borderAccent: "border-pink-100 dark:border-pink-900/50",
   },
   {
     name: "Lung-RADS",
     fullName: "Lung Cancer Screening",
-    desc: "LDCT lung nodule classification per ACR Lung-RADS v2022",
     page: "LungRADSCalculator",
-    bgAccent: "bg-slate-50 dark:bg-slate-800/30",
-    textAccent: "text-slate-600 dark:text-slate-400",
-    borderAccent: "border-slate-200 dark:border-slate-700/50",
   },
   {
     name: "PI-RADS",
     fullName: "Prostate Imaging RADS",
-    desc: "Prostate mpMRI scoring per PI-RADS v2.1 (2019)",
     page: "PIRADSCalculator",
-    bgAccent: "bg-violet-50 dark:bg-violet-950/30",
-    textAccent: "text-violet-600 dark:text-violet-400",
-    borderAccent: "border-violet-100 dark:border-violet-900/50",
   },
   {
     name: "O-RADS",
     fullName: "Ovarian-Adnexal RADS",
-    desc: "Adnexal mass US v2022 + MRI risk stratification",
     page: "ORADSCalculator",
-    bgAccent: "bg-rose-50 dark:bg-rose-950/30",
-    textAccent: "text-rose-600 dark:text-rose-400",
-    borderAccent: "border-rose-100 dark:border-rose-900/50",
   },
 ];
 
@@ -143,13 +115,12 @@ export default function LandingPage() {
             transition={{ delay: 0.15 + i * 0.06, duration: 0.4, ease: "easeOut" }}
           >
             <Link to={createPageUrl(calc.page)} className="block group">
-              <div className={`relative overflow-hidden rounded-xl border ${calc.borderAccent} ${calc.bgAccent} px-4 py-4 transition-all duration-300 hover:shadow-md hover:-translate-y-0.5 cursor-pointer`}>
+              <div className="relative overflow-hidden rounded-xl border border-indigo-100 dark:border-indigo-900/50 bg-indigo-50/60 dark:bg-indigo-950/30 px-4 py-4 transition-all duration-300 hover:shadow-md hover:-translate-y-0.5 cursor-pointer">
                 <div className="space-y-1.5">
-                  <span className={`text-[10px] font-bold uppercase tracking-wider ${calc.textAccent} leading-none`}>{calc.fullName}</span>
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-indigo-500 dark:text-indigo-400 leading-none">{calc.fullName}</span>
                   <h3 className="text-lg font-extrabold text-slate-900 dark:text-slate-100 leading-tight">{calc.name}</h3>
-
                 </div>
-                <ArrowRight className={`absolute top-1/2 right-3 -translate-y-1/2 w-4 h-4 ${calc.textAccent} opacity-0 group-hover:opacity-100 transition-all group-hover:translate-x-0.5`} />
+                <ArrowRight className="absolute top-1/2 right-3 -translate-y-1/2 w-4 h-4 text-indigo-500 dark:text-indigo-400 opacity-0 group-hover:opacity-100 transition-all group-hover:translate-x-0.5" />
               </div>
             </Link>
           </motion.div>
