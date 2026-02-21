@@ -51,31 +51,28 @@ export default function PremiumPage() {
 
     if (isLoading) {
         return (
-            <div className="min-h-screen flex items-center justify-center">
-                <div className="text-center">
-                    <div className="w-16 h-16 border-4 border-slate-200 dark:border-slate-700 border-t-blue-500 rounded-full animate-spin mx-auto mb-4"></div>
-                    <p className="text-slate-600 dark:text-slate-400">Loading...</p>
-                </div>
+            <div className="min-h-[60vh] flex items-center justify-center">
+                <div className="w-8 h-8 border-2 border-gray-200 dark:border-gray-800 border-t-gray-900 dark:border-t-white rounded-full animate-spin"></div>
             </div>
         );
     }
 
     if (!user) {
         return (
-            <div className="min-h-screen flex items-center justify-center p-4">
-                <Card className="shadow-2xl border-0 bg-white dark:bg-slate-900 max-w-md w-full text-center">
-                    <CardContent className="p-8">
-                        <Crown className="w-16 h-16 text-amber-500 mx-auto mb-4" />
-                        <h2 className="text-2xl font-bold text-slate-900 dark:text-slate-100 mb-4">Login Required</h2>
-                        <p className="text-slate-600 dark:text-slate-400 mb-6">Please log in to upgrade to Premium</p>
-                        <Button 
-                            onClick={() => User.login()}
-                            className="w-full bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white font-bold py-3"
-                        >
-                            Log In
-                        </Button>
-                    </CardContent>
-                </Card>
+            <div className="min-h-[60vh] flex items-center justify-center p-4">
+                <div className="max-w-sm w-full text-center space-y-6">
+                    <div className="w-12 h-12 rounded-xl bg-gray-100 dark:bg-gray-900 flex items-center justify-center mx-auto">
+                        <Crown className="w-6 h-6 text-gray-500" />
+                    </div>
+                    <div>
+                        <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">Login Required</h2>
+                        <p className="text-[13px] text-gray-500 dark:text-gray-400">Please log in to upgrade to Premium</p>
+                    </div>
+                    <Button onClick={() => User.login()}
+                        className="w-full bg-gray-900 dark:bg-white text-white dark:text-black hover:bg-black dark:hover:bg-gray-100 h-10 rounded-lg text-sm font-medium shadow-none">
+                        Log In
+                    </Button>
+                </div>
             </div>
         );
     }
@@ -132,12 +129,10 @@ export default function PremiumPage() {
     }
 
     return (
-        <div className="min-h-screen space-y-8">
-            {/* Hero Section */}
+        <div className="max-w-4xl mx-auto space-y-8">
             <div className="text-center space-y-4">
-                <Crown className="w-20 h-20 text-amber-500 mx-auto" />
-                <h1 className="text-4xl md:text-5xl font-bold text-slate-900 dark:text-slate-100">Upgrade to Premium</h1>
-                <p className="text-xl text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">Unlock unlimited ST-RADS analyses, enhanced reporting, and priority support to accelerate your research.</p>
+                <h1 className="text-2xl md:text-3xl font-semibold text-gray-900 dark:text-white">Upgrade to Premium</h1>
+                <p className="text-[13px] text-gray-500 dark:text-gray-400 max-w-lg mx-auto">Unlimited analyses, enhanced reporting, and priority support.</p>
                 {remainingFree > 0 && (
                     <Badge variant="outline" className="text-lg px-4 py-2 bg-blue-50 dark:bg-blue-950/40 text-blue-800 dark:text-blue-200 border-blue-300 dark:border-blue-800">
                         Free Trial: {remainingFree} analyses remaining
@@ -180,11 +175,7 @@ export default function PremiumPage() {
                 </Card>
 
                 {/* Premium Card */}
-                <Card className="glass-panel border-amber-400/50 dark:border-amber-500/50 bg-gradient-to-br from-white/80 to-amber-50/80 dark:from-gray-900/80 dark:to-amber-950/50 relative overflow-hidden ring-1 ring-amber-400/30 dark:ring-amber-500/30">
-                    <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-amber-300 via-orange-400 to-amber-300"></div>
-                    <div className="absolute top-4 -right-12">
-                        <Badge className="bg-amber-500 text-white font-bold transform rotate-45 px-8 py-1 shadow-lg">POPULAR</Badge>
-                    </div>
+                <Card className="border border-gray-900 dark:border-white relative overflow-hidden">
                     <CardHeader className="text-center p-6">
                         <div className="flex items-center justify-center gap-2 mb-2">
                             <Star className="w-6 h-6 text-amber-500" />
@@ -217,7 +208,7 @@ export default function PremiumPage() {
                             onClick={handleStripeCheckout}
                             disabled={isRedirecting}
                             size="lg"
-                            className="w-full bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-bold py-4 text-lg shadow-lg hover:shadow-xl transition-all duration-300 disabled:opacity-70 rounded-full"
+                            className="w-full bg-gray-900 dark:bg-white text-white dark:text-black hover:bg-black dark:hover:bg-gray-100 font-medium py-4 text-base shadow-none rounded-lg disabled:opacity-70"
                         >
                             {isRedirecting ? (
                                 <>

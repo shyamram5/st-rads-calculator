@@ -170,28 +170,28 @@ export default function BIRADSCalculatorPage() {
   // ═══════════════════════════════════════
   if (authLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="w-16 h-16 border-4 border-slate-200 dark:border-slate-700 border-t-pink-500 rounded-full animate-spin" />
+      <div className="min-h-[60vh] flex items-center justify-center">
+        <div className="w-8 h-8 border-2 border-gray-200 dark:border-gray-800 border-t-gray-900 dark:border-t-white rounded-full animate-spin"></div>
       </div>
     );
   }
 
   if (!user) {
     return (
-      <div className="min-h-[70vh] flex items-center justify-center p-4">
-        <Card className="shadow-2xl border-0 bg-white dark:bg-slate-900 max-w-md w-full text-center">
-          <CardContent className="p-8 space-y-6">
-            <Calculator className="w-16 h-16 text-pink-500 mx-auto" />
-            <h2 className="text-2xl font-bold text-slate-900 dark:text-slate-100">Sign Up to Use the Calculator</h2>
-            <p className="text-slate-600 dark:text-slate-400">Create a free account to access the BI-RADS Calculator — 5 free analyses to get started.</p>
-            <Button
-              onClick={(e) => { e.preventDefault(); User.login(); }}
-              className="w-full bg-pink-500 hover:bg-pink-600 text-white font-bold py-3 rounded-full text-lg"
-            >
-              <LogIn className="mr-2 h-5 w-5" /> Sign Up / Log In
-            </Button>
-          </CardContent>
-        </Card>
+      <div className="min-h-[60vh] flex items-center justify-center p-4">
+        <div className="max-w-sm w-full text-center space-y-6">
+          <div className="w-12 h-12 rounded-xl bg-gray-100 dark:bg-gray-900 flex items-center justify-center mx-auto">
+            <Calculator className="w-6 h-6 text-gray-500" />
+          </div>
+          <div>
+            <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">Sign in to continue</h2>
+            <p className="text-[13px] text-gray-500 dark:text-gray-400">Create a free account to access BI-RADS — 5 free analyses included.</p>
+          </div>
+          <Button onClick={(e) => { e.preventDefault(); User.login(); }}
+            className="w-full bg-gray-900 dark:bg-white text-white dark:text-black hover:bg-black dark:hover:bg-gray-100 h-10 rounded-lg text-sm font-medium shadow-none">
+            <LogIn className="mr-2 h-4 w-4" /> Sign Up / Log In
+          </Button>
+        </div>
       </div>
     );
   }
@@ -203,12 +203,8 @@ export default function BIRADSCalculatorPage() {
     return (
       <div className="max-w-2xl mx-auto space-y-6">
         <div className="text-center space-y-2">
-          <h1 className="text-3xl md:text-4xl font-bold text-slate-900 dark:text-slate-100">
-            ACR <span className="bg-gradient-to-r from-pink-500 to-rose-500 dark:from-pink-400 dark:to-rose-400 bg-clip-text text-transparent">BI-RADS®</span> Calculator
-          </h1>
-          <p className="text-sm text-slate-500 dark:text-slate-400 max-w-xl mx-auto">
-            Breast Imaging Reporting and Data System — 5th Edition (2013). Step-by-step guided scoring for mammography and ultrasound.
-          </p>
+          <h1 className="text-2xl font-semibold text-gray-900 dark:text-white">ACR BI-RADS® Calculator</h1>
+          <p className="text-[13px] text-gray-500 dark:text-gray-400 max-w-xl mx-auto">Breast Imaging · 5th Edition (2013)</p>
         </div>
 
         <Card className="border-0 shadow-lg bg-white/80 dark:bg-slate-900/80">
@@ -295,9 +291,7 @@ export default function BIRADSCalculatorPage() {
   return (
     <div className="max-w-2xl mx-auto space-y-5">
       <div className="text-center space-y-1">
-        <h1 className="text-2xl md:text-3xl font-bold text-slate-900 dark:text-slate-100">
-          ACR <span className="bg-gradient-to-r from-pink-500 to-rose-500 dark:from-pink-400 dark:to-rose-400 bg-clip-text text-transparent">BI-RADS®</span> Calculator
-        </h1>
+        <h1 className="text-2xl font-semibold text-gray-900 dark:text-white">ACR BI-RADS® Calculator</h1>
         <p className="text-xs text-slate-500 dark:text-slate-400">
           {modality === "mammo" ? "Mammography" : modality === "us" ? "Ultrasound" : "Mammography + Ultrasound"} · 5th Edition (2013)
         </p>
@@ -390,10 +384,8 @@ export default function BIRADSCalculatorPage() {
               )}
 
               {canCalculate() && (
-                <Button
-                  onClick={handleCalculate}
-                  className="gap-2 bg-gradient-to-r from-pink-500 to-rose-500 hover:from-pink-600 hover:to-rose-600 text-white rounded-full px-5 text-sm font-semibold shadow-lg shadow-pink-500/25"
-                >
+                <Button onClick={handleCalculate}
+                  className="gap-2 bg-gray-900 dark:bg-white text-white dark:text-black hover:bg-black dark:hover:bg-gray-100 rounded-lg px-5 text-sm font-medium shadow-none">
                   <Calculator className="w-4 h-4" /> Calculate BI-RADS
                 </Button>
               )}

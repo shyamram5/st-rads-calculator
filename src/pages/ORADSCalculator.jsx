@@ -32,26 +32,28 @@ export default function ORADSCalculatorPage() {
 
   if (authLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="w-16 h-16 border-4 border-slate-200 dark:border-slate-700 border-t-rose-500 rounded-full animate-spin" />
+      <div className="min-h-[60vh] flex items-center justify-center">
+        <div className="w-8 h-8 border-2 border-gray-200 dark:border-gray-800 border-t-gray-900 dark:border-t-white rounded-full animate-spin"></div>
       </div>
     );
   }
 
   if (!user) {
     return (
-      <div className="min-h-[70vh] flex items-center justify-center p-4">
-        <Card className="shadow-2xl border-0 bg-white dark:bg-slate-900 max-w-md w-full text-center">
-          <CardContent className="p-8 space-y-6">
-            <Calculator className="w-16 h-16 text-rose-500 mx-auto" />
-            <h2 className="text-2xl font-bold text-slate-900 dark:text-slate-100">Sign Up to Use the Calculator</h2>
-            <p className="text-slate-600 dark:text-slate-400">Create a free account to access the O-RADS Calculator.</p>
-            <Button onClick={(e) => { e.preventDefault(); User.login(); }}
-              className="w-full bg-rose-600 hover:bg-rose-700 text-white font-bold py-3 rounded-full text-lg">
-              <LogIn className="mr-2 h-5 w-5" /> Sign Up / Log In
-            </Button>
-          </CardContent>
-        </Card>
+      <div className="min-h-[60vh] flex items-center justify-center p-4">
+        <div className="max-w-sm w-full text-center space-y-6">
+          <div className="w-12 h-12 rounded-xl bg-gray-100 dark:bg-gray-900 flex items-center justify-center mx-auto">
+            <Calculator className="w-6 h-6 text-gray-500" />
+          </div>
+          <div>
+            <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">Sign in to continue</h2>
+            <p className="text-[13px] text-gray-500 dark:text-gray-400">Create a free account to access O-RADS.</p>
+          </div>
+          <Button onClick={(e) => { e.preventDefault(); User.login(); }}
+            className="w-full bg-gray-900 dark:bg-white text-white dark:text-black hover:bg-black dark:hover:bg-gray-100 h-10 rounded-lg text-sm font-medium shadow-none">
+            <LogIn className="mr-2 h-4 w-4" /> Sign Up / Log In
+          </Button>
+        </div>
       </div>
     );
   }
@@ -60,12 +62,8 @@ export default function ORADSCalculatorPage() {
     <div className="max-w-4xl mx-auto space-y-5">
       {/* Header */}
       <div className="text-center space-y-1">
-        <h1 className="text-2xl md:text-3xl font-bold text-slate-900 dark:text-slate-100">
-          <span className="bg-gradient-to-r from-rose-500 to-pink-600 dark:from-rose-400 dark:to-pink-400 bg-clip-text text-transparent">O-RADS™</span> Dual-Modality Calculator
-        </h1>
-        <p className="text-xs text-slate-500 dark:text-slate-400">
-          Ultrasound v2022 + MRI Risk Stratification · American College of Radiology
-        </p>
+        <h1 className="text-2xl font-semibold text-gray-900 dark:text-white">O-RADS™ Calculator</h1>
+        <p className="text-[13px] text-gray-500 dark:text-gray-400">Ovarian-Adnexal · US v2022 + MRI</p>
       </div>
 
       {/* Menopausal status (shared) */}

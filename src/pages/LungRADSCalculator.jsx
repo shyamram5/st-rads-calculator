@@ -157,26 +157,28 @@ export default function LungRADSCalculatorPage() {
   // ─── Auth gate ───
   if (authLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="w-16 h-16 border-4 border-slate-200 dark:border-slate-700 border-t-teal-500 rounded-full animate-spin" />
+      <div className="min-h-[60vh] flex items-center justify-center">
+        <div className="w-8 h-8 border-2 border-gray-200 dark:border-gray-800 border-t-gray-900 dark:border-t-white rounded-full animate-spin"></div>
       </div>
     );
   }
 
   if (!user) {
     return (
-      <div className="min-h-[70vh] flex items-center justify-center p-4">
-        <Card className="shadow-2xl border-0 bg-white dark:bg-slate-900 max-w-md w-full text-center">
-          <CardContent className="p-8 space-y-6">
-            <Calculator className="w-16 h-16 text-teal-500 mx-auto" />
-            <h2 className="text-2xl font-bold text-slate-900 dark:text-slate-100">Sign Up to Use the Calculator</h2>
-            <p className="text-slate-600 dark:text-slate-400">Create a free account to access the Lung-RADS Calculator — 5 free analyses to get started.</p>
-            <Button onClick={(e) => { e.preventDefault(); User.login(); }}
-              className="w-full bg-teal-600 hover:bg-teal-700 text-white font-bold py-3 rounded-full text-lg">
-              <LogIn className="mr-2 h-5 w-5" /> Sign Up / Log In
-            </Button>
-          </CardContent>
-        </Card>
+      <div className="min-h-[60vh] flex items-center justify-center p-4">
+        <div className="max-w-sm w-full text-center space-y-6">
+          <div className="w-12 h-12 rounded-xl bg-gray-100 dark:bg-gray-900 flex items-center justify-center mx-auto">
+            <Calculator className="w-6 h-6 text-gray-500" />
+          </div>
+          <div>
+            <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">Sign in to continue</h2>
+            <p className="text-[13px] text-gray-500 dark:text-gray-400">Create a free account to access Lung-RADS — 5 free analyses included.</p>
+          </div>
+          <Button onClick={(e) => { e.preventDefault(); User.login(); }}
+            className="w-full bg-gray-900 dark:bg-white text-white dark:text-black hover:bg-black dark:hover:bg-gray-100 h-10 rounded-lg text-sm font-medium shadow-none">
+            <LogIn className="mr-2 h-4 w-4" /> Sign Up / Log In
+          </Button>
+        </div>
       </div>
     );
   }
@@ -185,12 +187,8 @@ export default function LungRADSCalculatorPage() {
     <div className="max-w-3xl mx-auto space-y-5">
       {/* Header */}
       <div className="text-center space-y-1">
-        <h1 className="text-2xl md:text-3xl font-bold text-slate-900 dark:text-slate-100">
-          ACR <span className="bg-gradient-to-r from-teal-500 to-cyan-500 dark:from-teal-400 dark:to-cyan-400 bg-clip-text text-transparent">Lung-RADS®</span> v2022
-        </h1>
-        <p className="text-xs text-slate-500 dark:text-slate-400">
-          Clinical-grade lung cancer screening CT decision support tool
-        </p>
+        <h1 className="text-2xl font-semibold text-gray-900 dark:text-white">ACR Lung-RADS® v2022</h1>
+        <p className="text-[13px] text-gray-500 dark:text-gray-400">Lung cancer screening CT · Decision support</p>
       </div>
 
       {/* Tab bar */}
@@ -365,7 +363,7 @@ export default function LungRADSCalculatorPage() {
 
                   {canCalculate && (
                     <Button onClick={handleCalculate}
-                      className="gap-2 bg-gradient-to-r from-teal-500 to-cyan-500 hover:from-teal-600 hover:to-cyan-600 text-white rounded-full px-5 text-sm font-semibold shadow-lg shadow-teal-500/25">
+                      className="gap-2 bg-gray-900 dark:bg-white text-white dark:text-black hover:bg-black dark:hover:bg-gray-100 rounded-lg px-5 text-sm font-medium shadow-none">
                       <Calculator className="w-4 h-4" /> Calculate Lung-RADS
                     </Button>
                   )}

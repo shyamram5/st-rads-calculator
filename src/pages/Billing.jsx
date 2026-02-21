@@ -70,31 +70,28 @@ export default function BillingPage() {
 
     if (isLoading) {
         return (
-            <div className="min-h-screen flex items-center justify-center">
-                <div className="text-center">
-                    <div className="w-16 h-16 border-4 border-slate-200 dark:border-slate-700 border-t-blue-500 rounded-full animate-spin mx-auto mb-4"></div>
-                    <p className="text-slate-600 dark:text-slate-400">Loading billing info...</p>
-                </div>
+            <div className="min-h-[60vh] flex items-center justify-center">
+                <div className="w-8 h-8 border-2 border-gray-200 dark:border-gray-800 border-t-gray-900 dark:border-t-white rounded-full animate-spin"></div>
             </div>
         );
     }
 
     if (!user) {
         return (
-            <div className="min-h-screen flex items-center justify-center p-4">
-                <Card className="shadow-2xl border-0 bg-white dark:bg-slate-900 max-w-md w-full text-center">
-                    <CardContent className="p-8">
-                        <CreditCard className="w-16 h-16 text-slate-400 mx-auto mb-4" />
-                        <h2 className="text-2xl font-bold text-slate-900 dark:text-slate-100 mb-4">Login Required</h2>
-                        <p className="text-slate-600 dark:text-slate-400 mb-6">Please log in to view billing information</p>
-                        <Button
-                            onClick={() => User.login()}
-                            className="w-full bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white font-bold py-3"
-                        >
-                            Log In
-                        </Button>
-                    </CardContent>
-                </Card>
+            <div className="min-h-[60vh] flex items-center justify-center p-4">
+                <div className="max-w-sm w-full text-center space-y-6">
+                    <div className="w-12 h-12 rounded-xl bg-gray-100 dark:bg-gray-900 flex items-center justify-center mx-auto">
+                        <CreditCard className="w-6 h-6 text-gray-500" />
+                    </div>
+                    <div>
+                        <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">Login Required</h2>
+                        <p className="text-[13px] text-gray-500 dark:text-gray-400">Please log in to view billing information</p>
+                    </div>
+                    <Button onClick={() => User.login()}
+                        className="w-full bg-gray-900 dark:bg-white text-white dark:text-black hover:bg-black dark:hover:bg-gray-100 h-10 rounded-lg text-sm font-medium shadow-none">
+                        Log In
+                    </Button>
+                </div>
             </div>
         );
     }
@@ -104,10 +101,10 @@ export default function BillingPage() {
     const analysesUsed = user.analyses_used || 0;
 
     return (
-        <div className="min-h-screen space-y-8">
+        <div className="max-w-3xl mx-auto space-y-8">
             <div className="text-center">
-                <h1 className="text-4xl font-bold text-slate-900 dark:text-slate-100 mb-2">Billing</h1>
-                <p className="text-xl text-slate-600 dark:text-slate-400">Manage your subscription and billing</p>
+                <h1 className="text-2xl font-semibold text-gray-900 dark:text-white mb-1">Billing</h1>
+                <p className="text-[13px] text-gray-500 dark:text-gray-400">Manage your subscription and billing</p>
             </div>
 
             {cancelSuccess && (
@@ -120,10 +117,10 @@ export default function BillingPage() {
             )}
 
             {/* Current Plan */}
-            <Card className="shadow-2xl border-0 bg-white dark:bg-slate-900">
-                <CardHeader className="bg-slate-50 dark:bg-slate-800/50 p-6">
-                    <CardTitle className="text-2xl text-slate-900 dark:text-slate-100 flex items-center gap-2">
-                        <Receipt className="w-6 h-6" />
+            <Card className="border border-gray-200 dark:border-gray-800 bg-white dark:bg-black shadow-none">
+                <CardHeader className="p-6 border-b border-gray-100 dark:border-gray-900">
+                    <CardTitle className="text-base font-semibold text-gray-900 dark:text-white flex items-center gap-2">
+                        <Receipt className="w-4 h-4" />
                         Current Plan
                     </CardTitle>
                 </CardHeader>
@@ -156,7 +153,7 @@ export default function BillingPage() {
                             <Button
                                 onClick={handleUpgrade}
                                 disabled={isRedirecting}
-                                className="bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-bold px-6 py-3 rounded-full shadow-lg"
+                                className="bg-gray-900 dark:bg-white text-white dark:text-black hover:bg-black dark:hover:bg-gray-100 font-medium px-6 h-10 rounded-lg shadow-none"
                             >
                                 {isRedirecting ? (
                                     <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Redirecting...</>
@@ -171,11 +168,11 @@ export default function BillingPage() {
 
             {/* Premium Benefits */}
             {isPremium && (
-                <Card className="shadow-2xl border-0 bg-white dark:bg-slate-900">
-                    <CardHeader className="bg-slate-50 dark:bg-slate-800/50 p-6">
-                        <CardTitle className="text-2xl text-slate-900 dark:text-slate-100 flex items-center gap-2">
-                            <Crown className="w-6 h-6 text-amber-500" />
-                            Your Premium Benefits
+                <Card className="border border-gray-200 dark:border-gray-800 bg-white dark:bg-black shadow-none">
+                    <CardHeader className="p-6 border-b border-gray-100 dark:border-gray-900">
+                        <CardTitle className="text-base font-semibold text-gray-900 dark:text-white flex items-center gap-2">
+                            <Crown className="w-4 h-4 text-amber-500" />
+                            Premium Benefits
                         </CardTitle>
                     </CardHeader>
                     <CardContent className="p-8">

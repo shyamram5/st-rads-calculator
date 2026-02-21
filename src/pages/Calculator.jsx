@@ -228,49 +228,51 @@ export default function CalculatorPage() {
 
   if (authLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="w-16 h-16 border-4 border-slate-200 dark:border-slate-700 border-t-blue-500 rounded-full animate-spin"></div>
+      <div className="min-h-[60vh] flex items-center justify-center">
+        <div className="w-8 h-8 border-2 border-gray-200 dark:border-gray-800 border-t-gray-900 dark:border-t-white rounded-full animate-spin"></div>
       </div>
     );
   }
 
   if (!user) {
     return (
-      <div className="min-h-[70vh] flex items-center justify-center p-4">
-        <Card className="shadow-2xl border-0 bg-white dark:bg-slate-900 max-w-md w-full text-center">
-          <CardContent className="p-8 space-y-6">
-            <CalcIcon className="w-16 h-16 text-blue-500 mx-auto" />
-            <h2 className="text-2xl font-bold text-slate-900 dark:text-slate-100">Sign Up to Use the Calculator</h2>
-            <p className="text-slate-600 dark:text-slate-400">Create a free account to access the ST-RADS Calculator — 5 free analyses to get started.</p>
-            <Button
-              onClick={(e) => { e.preventDefault(); User.login(); }}
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-full text-lg"
-            >
-              <LogIn className="mr-2 h-5 w-5" /> Sign Up / Log In
-            </Button>
-          </CardContent>
-        </Card>
+      <div className="min-h-[60vh] flex items-center justify-center p-4">
+        <div className="max-w-sm w-full text-center space-y-6">
+          <div className="w-12 h-12 rounded-xl bg-gray-100 dark:bg-gray-900 flex items-center justify-center mx-auto">
+            <CalcIcon className="w-6 h-6 text-gray-500" />
+          </div>
+          <div>
+            <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">Sign in to continue</h2>
+            <p className="text-[13px] text-gray-500 dark:text-gray-400">Create a free account to access ST-RADS — 5 free analyses included.</p>
+          </div>
+          <Button
+            onClick={(e) => { e.preventDefault(); User.login(); }}
+            className="w-full bg-gray-900 dark:bg-white text-white dark:text-black hover:bg-black dark:hover:bg-gray-100 h-10 rounded-lg text-sm font-medium shadow-none"
+          >
+            <LogIn className="mr-2 h-4 w-4" /> Sign Up / Log In
+          </Button>
+        </div>
       </div>
     );
   }
 
   if (showResult && result) {
     return (
-      <div className="min-h-screen space-y-8">
+      <div className="space-y-8">
         <div className="text-center">
-          <h1 className="text-3xl font-bold text-slate-900 dark:text-slate-100 mb-2">ST-RADS Classification Result</h1>
-          <p className="text-slate-600 dark:text-slate-400">Deterministic classification based on the official ST-RADS v2025 flowcharts</p>
+          <h1 className="text-2xl font-semibold text-gray-900 dark:text-white mb-1">ST-RADS Result</h1>
+          <p className="text-[13px] text-gray-500 dark:text-gray-400">Deterministic classification · ST-RADS v2025</p>
         </div>
         <UsageTracker user={user} analysesUsed={analysesUsed} />
         <ResultPanel result={result} caseData={caseData} onReset={handleReset} isPremium={isPremium} />
 
         {/* Education Panel on Results Page */}
-        <div className="border-t border-slate-200 dark:border-slate-700 pt-8">
+        <div className="border-t border-gray-100 dark:border-gray-900 pt-8">
           <button
             onClick={() => setShowEducation(!showEducation)}
-            className="flex items-center gap-2 mx-auto px-5 py-2.5 rounded-full glass-panel text-sm font-semibold text-slate-700 dark:text-slate-300 hover:bg-white/50 dark:hover:bg-slate-800/50 transition-all"
+            className="flex items-center gap-2 mx-auto px-4 py-2 rounded-lg border border-gray-200 dark:border-gray-800 text-[13px] font-medium text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-900 transition-colors"
           >
-            <BookOpen className="w-4 h-4 text-blue-500" />
+            <BookOpen className="w-4 h-4" />
             Learn More About ST-RADS
             {showEducation ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
           </button>
@@ -290,10 +292,10 @@ export default function CalculatorPage() {
 
   if (hasReachedLimit) {
     return (
-      <div className="min-h-screen space-y-8 max-w-2xl mx-auto">
+      <div className="space-y-8 max-w-2xl mx-auto">
         <div className="text-center">
-          <h1 className="text-3xl font-bold text-slate-900 dark:text-slate-100 mb-1">ST-RADS Calculator</h1>
-          <p className="text-slate-600 dark:text-slate-400 text-sm">You've used all 5 free analyses</p>
+          <h1 className="text-2xl font-semibold text-gray-900 dark:text-white mb-1">ST-RADS Calculator</h1>
+          <p className="text-[13px] text-gray-500 dark:text-gray-400">You've used all 5 free analyses</p>
         </div>
         <UsageTracker user={user} analysesUsed={analysesUsed} />
         <PremiumUpgrade analysesUsed={analysesUsed} />
@@ -302,23 +304,23 @@ export default function CalculatorPage() {
   }
 
   return (
-    <div className="min-h-screen space-y-6">
+    <div className="space-y-6">
       <div className="text-center">
-        <h1 className="text-3xl font-bold text-slate-900 dark:text-slate-100 mb-1">ST-RADS Calculator</h1>
-        <p className="text-slate-600 dark:text-slate-400 text-sm">Interactive decision engine based on the official ACR ST-RADS v2025 framework</p>
+        <h1 className="text-2xl font-semibold text-gray-900 dark:text-white mb-1">ST-RADS Calculator</h1>
+        <p className="text-[13px] text-gray-500 dark:text-gray-400">ACR ST-RADS v2025 · Interactive decision engine</p>
       </div>
 
       <UsageTracker user={user} analysesUsed={analysesUsed} />
       
       {/* Progress Bar */}
       <div className="max-w-2xl mx-auto">
-        <div className="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400 mb-2">
+        <div className="flex items-center justify-between text-[12px] text-gray-400 dark:text-gray-500 mb-2">
           <span>Step {currentStepIndex + 1} of {steps.length}</span>
           <span>{currentStep?.title}</span>
         </div>
-        <div className="w-full bg-slate-200 dark:bg-slate-700 rounded-full h-2">
+        <div className="w-full bg-gray-100 dark:bg-gray-900 rounded-full h-1">
           <div
-            className="bg-blue-600 h-2 rounded-full transition-all duration-500"
+            className="bg-gray-900 dark:bg-white h-1 rounded-full transition-all duration-500"
             style={{ width: `${((currentStepIndex + 1) / steps.length) * 100}%` }}
           />
         </div>
@@ -365,7 +367,7 @@ export default function CalculatorPage() {
             {(canCalculateEarly || isLastStep) && hasRequiredAnswers && (
               <Button
                 onClick={() => setShowResult(true)}
-                className="gap-2 bg-blue-600 hover:bg-blue-700 text-white"
+                className="gap-2 bg-gray-900 dark:bg-white text-white dark:text-black hover:bg-black dark:hover:bg-gray-100 rounded-lg shadow-none"
               >
                 <Sparkles className="w-4 h-4" /> Calculate ST-RADS
               </Button>
@@ -374,12 +376,12 @@ export default function CalculatorPage() {
         </div>
 
         {/* Education Toggle */}
-        <div className="mt-10 border-t border-slate-200 dark:border-slate-700 pt-6">
+        <div className="mt-10 border-t border-gray-100 dark:border-gray-900 pt-6">
           <button
             onClick={() => setShowEducation(!showEducation)}
-            className="flex items-center gap-2 mx-auto px-5 py-2.5 rounded-full glass-panel text-sm font-semibold text-slate-700 dark:text-slate-300 hover:bg-white/50 dark:hover:bg-slate-800/50 transition-all"
+            className="flex items-center gap-2 mx-auto px-4 py-2 rounded-lg border border-gray-200 dark:border-gray-800 text-[13px] font-medium text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-900 transition-colors"
           >
-            <BookOpen className="w-4 h-4 text-blue-500" />
+            <BookOpen className="w-4 h-4" />
             Learn About ST-RADS
             {showEducation ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
           </button>
