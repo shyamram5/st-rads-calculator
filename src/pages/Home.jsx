@@ -142,17 +142,13 @@ export default function LandingPage() {
             transition={{ delay: 0.15 + i * 0.06, duration: 0.4, ease: "easeOut" }}
           >
             <Link to={createPageUrl(calc.page)} className="block group">
-              <div className={`relative overflow-hidden rounded-xl border ${calc.borderAccent} ${calc.bgAccent} px-4 py-4 transition-all duration-300 hover:shadow-md hover:-translate-y-0.5`}>
+              <div className={`relative overflow-hidden rounded-xl border ${calc.borderAccent} ${calc.bgAccent} px-4 py-4 transition-all duration-300 hover:shadow-md hover:-translate-y-0.5 cursor-pointer`}>
                 <div className="space-y-1.5">
                   <span className={`text-[10px] font-bold uppercase tracking-wider ${calc.textAccent} leading-none`}>{calc.fullName}</span>
                   <h3 className="text-lg font-extrabold text-slate-900 dark:text-slate-100 leading-tight">{calc.name}</h3>
 
                 </div>
-                <div className="mt-3 flex items-center justify-between">
-                  <span className={`inline-flex items-center gap-1 text-[11px] font-semibold ${calc.textAccent}`}>
-                    Open <ArrowRight className="w-3 h-3 transition-transform group-hover:translate-x-0.5" />
-                  </span>
-                </div>
+                <ArrowRight className={`absolute top-1/2 right-3 -translate-y-1/2 w-4 h-4 ${calc.textAccent} opacity-0 group-hover:opacity-100 transition-all group-hover:translate-x-0.5`} />
               </div>
             </Link>
           </motion.div>
