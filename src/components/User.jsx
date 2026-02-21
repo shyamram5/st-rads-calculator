@@ -29,6 +29,14 @@ export const User = {
         }
     },
     updateMyUserData: async (data) => {
+        // Skip update for local dev mock user
+        if (typeof window !== 'undefined') {
+            const host = window.location.hostname;
+            const isLocalHost = host === 'localhost' || host === '127.0.0.1' || /^192\.168\./.test(host) || /^10\./.test(host);
+            if (isLocalHost || import.meta.env.MODE === 'development') {
+                return data;
+            }
+        }
         return await base44.auth.updateMe(data);
     }
 };
