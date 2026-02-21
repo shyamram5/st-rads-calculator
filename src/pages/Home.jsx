@@ -90,9 +90,8 @@ export default function LandingPage() {
           <Clock className="w-3 h-3" /> 7 RADS systems available
         </motion.div>
 
-        <motion.h1 variants={fadeUp} custom={1} className="text-2xl sm:text-3xl font-extrabold tracking-tight leading-tight">
-          <span className="text-slate-900 dark:text-white">The </span>
-          <span className="bg-gradient-to-r from-blue-600 via-indigo-500 to-indigo-700 dark:from-blue-400 dark:via-indigo-400 dark:to-indigo-300 bg-clip-text text-transparent">RADS Calculator</span>
+        <motion.h1 variants={fadeUp} custom={1} className="text-2xl sm:text-3xl font-extrabold tracking-tight leading-tight bg-gradient-to-r from-blue-600 via-indigo-500 to-indigo-700 dark:from-blue-400 dark:via-indigo-400 dark:to-indigo-300 bg-clip-text text-transparent">
+          The RADS Calculator
         </motion.h1>
 
         <motion.p variants={fadeUp} custom={2} className="text-sm text-slate-500 dark:text-slate-400 max-w-xl mx-auto leading-relaxed">
