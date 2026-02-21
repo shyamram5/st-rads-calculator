@@ -146,7 +146,7 @@ export default function LandingPage() {
                 <div className="space-y-1.5">
                   <span className={`text-[10px] font-bold uppercase tracking-wider ${calc.textAccent} leading-none`}>{calc.fullName}</span>
                   <h3 className="text-lg font-extrabold text-slate-900 dark:text-slate-100 leading-tight">{calc.name}</h3>
-                  <p className="text-[11px] text-slate-500 dark:text-slate-400 leading-snug line-clamp-2">{calc.desc}</p>
+
                 </div>
                 <div className="mt-3 flex items-center justify-between">
                   <span className={`inline-flex items-center gap-1 text-[11px] font-semibold ${calc.textAccent}`}>
