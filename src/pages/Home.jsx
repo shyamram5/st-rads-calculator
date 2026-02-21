@@ -93,7 +93,7 @@ export default function LandingPage() {
   }, []);
 
   return (
-    <div className="space-y-20 py-8 md:py-16">
+    <div className="space-y-14 py-6 md:py-12">
 
       {/* ── Hero ── */}
       <motion.section
@@ -119,27 +119,24 @@ export default function LandingPage() {
       </motion.section>
 
       {/* ── Calculator Cards ── */}
-      <section className="grid sm:grid-cols-2 gap-5 max-w-4xl mx-auto px-4">
+      <section className="grid grid-cols-2 lg:grid-cols-4 gap-3 max-w-3xl mx-auto px-4">
         {CALCULATORS.map((calc, i) => (
           <motion.div
             key={calc.name}
-            initial={{ opacity: 0, y: 28 }}
+            initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 + i * 0.08, duration: 0.45, ease: "easeOut" }}
+            transition={{ delay: 0.15 + i * 0.06, duration: 0.4, ease: "easeOut" }}
           >
             <Link to={createPageUrl(calc.page)} className="block group">
-              <div className={`relative overflow-hidden rounded-2xl border ${calc.borderAccent} ${calc.bgAccent} p-6 transition-all duration-300 hover:shadow-lg hover:-translate-y-1`}>
-                <div className="space-y-3">
-                  <div className="flex items-center justify-between">
-                    <span className={`text-xs font-bold uppercase tracking-wider ${calc.textAccent}`}>{calc.fullName}</span>
-                    <ArrowRight className={`w-4 h-4 ${calc.textAccent} opacity-0 group-hover:opacity-100 transition-opacity -translate-x-2 group-hover:translate-x-0 duration-300`} />
-                  </div>
-                  <h3 className="text-2xl font-extrabold text-slate-900 dark:text-slate-100">{calc.name}</h3>
-                  <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">{calc.desc}</p>
+              <div className={`relative overflow-hidden rounded-xl border ${calc.borderAccent} ${calc.bgAccent} px-4 py-4 transition-all duration-300 hover:shadow-md hover:-translate-y-0.5`}>
+                <div className="space-y-1.5">
+                  <span className={`text-[10px] font-bold uppercase tracking-wider ${calc.textAccent} leading-none`}>{calc.fullName}</span>
+                  <h3 className="text-lg font-extrabold text-slate-900 dark:text-slate-100 leading-tight">{calc.name}</h3>
+                  <p className="text-[11px] text-slate-500 dark:text-slate-400 leading-snug line-clamp-2">{calc.desc}</p>
                 </div>
-                <div className="mt-5">
-                  <span className={`inline-flex items-center gap-1.5 text-xs font-semibold ${calc.textAccent} group-hover:underline`}>
-                    Open Calculator <ArrowRight className="w-3 h-3" />
+                <div className="mt-3 flex items-center justify-between">
+                  <span className={`inline-flex items-center gap-1 text-[11px] font-semibold ${calc.textAccent}`}>
+                    Open <ArrowRight className="w-3 h-3 transition-transform group-hover:translate-x-0.5" />
                   </span>
                 </div>
               </div>
@@ -149,33 +146,33 @@ export default function LandingPage() {
       </section>
 
       {/* ── Coming Soon ── */}
-      <div className="flex flex-wrap items-center justify-center gap-3 px-4">
+      <div className="flex flex-wrap items-center justify-center gap-2 px-4 -mt-8">
         {COMING_SOON.map((name) => (
-          <span key={name} className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-slate-100 dark:bg-slate-800/50 text-slate-400 dark:text-slate-500 text-sm font-medium border border-slate-200/60 dark:border-slate-700/40">
+          <span key={name} className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-100 dark:bg-slate-800/50 text-slate-400 dark:text-slate-500 text-xs font-medium border border-slate-200/60 dark:border-slate-700/40">
             {name}
-            <span className="text-[10px] px-2 py-0.5 rounded-full bg-slate-200 dark:bg-slate-700 text-slate-500 dark:text-slate-400 font-semibold">SOON</span>
+            <span className="text-[9px] px-1.5 py-0.5 rounded-full bg-slate-200 dark:bg-slate-700 text-slate-500 dark:text-slate-400 font-semibold uppercase">Soon</span>
           </span>
         ))}
       </div>
 
       {/* ── How It Works ── */}
-      <section className="max-w-4xl mx-auto px-4">
-        <h2 className="text-center text-sm font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500 mb-8">How it works</h2>
-        <div className="grid md:grid-cols-3 gap-6">
+      <section className="max-w-3xl mx-auto px-4">
+        <h2 className="text-center text-[10px] font-bold uppercase tracking-[0.15em] text-slate-400 dark:text-slate-500 mb-6">How it works</h2>
+        <div className="grid grid-cols-3 gap-3">
           {HOW_IT_WORKS.map((step, i) => (
             <motion.div
               key={step.title}
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 16 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-40px" }}
-              transition={{ delay: i * 0.1, duration: 0.4 }}
-              className="flex flex-col items-center text-center space-y-3 p-6 rounded-2xl bg-white/60 dark:bg-slate-800/30 border border-slate-200/50 dark:border-slate-700/30"
+              transition={{ delay: i * 0.08, duration: 0.35 }}
+              className="flex flex-col items-center text-center space-y-2 p-4 rounded-xl bg-white/50 dark:bg-slate-800/20 border border-slate-200/40 dark:border-slate-700/20"
             >
-              <div className={`w-12 h-12 flex items-center justify-center rounded-xl ${step.bg} ${step.color}`}>
-                <step.icon className="w-6 h-6" />
+              <div className={`w-9 h-9 flex items-center justify-center rounded-lg ${step.bg} ${step.color}`}>
+                <step.icon className="w-4.5 h-4.5" />
               </div>
-              <h3 className="font-bold text-slate-900 dark:text-slate-100">{step.title}</h3>
-              <p className="text-sm text-slate-500 dark:text-slate-400 leading-relaxed">{step.desc}</p>
+              <h3 className="font-bold text-sm text-slate-900 dark:text-slate-100">{step.title}</h3>
+              <p className="text-[11px] text-slate-500 dark:text-slate-400 leading-snug">{step.desc}</p>
             </motion.div>
           ))}
         </div>
