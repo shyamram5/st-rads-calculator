@@ -78,6 +78,9 @@ export default function LandingPage() {
                             TI-RADS Calculator <ArrowRight className="ml-2 h-5 w-5" />
                         </Button>
                     </Link>
+                    <Button size="lg" disabled className="h-12 px-10 text-base rounded-full bg-gradient-to-r from-emerald-500/60 to-teal-500/60 text-white/80 cursor-not-allowed font-semibold ring-1 ring-emerald-500/20">
+                        LI-RADS — Coming Soon
+                    </Button>
                 </div>
 
                 <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-slate-100/80 dark:bg-slate-800/50 text-slate-500 dark:text-slate-400 text-xs font-medium">
