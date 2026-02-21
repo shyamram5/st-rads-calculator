@@ -242,12 +242,12 @@ export default function PremiumPage() {
                         <Building2 className="w-10 h-10 text-blue-500 mx-auto" />
                         <h3 className="text-2xl font-bold text-slate-900 dark:text-slate-100">Need a plan for your institution?</h3>
                         <p className="text-slate-600 dark:text-slate-400 max-w-lg mx-auto">
-                            Get unlimited analyses for your entire radiology department, hospital group, or academic program — just $1,000/year.
+                            All 4 RADS systems for your department, program, or enterprise. Flexible plans for teams of any size.
                         </p>
                         <Link to={createPageUrl("InstitutionalPlan")}>
                             <Button size="lg" className="rounded-full bg-blue-600 hover:bg-blue-700 text-white font-semibold px-8 mt-2">
                                 <Building2 className="mr-2 h-5 w-5" />
-                                Institutional Plan — $1,000/year
+                                View Institutional Plans
                             </Button>
                         </Link>
                     </CardContent>
