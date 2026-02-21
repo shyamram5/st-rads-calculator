@@ -60,9 +60,7 @@ export default function LandingPage() {
           </div>
 
           <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-[-0.04em] leading-[1.1] text-gray-900 dark:text-white">
-            The RADS
-            <br />
-            Calculator
+            The RADS Calculator
           </h1>
 
           <p className="text-base sm:text-lg text-gray-500 dark:text-gray-400 max-w-lg mx-auto leading-relaxed">
