@@ -20,30 +20,30 @@ export default function CaseCard({ caseData }) {
   const colors = categoryColors[caseData.category] || categoryColors[0];
 
   return (
-    <Card className={`shadow-lg border-0 overflow-hidden transition-all duration-300 hover:shadow-xl ${colors.bg}`}>
-      <CardHeader className="cursor-pointer" onClick={() => setExpanded(!expanded)}>
+    <Card className="border border-gray-200 dark:border-gray-800 bg-white dark:bg-black shadow-none overflow-hidden transition-colors">
+      <CardHeader className="cursor-pointer p-5" onClick={() => setExpanded(!expanded)}>
         <div className="flex items-start justify-between gap-4">
-          <div className="flex-1">
-            <div className="flex items-center gap-3 mb-2 flex-wrap">
-              <Badge className={`${colors.badge} font-bold text-sm px-3 py-1`}>
+          <div className="flex-1 space-y-2">
+            <div className="flex items-center gap-2 flex-wrap">
+              <Badge className="bg-gray-900 dark:bg-white text-white dark:text-black text-[11px] font-semibold px-2 py-0.5 rounded-md">
                 ST-RADS {caseData.categoryLabel}
               </Badge>
-              <Badge variant="outline" className="text-xs">
+              <Badge variant="outline" className="text-[11px] border-gray-200 dark:border-gray-800">
                 {caseData.riskLevel}
               </Badge>
               {caseData.diagnosis && (
-                <Badge variant="outline" className="text-xs font-medium">
+                <Badge variant="outline" className="text-[11px] border-gray-200 dark:border-gray-800">
                   {caseData.diagnosis}
                 </Badge>
               )}
             </div>
-            <CardTitle className="text-lg text-slate-900 dark:text-slate-100">
+            <CardTitle className="text-sm font-semibold text-gray-900 dark:text-white">
               {caseData.title}
             </CardTitle>
-            <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">{caseData.patient}</p>
+            <p className="text-[12px] text-gray-400 dark:text-gray-500">{caseData.patient}</p>
           </div>
-          <button className="mt-1 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors">
-            {expanded ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
+          <button className="mt-1 text-gray-300 dark:text-gray-600 hover:text-gray-500 dark:hover:text-gray-400 transition-colors">
+            {expanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
           </button>
         </div>
       </CardHeader>
@@ -54,33 +54,33 @@ export default function CaseCard({ caseData }) {
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.3 }}
+            transition={{ duration: 0.2 }}
           >
-            <CardContent className="space-y-5 pt-0">
+            <CardContent className="space-y-5 pt-0 px-5 pb-5 border-t border-gray-100 dark:border-gray-900">
               {/* Imaging Series */}
               {caseData.imageDescriptions && (
-                <div className="space-y-2">
+                <div className="space-y-2 pt-4">
                   <div className="flex items-center justify-between">
-                    <h4 className="flex items-center gap-2 font-semibold text-sm text-slate-700 dark:text-slate-300 uppercase tracking-wider">
-                      <Image className="w-4 h-4" /> Imaging Series ({caseData.figureRef})
+                    <h4 className="text-[12px] font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                      Imaging Series ({caseData.figureRef})
                     </h4>
                     <a
                       href={PDF_URL}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center gap-1 text-xs text-blue-600 dark:text-blue-400 hover:underline font-medium"
+                      className="flex items-center gap-1 text-[11px] text-gray-400 dark:text-gray-500 hover:text-gray-900 dark:hover:text-white transition-colors"
                     >
                       View in Manuscript <ExternalLink className="w-3 h-3" />
                     </a>
                   </div>
-                  <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2">
+                  <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-1.5">
                     {caseData.imageDescriptions.map((img, i) => (
                       <div
                         key={i}
-                        className="bg-slate-900 dark:bg-black rounded-lg p-3 flex flex-col justify-between min-h-[90px]"
+                        className="bg-gray-900 dark:bg-gray-950 rounded-lg p-3 flex flex-col justify-between min-h-[80px]"
                       >
-                        <p className="text-[11px] font-bold text-slate-300 uppercase tracking-wide mb-1">{img.label}</p>
-                        <p className="text-[11px] text-slate-400 leading-snug">{img.desc}</p>
+                        <p className="text-[10px] font-medium text-gray-400 uppercase tracking-wide mb-1">{img.label}</p>
+                        <p className="text-[11px] text-gray-500 leading-snug">{img.desc}</p>
                       </div>
                     ))}
                   </div>
@@ -89,10 +89,10 @@ export default function CaseCard({ caseData }) {
 
               {/* Imaging Findings */}
               <div className="space-y-2">
-                <h4 className="flex items-center gap-2 font-semibold text-sm text-slate-700 dark:text-slate-300 uppercase tracking-wider">
-                  <Activity className="w-4 h-4" /> MRI Findings
+                <h4 className="text-[12px] font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                  MRI Findings
                 </h4>
-                <div className="bg-white/60 dark:bg-slate-800/60 rounded-lg p-4 text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
+                <div className="bg-gray-50 dark:bg-gray-950 rounded-lg p-4 text-[13px] text-gray-700 dark:text-gray-300 leading-relaxed">
                   {caseData.findings}
                 </div>
               </div>
@@ -100,13 +100,13 @@ export default function CaseCard({ caseData }) {
               {/* Key Features */}
               {caseData.keyFeatures && (
                 <div className="space-y-2">
-                  <h4 className="flex items-center gap-2 font-semibold text-sm text-slate-700 dark:text-slate-300 uppercase tracking-wider">
-                    <Stethoscope className="w-4 h-4" /> Key Diagnostic Features
+                  <h4 className="text-[12px] font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                    Key Diagnostic Features
                   </h4>
-                  <ul className="grid gap-2 sm:grid-cols-2">
+                  <ul className="grid gap-1.5 sm:grid-cols-2">
                     {caseData.keyFeatures.map((feature, i) => (
-                      <li key={i} className="flex items-start gap-2 bg-white/60 dark:bg-slate-800/60 rounded-lg px-3 py-2 text-sm text-slate-700 dark:text-slate-300">
-                        <span className={`mt-1.5 w-2 h-2 rounded-full flex-shrink-0 ${colors.badge}`}></span>
+                      <li key={i} className="flex items-start gap-2 bg-gray-50 dark:bg-gray-950 rounded-lg px-3 py-2 text-[13px] text-gray-600 dark:text-gray-400">
+                        <span className="mt-1.5 w-1.5 h-1.5 rounded-full flex-shrink-0 bg-gray-400 dark:bg-gray-600"></span>
                         {feature}
                       </li>
                     ))}
@@ -116,19 +116,19 @@ export default function CaseCard({ caseData }) {
 
               {/* Management */}
               <div className="space-y-2">
-                <h4 className="flex items-center gap-2 font-semibold text-sm text-slate-700 dark:text-slate-300 uppercase tracking-wider">
-                  <ClipboardList className="w-4 h-4" /> Management & Outcome
+                <h4 className="text-[12px] font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                  Management & Outcome
                 </h4>
-                <div className="bg-white/60 dark:bg-slate-800/60 rounded-lg p-4 text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
+                <div className="bg-gray-50 dark:bg-gray-950 rounded-lg p-4 text-[13px] text-gray-700 dark:text-gray-300 leading-relaxed">
                   {caseData.management}
                 </div>
               </div>
 
               {/* Teaching Point */}
               {caseData.teachingPoint && (
-                <div className={`rounded-lg p-4 border-l-4 ${colors.ring.replace('ring', 'border')} bg-white/40 dark:bg-slate-900/40`}>
-                  <p className="text-sm font-semibold text-slate-800 dark:text-slate-200 mb-1">Teaching Point</p>
-                  <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">{caseData.teachingPoint}</p>
+                <div className="rounded-lg p-4 border-l-2 border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-950">
+                  <p className="text-[12px] font-semibold text-gray-900 dark:text-white mb-1">Teaching Point</p>
+                  <p className="text-[13px] text-gray-500 dark:text-gray-400 leading-relaxed">{caseData.teachingPoint}</p>
                 </div>
               )}
             </CardContent>
