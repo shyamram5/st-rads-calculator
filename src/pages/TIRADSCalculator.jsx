@@ -45,7 +45,7 @@ export default function TIRADSCalculatorPage() {
       {/* Header */}
       <div className="text-center space-y-2">
         <h1 className="text-3xl md:text-4xl font-bold text-slate-900 dark:text-slate-100">
-          ACR <span className="bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-400 dark:to-indigo-400 bg-clip-text text-transparent">TI-RADS</span> Calculator
+          ACR <span className="bg-gradient-to-r from-amber-500 to-yellow-500 dark:from-amber-400 dark:to-yellow-400 bg-clip-text text-transparent">TI-RADS</span> Calculator
         </h1>
         <p className="text-sm text-slate-500 dark:text-slate-400 max-w-xl mx-auto">
           Assess thyroid nodule malignancy risk based on ultrasound characteristics using the ACR TI-RADS classification system.
