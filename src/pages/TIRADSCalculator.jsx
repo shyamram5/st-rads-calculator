@@ -142,6 +142,8 @@ export default function TIRADSCalculatorPage() {
         </p>
       </div>
 
+      <UsageTracker user={user} analysesUsed={analysesUsed} />
+
       {/* Feature Selectors */}
       <div className="space-y-4">
         <TIRADSFeatureSelector
