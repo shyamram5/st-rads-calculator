@@ -240,7 +240,7 @@ export default function LIRADSCalculatorPage() {
   if (authLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="w-16 h-16 border-4 border-slate-200 dark:border-slate-700 border-t-blue-500 rounded-full animate-spin" />
+        <div className="w-16 h-16 border-4 border-slate-200 dark:border-slate-700 border-t-emerald-500 rounded-full animate-spin" />
       </div>
     );
   }
@@ -251,12 +251,12 @@ export default function LIRADSCalculatorPage() {
       <div className="min-h-[70vh] flex items-center justify-center p-4">
         <Card className="shadow-2xl border-0 bg-white dark:bg-slate-900 max-w-md w-full text-center">
           <CardContent className="p-8 space-y-6">
-            <CalcIcon className="w-16 h-16 text-blue-500 mx-auto" />
+            <CalcIcon className="w-16 h-16 text-emerald-500 mx-auto" />
             <h2 className="text-2xl font-bold text-slate-900 dark:text-slate-100">Sign Up to Use the Calculator</h2>
             <p className="text-slate-600 dark:text-slate-400">Create a free account to access the LI-RADS Calculator — 5 free analyses to get started.</p>
             <Button
               onClick={(e) => { e.preventDefault(); User.login(); }}
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-full text-lg"
+              className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-full text-lg"
             >
               <LogIn className="mr-2 h-5 w-5" /> Sign Up / Log In
             </Button>
@@ -299,7 +299,7 @@ export default function LIRADSCalculatorPage() {
     <div className="max-w-2xl mx-auto space-y-6">
       <div className="text-center space-y-2">
         <h1 className="text-3xl md:text-4xl font-bold text-slate-900 dark:text-slate-100">
-          ACR <span className="bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-400 dark:to-indigo-400 bg-clip-text text-transparent">LI-RADS</span> Calculator
+          ACR <span className="bg-gradient-to-r from-emerald-500 to-teal-500 dark:from-emerald-400 dark:to-teal-400 bg-clip-text text-transparent">LI-RADS</span> Calculator
         </h1>
         <p className="text-sm text-slate-500 dark:text-slate-400 max-w-xl mx-auto">
           Liver Imaging Reporting and Data System v2018 — step-by-step scoring for liver observations in patients at risk for HCC.
@@ -316,7 +316,7 @@ export default function LIRADSCalculatorPage() {
         </div>
         <div className="w-full bg-slate-200 dark:bg-slate-700 rounded-full h-2">
           <div
-            className="bg-blue-600 h-2 rounded-full transition-all duration-500"
+            className="bg-emerald-500 h-2 rounded-full transition-all duration-500"
             style={{ width: `${((currentStepIndex + 1) / visibleSteps.length) * 100}%` }}
           />
         </div>
@@ -394,7 +394,7 @@ export default function LIRADSCalculatorPage() {
           {canCalculate(data) && (
             <Button
               onClick={handleCalculate}
-              className="gap-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white rounded-full px-6 font-semibold shadow-lg shadow-blue-500/25"
+              className="gap-2 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white rounded-full px-6 font-semibold shadow-lg shadow-emerald-500/25"
             >
               Calculate LI-RADS
             </Button>

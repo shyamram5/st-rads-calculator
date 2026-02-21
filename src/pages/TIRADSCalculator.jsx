@@ -90,7 +90,7 @@ export default function TIRADSCalculatorPage() {
   if (authLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="w-16 h-16 border-4 border-slate-200 dark:border-slate-700 border-t-blue-500 rounded-full animate-spin"></div>
+        <div className="w-16 h-16 border-4 border-slate-200 dark:border-slate-700 border-t-amber-500 rounded-full animate-spin"></div>
       </div>
     );
   }
@@ -100,12 +100,12 @@ export default function TIRADSCalculatorPage() {
       <div className="min-h-[70vh] flex items-center justify-center p-4">
         <Card className="shadow-2xl border-0 bg-white dark:bg-slate-900 max-w-md w-full text-center">
           <CardContent className="p-8 space-y-6">
-            <CalcIcon className="w-16 h-16 text-blue-500 mx-auto" />
+            <CalcIcon className="w-16 h-16 text-amber-500 mx-auto" />
             <h2 className="text-2xl font-bold text-slate-900 dark:text-slate-100">Sign Up to Use the Calculator</h2>
             <p className="text-slate-600 dark:text-slate-400">Create a free account to access the TI-RADS Calculator — 5 free analyses to get started.</p>
             <Button
               onClick={(e) => { e.preventDefault(); User.login(); }}
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-full text-lg"
+              className="w-full bg-amber-500 hover:bg-amber-600 text-white font-bold py-3 rounded-full text-lg"
             >
               <LogIn className="mr-2 h-5 w-5" /> Sign Up / Log In
             </Button>
@@ -133,7 +133,7 @@ export default function TIRADSCalculatorPage() {
       {/* Header */}
       <div className="text-center space-y-2">
         <h1 className="text-3xl md:text-4xl font-bold text-slate-900 dark:text-slate-100">
-          ACR <span className="bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-400 dark:to-indigo-400 bg-clip-text text-transparent">TI-RADS</span> Calculator
+          ACR <span className="bg-gradient-to-r from-amber-500 to-yellow-500 dark:from-amber-400 dark:to-yellow-400 bg-clip-text text-transparent">TI-RADS</span> Calculator
         </h1>
         <p className="text-sm text-slate-500 dark:text-slate-400 max-w-xl mx-auto">
           Assess thyroid nodule malignancy risk based on ultrasound characteristics using the ACR TI-RADS classification system.
@@ -199,7 +199,7 @@ export default function TIRADSCalculatorPage() {
           <Button
             onClick={handleCalculate}
             size="lg"
-            className="gap-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white rounded-full px-8 font-semibold shadow-lg shadow-blue-500/25"
+            className="gap-2 bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-600 hover:to-yellow-600 text-white rounded-full px-8 font-semibold shadow-lg shadow-amber-500/25"
           >
             Calculate TI-RADS
           </Button>
