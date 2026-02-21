@@ -19,12 +19,25 @@ const TAB_ROOTS = {
   Account: "Account",
 };
 
+const PAGE_NAV_COLORS = {
+  Home: { light: "rgba(59, 130, 246, 0.08)", dark: "rgba(59, 130, 246, 0.12)", border: "rgba(59, 130, 246, 0.15)" },
+  Calculator: { light: "rgba(99, 102, 241, 0.08)", dark: "rgba(99, 102, 241, 0.12)", border: "rgba(99, 102, 241, 0.15)" },
+  TIRADSCalculator: { light: "rgba(168, 85, 247, 0.08)", dark: "rgba(168, 85, 247, 0.12)", border: "rgba(168, 85, 247, 0.15)" },
+  LIRADSCalculator: { light: "rgba(16, 185, 129, 0.08)", dark: "rgba(16, 185, 129, 0.12)", border: "rgba(16, 185, 129, 0.15)" },
+  BIRADSCalculator: { light: "rgba(236, 72, 153, 0.08)", dark: "rgba(236, 72, 153, 0.12)", border: "rgba(236, 72, 153, 0.15)" },
+  CaseExamples: { light: "rgba(245, 158, 11, 0.08)", dark: "rgba(245, 158, 11, 0.12)", border: "rgba(245, 158, 11, 0.15)" },
+  Billing: { light: "rgba(20, 184, 166, 0.08)", dark: "rgba(20, 184, 166, 0.12)", border: "rgba(20, 184, 166, 0.15)" },
+  Premium: { light: "rgba(245, 158, 11, 0.08)", dark: "rgba(245, 158, 11, 0.12)", border: "rgba(245, 158, 11, 0.15)" },
+  Account: { light: "rgba(107, 114, 128, 0.08)", dark: "rgba(107, 114, 128, 0.12)", border: "rgba(107, 114, 128, 0.15)" },
+};
+
 export default function Layout({ children, currentPageName }) {
   const [user, setUser] = useState(null);
   const [theme, setTheme] = useState("system");
   const location = useLocation();
   const navigate = useNavigate();
   const prevTabRef = React.useRef(currentPageName);
+  const navColor = PAGE_NAV_COLORS[currentPageName] || PAGE_NAV_COLORS.Home;
 
   // Listen for system theme changes
   useEffect(() => {
@@ -149,7 +162,8 @@ export default function Layout({ children, currentPageName }) {
                   .pr-safe { padding-right: var(--sar); }
                   .pb-safe-nav { padding-bottom: calc(var(--sab) + 4rem); } /* For bottom tab bar spacing */
               `}</style>
-            <header className="glass-panel sticky top-4 z-50 mx-4 sm:mx-8 rounded-2xl mt-4 transition-all duration-300 pt-safe">
+            <header className="sticky top-4 z-50 mx-4 sm:mx-8 rounded-2xl mt-4 transition-all duration-500 pt-safe" style={{ background: `${navColor.light}`, backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)", border: `1px solid ${navColor.border}`, boxShadow: `0 8px 32px 0 ${navColor.border}` }}>
+                <style>{`.dark header[style] { background: ${navColor.dark} !important; }`}</style>
                 <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="flex justify-between items-center py-3">
                         <div className="flex items-center gap-4">
