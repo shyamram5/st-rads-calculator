@@ -40,7 +40,7 @@ const TIERS = [
     gradient: "from-indigo-500 to-purple-500",
     border: "border-indigo-200 dark:border-indigo-800",
     bg: "from-indigo-50/80 to-purple-50/80 dark:from-indigo-950/30 dark:to-purple-950/30",
-    popular: true,
+
   },
   {
     id: "enterprise",
