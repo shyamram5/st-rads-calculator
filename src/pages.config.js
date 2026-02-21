@@ -54,13 +54,14 @@ import CaseExamples from './pages/CaseExamples';
 import CaseReview from './pages/CaseReview';
 import Home from './pages/Home';
 import InstitutionalPlan from './pages/InstitutionalPlan';
+import LIRADSCalculator from './pages/LIRADSCalculator';
 import PaymentCancel from './pages/PaymentCancel';
 import PaymentSuccess from './pages/PaymentSuccess';
 import Premium from './pages/Premium';
 import StudyAssistant from './pages/StudyAssistant';
 import Support from './pages/Support';
 import TIRADSCalculator from './pages/TIRADSCalculator';
-import LIRADSCalculator from './pages/LIRADSCalculator';
+import BIRADSCalculator from './pages/BIRADSCalculator';
 import __Layout from './Layout.jsx';
 
 
@@ -72,13 +73,14 @@ export const PAGES = {
     "CaseReview": CaseReview,
     "Home": Home,
     "InstitutionalPlan": InstitutionalPlan,
+    "LIRADSCalculator": LIRADSCalculator,
     "PaymentCancel": PaymentCancel,
     "PaymentSuccess": PaymentSuccess,
     "Premium": Premium,
     "StudyAssistant": StudyAssistant,
     "Support": Support,
     "TIRADSCalculator": TIRADSCalculator,
-    "LIRADSCalculator": LIRADSCalculator,
+    "BIRADSCalculator": BIRADSCalculator,
 }
 
 export const pagesConfig = {
