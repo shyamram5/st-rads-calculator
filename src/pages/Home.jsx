@@ -72,12 +72,6 @@ export default function LandingPage() {
           </p>
 
           <div className="flex items-center justify-center gap-3 pt-2">
-            <Link to={createPageUrl("Calculator")}>
-              <Button className="h-10 px-6 rounded-lg bg-gray-900 dark:bg-white text-white dark:text-black hover:bg-black dark:hover:bg-gray-100 text-sm font-medium shadow-none gap-2">
-                Open Calculator
-                <ArrowRight className="w-4 h-4" />
-              </Button>
-            </Link>
           </div>
 
           <div className="flex items-center justify-center gap-4 pt-4 text-[12px] text-gray-400 dark:text-gray-500 font-medium">
