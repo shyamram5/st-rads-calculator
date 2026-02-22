@@ -15,7 +15,7 @@ const TIERS = [
     name: "Academic / Small Practice",
     size: "1–10 radiologists",
     features: [
-      "All 4 RADS systems (ST-RADS, TI-RADS, LI-RADS, BI-RADS)",
+      "All 9 RADS systems (ST-RADS, TI-RADS, LI-RADS, BI-RADS, Lung-RADS, PI-RADS, O-RADS, MSKI-RADS, Bone-RADS)",
       "Unlimited users at your institution",
       "Email support",
       "Updates included",
@@ -30,7 +30,7 @@ const TIERS = [
     name: "Medium Department",
     size: "11–25 radiologists",
     features: [
-      "All 4 RADS systems",
+      "All 9 RADS systems",
       "Unlimited users",
       "Priority email support",
       "Analytics dashboard",
@@ -47,7 +47,7 @@ const TIERS = [
     name: "Large / Enterprise",
     size: "25+ radiologists",
     features: [
-      "All 4 RADS systems",
+      "All 9 RADS systems",
       "Multi-site access",
       "Dedicated support",
       "Custom features on request",
