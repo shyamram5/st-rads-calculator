@@ -14,6 +14,7 @@ const CALCULATORS = [
   { name: "Lung-RADS", fullName: "Lung", page: "LungRADSCalculator" },
   { name: "PI-RADS", fullName: "Prostate", page: "PIRADSCalculator" },
   { name: "O-RADS", fullName: "Ovarian", page: "ORADSCalculator" },
+  { name: "MSKI-RADS", fullName: "MSK Infection", page: "MSKIRADSCalculator" },
 ];
 
 const STEPS = [
@@ -31,6 +32,8 @@ const PAPERS = [
   { title: "ACR Lung-RADS® v2022", authors: "ACR", journal: "", url: "https://www.acr.org/Clinical-Resources/Reporting-and-Data-Systems/Lung-RADS" },
   { title: "PI-RADS® v2.1", authors: "ACR–ESUR", journal: "2019", url: "https://www.acr.org/Clinical-Resources/Reporting-and-Data-Systems/PI-RADS" },
   { title: "ACR O-RADS™ US v2022 & MRI", authors: "ACR", journal: "", url: "https://www.acr.org/Clinical-Resources/Reporting-and-Data-Systems/O-RADS" },
+  { title: "MSKI-RADS for Extremity Infection", authors: "Chhabra et al.", journal: "Radiology 2024", url: "https://doi.org/10.1148/radiol.232914" },
+  { title: "SSR White Paper: MSK Infection Terminology", authors: "Alaia et al.", journal: "Skeletal Radiol 2021", url: "https://doi.org/10.1007/s00256-021-03898-y" },
 ];
 
 export default function LandingPage() {
@@ -56,7 +59,7 @@ export default function LandingPage() {
         >
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-gray-200 dark:border-gray-800 text-[11px] font-medium text-gray-500 dark:text-gray-400">
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-            7 RADS systems available
+            8 RADS systems available
           </div>
 
           <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-[-0.04em] leading-[1.1] text-gray-900 dark:text-white">
