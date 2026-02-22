@@ -65,6 +65,7 @@ import Premium from './pages/Premium';
 import StudyAssistant from './pages/StudyAssistant';
 import Support from './pages/Support';
 import TIRADSCalculator from './pages/TIRADSCalculator';
+import MSKIRADSCalculator from './pages/MSKIRADSCalculator';
 import __Layout from './Layout.jsx';
 
 
@@ -87,6 +88,7 @@ export const PAGES = {
     "StudyAssistant": StudyAssistant,
     "Support": Support,
     "TIRADSCalculator": TIRADSCalculator,
+    "MSKIRADSCalculator": MSKIRADSCalculator,
 }
 
 export const pagesConfig = {
