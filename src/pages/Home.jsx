@@ -149,22 +149,22 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ── Research ── */}
+      {/* ── References (collapsed) ── */}
       <section className="max-w-3xl mx-auto px-4 mb-12">
-        <p className="text-[11px] font-medium uppercase tracking-[0.15em] text-gray-400 dark:text-gray-500 mb-6 text-center flex items-center justify-center gap-2">
-          <BookOpen className="w-3.5 h-3.5" /> References
-        </p>
-        <div className="space-y-0 divide-y divide-gray-100 dark:divide-gray-900">
-          {PAPERS.map((paper, i) => (
-            <a key={i} href={paper.url} target="_blank" rel="noopener noreferrer"
-              className="group flex items-start justify-between gap-4 py-3 text-[12px] text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors">
-              <span className="leading-relaxed">
-                {paper.title} <span className="text-gray-400 dark:text-gray-500">— {paper.authors}</span> {paper.journal && <span className="text-gray-300 dark:text-gray-600">{paper.journal}</span>}
-              </span>
-              <ArrowUpRight className="w-3.5 h-3.5 flex-shrink-0 mt-0.5 opacity-0 group-hover:opacity-100 transition-opacity" />
-            </a>
-          ))}
-        </div>
+        <details className="group">
+          <summary className="flex items-center justify-center gap-1.5 cursor-pointer text-[11px] text-gray-300 dark:text-gray-600 hover:text-gray-400 dark:hover:text-gray-500 transition-colors select-none list-none [&::-webkit-details-marker]:hidden">
+            <BookOpen className="w-3 h-3" />
+            <span>References</span>
+          </summary>
+          <div className="mt-4 space-y-0 divide-y divide-gray-100 dark:divide-gray-900">
+            {PAPERS.map((paper, i) => (
+              <a key={i} href={paper.url} target="_blank" rel="noopener noreferrer"
+                className="block py-2 text-[11px] text-gray-300 dark:text-gray-600 hover:text-gray-500 dark:hover:text-gray-400 transition-colors leading-relaxed">
+                {paper.title} — {paper.authors} {paper.journal}
+              </a>
+            ))}
+          </div>
+        </details>
       </section>
     </div>
   );
