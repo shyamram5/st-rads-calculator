@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import {
   MARGIN_GRADES, PERIOSTEAL_OPTIONS, NONAGGRESSIVE_PATTERNS, AGGRESSIVE_PATTERNS,
-  ENDOSTEAL_OPTIONS, CATEGORIES, DO_NOT_TOUCH, LOCATION_PEARLS, KEY_STATS
+  ENDOSTEAL_OPTIONS, CATEGORIES, DO_NOT_TOUCH, LOCATION_PEARLS
 } from "./boneRadsRuleEngine";
 
 function Section({ title, children, defaultOpen = false }) {
