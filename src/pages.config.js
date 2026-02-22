@@ -66,6 +66,7 @@ import StudyAssistant from './pages/StudyAssistant';
 import Support from './pages/Support';
 import TIRADSCalculator from './pages/TIRADSCalculator';
 import MSKIRADSCalculator from './pages/MSKIRADSCalculator';
+import BoneRADSCalculator from './pages/BoneRADSCalculator';
 import __Layout from './Layout.jsx';
 
 
@@ -89,6 +90,7 @@ export const PAGES = {
     "Support": Support,
     "TIRADSCalculator": TIRADSCalculator,
     "MSKIRADSCalculator": MSKIRADSCalculator,
+    "BoneRADSCalculator": BoneRADSCalculator,
 }
 
 export const pagesConfig = {
