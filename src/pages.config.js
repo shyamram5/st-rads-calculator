@@ -50,6 +50,7 @@
 import Account from './pages/Account';
 import BIRADSCalculator from './pages/BIRADSCalculator';
 import Billing from './pages/Billing';
+import BoneRADSCalculator from './pages/BoneRADSCalculator';
 import Calculator from './pages/Calculator';
 import CaseExamples from './pages/CaseExamples';
 import CaseReview from './pages/CaseReview';
@@ -57,6 +58,7 @@ import Home from './pages/Home';
 import InstitutionalPlan from './pages/InstitutionalPlan';
 import LIRADSCalculator from './pages/LIRADSCalculator';
 import LungRADSCalculator from './pages/LungRADSCalculator';
+import MSKIRADSCalculator from './pages/MSKIRADSCalculator';
 import ORADSCalculator from './pages/ORADSCalculator';
 import PIRADSCalculator from './pages/PIRADSCalculator';
 import PaymentCancel from './pages/PaymentCancel';
@@ -65,8 +67,6 @@ import Premium from './pages/Premium';
 import StudyAssistant from './pages/StudyAssistant';
 import Support from './pages/Support';
 import TIRADSCalculator from './pages/TIRADSCalculator';
-import MSKIRADSCalculator from './pages/MSKIRADSCalculator';
-import BoneRADSCalculator from './pages/BoneRADSCalculator';
 import __Layout from './Layout.jsx';
 
 
@@ -74,6 +74,7 @@ export const PAGES = {
     "Account": Account,
     "BIRADSCalculator": BIRADSCalculator,
     "Billing": Billing,
+    "BoneRADSCalculator": BoneRADSCalculator,
     "Calculator": Calculator,
     "CaseExamples": CaseExamples,
     "CaseReview": CaseReview,
@@ -81,6 +82,7 @@ export const PAGES = {
     "InstitutionalPlan": InstitutionalPlan,
     "LIRADSCalculator": LIRADSCalculator,
     "LungRADSCalculator": LungRADSCalculator,
+    "MSKIRADSCalculator": MSKIRADSCalculator,
     "ORADSCalculator": ORADSCalculator,
     "PIRADSCalculator": PIRADSCalculator,
     "PaymentCancel": PaymentCancel,
@@ -89,8 +91,6 @@ export const PAGES = {
     "StudyAssistant": StudyAssistant,
     "Support": Support,
     "TIRADSCalculator": TIRADSCalculator,
-    "MSKIRADSCalculator": MSKIRADSCalculator,
-    "BoneRADSCalculator": BoneRADSCalculator,
 }
 
 export const pagesConfig = {

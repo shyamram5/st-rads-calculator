@@ -89,7 +89,7 @@ export default function LandingPage() {
 
       {/* ── Calculator Grid ── */}
       <section className="max-w-3xl mx-auto px-4 mb-14">
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-px bg-gray-200 dark:bg-gray-800 rounded-xl overflow-hidden border border-gray-200 dark:border-gray-800">
+        <div className="grid grid-cols-3 gap-px bg-gray-200 dark:bg-gray-800 rounded-xl overflow-hidden border border-gray-200 dark:border-gray-800">
           {CALCULATORS.map((calc, i) => (
             <motion.div
               key={calc.name}
@@ -108,8 +108,6 @@ export default function LandingPage() {
               </Link>
             </motion.div>
           ))}
-          {/* Fill remaining cell for even grid */}
-          <div className="bg-white dark:bg-black hidden lg:block" />
         </div>
       </section>
 
